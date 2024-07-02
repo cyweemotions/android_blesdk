@@ -1,0 +1,48 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion '29.0.0'
+
+    defaultConfig {
+        applicationId "com.fitpolo.demo"
+        minSdkVersion 18
+        targetSdkVersion 29
+        versionCode 1
+        versionName "6.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                def formatedDate = new Date().format("yyyyMMddHHmm")
+                def apkFileName = "FitpoloDemo_${defaultConfig.versionName}_${formatedDate}.apk"
+                if (outputFile.name.contains('debug')) {
+                    apkFileName = "FitpoloDemo_${defaultConfig.versionName}_${formatedDate}_debug.apk"
+                }
+                outputFileName = apkFileName
+            }
+        }
+    }
+
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    // Butter Knife
+    implementation 'com.jakewharton:butterknife:10.2.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation project(path: ':fitpolosupport')
+}
