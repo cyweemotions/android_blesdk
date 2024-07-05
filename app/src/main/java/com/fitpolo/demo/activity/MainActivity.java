@@ -8,8 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -22,6 +24,7 @@ import com.fitpolo.support.MokoConstants;
 import com.fitpolo.support.MokoSupport;
 import com.fitpolo.support.callback.MokoScanDeviceCallback;
 import com.fitpolo.support.entity.BleDevice;
+import com.fitpolo.support.log.LogModule;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,12 +82,20 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         BleDevice device = (BleDevice) parent.getItemAtPosition(position);
         mService.connectBluetoothDevice(device.address);
         deviceMacAddress = device.address;
+        ///延迟调用
+        if (!MainActivity.this.isFinishing() && mDialog.isShowing()) {
+            mDialog.dismiss();
+        }
+        Toast.makeText(MainActivity.this, "Connect success", Toast.LENGTH_SHORT).show();
+        Intent orderIntent = new Intent(MainActivity.this, SendOrderActivity.class);
+        orderIntent.putExtra("deviceMacAddress", deviceMacAddress);
+        startActivity(orderIntent);
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-
         @Override
         public void onReceive(Context context, Intent intent) {
+            LogModule.i("走了onReceive");
             if (intent != null) {
                 if (MokoConstants.ACTION_DISCOVER_SUCCESS.equals(intent.getAction())) {
                     abortBroadcast();
@@ -123,13 +134,18 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
+            LogModule.i("走了onServiceConnected");
             mService = ((MokoService.LocalBinder) service).getService();
             // 注册广播接收器
             IntentFilter filter = new IntentFilter();
             filter.addAction(MokoConstants.ACTION_CONN_STATUS_DISCONNECTED);
             filter.addAction(MokoConstants.ACTION_DISCOVER_SUCCESS);
             filter.setPriority(100);
-            registerReceiver(mReceiver, filter);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                registerReceiver(mReceiver, filter, Context.RECEIVER_VISIBLE_TO_INSTANT_APPS);
+            }else{
+                registerReceiver(mReceiver, filter);
+            }
         }
 
         @Override

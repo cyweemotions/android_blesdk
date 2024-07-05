@@ -124,7 +124,7 @@ public class SendOrderActivity extends BaseActivity {
                     switch (blueState) {
                         case BluetoothAdapter.STATE_TURNING_OFF:
                         case BluetoothAdapter.STATE_OFF:
-                            SendOrderActivity.this.finish();
+//                            SendOrderActivity.this.finish();
                             break;
                     }
                 }
@@ -132,7 +132,7 @@ public class SendOrderActivity extends BaseActivity {
                     abortBroadcast();
                     if (!mIsUpgrade) {
                         Toast.makeText(SendOrderActivity.this, "Connect failed", Toast.LENGTH_SHORT).show();
-                        SendOrderActivity.this.finish();
+//                        SendOrderActivity.this.finish();
                     }
                 }
                 if (MokoConstants.ACTION_ORDER_RESULT.equals(action)) {
@@ -527,7 +527,7 @@ public class SendOrderActivity extends BaseActivity {
                     mDialog.dismiss();
                 }
                 Toast.makeText(SendOrderActivity.this, "upgrade success", Toast.LENGTH_SHORT).show();
-                SendOrderActivity.this.finish();
+//                SendOrderActivity.this.finish();
             }
         });
     }
@@ -536,7 +536,7 @@ public class SendOrderActivity extends BaseActivity {
         if (MokoSupport.getInstance().isConnDevice(this, deviceMacAddress)) {
            mService.disConnectBle();
         }
-        finish();
+//        finish();
     }
 
     @Override
