@@ -78,7 +78,7 @@ public class MokoSupport implements MokoResponseCallback {
     private Context mContext;
     private MokoConnStateCallback mMokoConnStateCallback;
     private HashMap<OrderType, MokoCharacteristic> mCharacteristicMap;
-    private static final UUID DESCRIPTOR_UUID_NOTIFY = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
+    private static final UUID DESCRIPTOR_UUID_NOTIFY = UUID.fromString("e49a24c1-f69a-11e8-8eb2-f2801f1b9fd1");
     private static final UUID SERVICE_UUID = UUID.fromString("000023c0-0000-1000-8000-00805f9b34fb");
 
     ///////////////////////////////////////////////////////////////////////////

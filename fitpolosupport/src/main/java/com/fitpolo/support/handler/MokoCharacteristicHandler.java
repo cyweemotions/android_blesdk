@@ -16,8 +16,8 @@ import java.util.List;
 public class MokoCharacteristicHandler {
     private static MokoCharacteristicHandler INSTANCE;
 
-    public static final String SERVICE_UUID_HEADER_OLD = "0000ffc0";
-    public static final String SERVICE_UUID_HEADER_NEW = "0000ffb0";
+    public static final String SERVICE_UUID_HEADER_OLD = "e49a23c0";
+    public static final String SERVICE_UUID_HEADER_NEW = "e49a23c0";
 
     public HashMap<OrderType, MokoCharacteristic> mokoCharacteristicMap;
 
@@ -60,6 +60,7 @@ public class MokoCharacteristicHandler {
                     if (characteristicUuid.equals(OrderType.NOTIFY.getUuid())) {
                         gatt.setCharacteristicNotification(characteristic, true);
                         mokoCharacteristicMap.put(OrderType.NOTIFY, new MokoCharacteristic(characteristic, OrderType.NOTIFY));
+                        mokoCharacteristicMap.put(OrderType.WRITE, new MokoCharacteristic(characteristic, OrderType.WRITE));
                         continue;
                     }
                     if (characteristicUuid.equals(OrderType.WRITE.getUuid())) {
