@@ -227,6 +227,7 @@ public class MokoSupport implements MokoResponseCallback {
                 if (orderTask == null) {
                     continue;
                 }
+                LogModule.i("开始发送1");
                 mQueue.offer(orderTask);
             }
             executeTask(null);
@@ -235,6 +236,7 @@ public class MokoSupport implements MokoResponseCallback {
                 if (orderTask == null) {
                     continue;
                 }
+                LogModule.i("开始发送2");
                 mQueue.offer(orderTask);
             }
         }
@@ -320,6 +322,7 @@ public class MokoSupport implements MokoResponseCallback {
      * @Description 正在同步
      */
     public synchronized boolean isSyncData() {
+//        LogModule.i("isSyncData" + mQueue.toString());
         return mQueue != null && !mQueue.isEmpty();
     }
 
@@ -479,7 +482,7 @@ public class MokoSupport implements MokoResponseCallback {
                 case HANDLER_MESSAGE_WHAT_SERVICES_DISCOVERED:
                     LogModule.i("连接成功！");
                     mCharacteristicMap = MokoCharacteristicHandler.getInstance().getCharacteristics(mBluetoothGatt);
-                    sendOrder(new OpenNotifyTask(OrderType.NOTIFY, OrderEnum.openNotify, null));
+//                    sendOrder(new OpenNotifyTask(OrderType.NOTIFY, OrderEnum.openNotify, null));
                     break;
                 case HANDLER_MESSAGE_WHAT_DISCONNECT:
                     if (mQueue != null && !mQueue.isEmpty()) {

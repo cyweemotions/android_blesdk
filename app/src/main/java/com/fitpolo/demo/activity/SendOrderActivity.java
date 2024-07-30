@@ -131,7 +131,7 @@ public class SendOrderActivity extends BaseActivity {
                 if (MokoConstants.ACTION_CONN_STATUS_DISCONNECTED.equals(action)) {
                     abortBroadcast();
                     if (!mIsUpgrade) {
-                        Toast.makeText(SendOrderActivity.this, "Connect failed", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(SendOrderActivity.this, "Connect failed", Toast.LENGTH_SHORT).show();
 //                        SendOrderActivity.this.finish();
                     }
                 }
@@ -322,7 +322,9 @@ public class SendOrderActivity extends BaseActivity {
     }
 
     public void setSystemTime(View view) {
-        MokoSupport.getInstance().sendOrder(new SystemTimeTask(mService));
+        Toast.makeText(this, "Connect successp-[1", Toast.LENGTH_SHORT).show();
+//        MokoSupport.getInstance().sendOrder(new SystemTimeTask(mService));
+        MokoSupport.getInstance().sendOrder(new ReadSettingTask(mService));
     }
 
     public void setUserInfo(View view) {
@@ -470,6 +472,10 @@ public class SendOrderActivity extends BaseActivity {
 
     public void notification(View view) {
         startActivity(new Intent(this, MessageNotificationActivity.class));
+    }
+
+    public void findDevice(){
+        MokoSupport.getInstance().sendOrder(new ReadSettingTask(mService));
     }
 
     private static final int REQUEST_CODE_FILE = 2;
