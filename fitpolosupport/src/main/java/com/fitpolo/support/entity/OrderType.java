@@ -5,6 +5,8 @@ import java.io.Serializable;
 public enum OrderType implements Serializable {
     NOTIFY("NOTIFY", "e49a24c1-f69a-11e8-8eb2-f2801f1b9fd1"),
     WRITE("WRITE", "e49a24c1-f69a-11e8-8eb2-f2801f1b9fd1"),
+    DataPushNOTIFY("DataPushNOTIFY", "e49a26c1-f69a-11e8-8eb2-f2801f1b9fd1"),
+    DataPushWRITE("DataPushWRITE", "e49a26c1-f69a-11e8-8eb2-f2801f1b9fd1"),
     ;
 
 

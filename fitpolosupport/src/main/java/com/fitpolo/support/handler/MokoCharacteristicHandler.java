@@ -5,10 +5,8 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.text.TextUtils;
 
-import com.fitpolo.support.MokoSupport;
 import com.fitpolo.support.entity.MokoCharacteristic;
 import com.fitpolo.support.entity.OrderType;
-import com.fitpolo.support.log.LogModule;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +21,6 @@ public class MokoCharacteristicHandler {
     public HashMap<OrderType, MokoCharacteristic> mokoCharacteristicMap;
 
     private MokoCharacteristicHandler() {
-        //no instance
         mokoCharacteristicMap = new HashMap<>();
     }
 
@@ -67,6 +64,24 @@ public class MokoCharacteristicHandler {
 
                     if (characteristicUuid.equals(OrderType.WRITE.getUuid())) {
                         mokoCharacteristicMap.put(OrderType.WRITE, new MokoCharacteristic(characteristic, OrderType.WRITE));
+                        continue;
+                    }
+                }
+            }
+            if(service.getUuid().toString().startsWith(SERVICE_UUID_DATA_PUSH)){
+                for (BluetoothGattCharacteristic characteristic : characteristics) {
+                    String characteristicUuid = characteristic.getUuid().toString();
+                    if (TextUtils.isEmpty(characteristicUuid)) {
+                        continue;
+                    }
+                    if (characteristicUuid.equals(OrderType.DataPushNOTIFY.getUuid())) {
+                        gatt.setCharacteristicNotification(characteristic, true);
+                        mokoCharacteristicMap.put(OrderType.DataPushNOTIFY, new MokoCharacteristic(characteristic, OrderType.DataPushNOTIFY));
+                        continue;
+                    }
+
+                    if (characteristicUuid.equals(OrderType.DataPushWRITE.getUuid())) {
+                        mokoCharacteristicMap.put(OrderType.DataPushWRITE, new MokoCharacteristic(characteristic, OrderType.DataPushWRITE));
                         continue;
                     }
                 }
