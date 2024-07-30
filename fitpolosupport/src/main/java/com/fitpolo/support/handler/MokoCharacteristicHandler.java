@@ -16,8 +16,9 @@ import java.util.List;
 public class MokoCharacteristicHandler {
     private static MokoCharacteristicHandler INSTANCE;
 
-    public static final String SERVICE_UUID_HEADER_OLD = "e49a23c0";
-    public static final String SERVICE_UUID_HEADER_NEW = "e49a23c0";
+    public static final String SERVICE_UUID_SET = "e49a23c0";
+    public static final String SERVICE_UUID_XOFF = "00009527";
+    public static final String SERVICE_UUID_DATA_PUSH = "e49a25c0";
 
     public HashMap<OrderType, MokoCharacteristic> mokoCharacteristicMap;
 
@@ -51,7 +52,7 @@ public class MokoCharacteristicHandler {
                 continue;
             }
             List<BluetoothGattCharacteristic> characteristics = service.getCharacteristics();
-            if (service.getUuid().toString().startsWith(SERVICE_UUID_HEADER_OLD)) {
+            if (service.getUuid().toString().startsWith(SERVICE_UUID_SET)) {
                 for (BluetoothGattCharacteristic characteristic : characteristics) {
                     String characteristicUuid = characteristic.getUuid().toString();
                     if (TextUtils.isEmpty(characteristicUuid)) {
@@ -63,6 +64,7 @@ public class MokoCharacteristicHandler {
                         mokoCharacteristicMap.put(OrderType.WRITE, new MokoCharacteristic(characteristic, OrderType.WRITE));
                         continue;
                     }
+
                     if (characteristicUuid.equals(OrderType.WRITE.getUuid())) {
                         mokoCharacteristicMap.put(OrderType.WRITE, new MokoCharacteristic(characteristic, OrderType.WRITE));
                         continue;
