@@ -29,6 +29,7 @@ import com.fitpolo.support.entity.BandAlarm;
 import com.fitpolo.support.entity.CustomScreen;
 import com.fitpolo.support.entity.DailySleep;
 import com.fitpolo.support.entity.DailyStep;
+import com.fitpolo.support.entity.FindDevice;
 import com.fitpolo.support.entity.HeartRate;
 import com.fitpolo.support.entity.OrderEnum;
 import com.fitpolo.support.entity.OrderTaskResponse;
@@ -42,6 +43,7 @@ import com.fitpolo.support.task.AllSleepIndexTask;
 import com.fitpolo.support.task.AllStepsTask;
 import com.fitpolo.support.task.AutoLightenTask;
 import com.fitpolo.support.task.BatteryDailyStepsCountTask;
+import com.fitpolo.support.task.FindDeviceTask;
 import com.fitpolo.support.task.FirmwareParamTask;
 import com.fitpolo.support.task.FirmwareVersionTask;
 import com.fitpolo.support.task.FunctionDisplayTask;
@@ -190,6 +192,8 @@ public class SendOrderActivity extends BaseActivity {
                         case getSleepHeartCount:
                             break;
                         case getAllSteps:
+                            LogModule.i("步数返回数据");
+
                             ArrayList<DailyStep> steps = MokoSupport.getInstance().getDailySteps();
                             if (steps == null || steps.isEmpty()) {
                                 return;
@@ -389,10 +393,10 @@ public class SendOrderActivity extends BaseActivity {
     }
 
     public void getAllSteps(View view) {
-        if (MokoSupport.getInstance().getDailyStepCount() == 0) {
-            Toast.makeText(this, "Get step count first", Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        if (MokoSupport.getInstance().getDailyStepCount() == 0) {
+//            Toast.makeText(this, "Get step count first", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
         MokoSupport.getInstance().sendOrder(new AllStepsTask(mService));
     }
 
@@ -474,8 +478,12 @@ public class SendOrderActivity extends BaseActivity {
         startActivity(new Intent(this, MessageNotificationActivity.class));
     }
 
-    public void findDevice(){
-        MokoSupport.getInstance().sendOrder(new ReadSettingTask(mService));
+    public void findDevice(View view){
+        LogModule.i("开始发送====");
+
+        FindDevice findDevice = new FindDevice();
+        findDevice.action = 23;
+        MokoSupport.getInstance().sendOrder(new FindDeviceTask(mService, findDevice));
     }
 
     private static final int REQUEST_CODE_FILE = 2;
