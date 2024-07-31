@@ -2,11 +2,15 @@ package com.fitpolo.support.handler;
 
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
+import android.os.Handler;
 import android.text.TextUtils;
 
+import com.fitpolo.support.MokoSupport;
 import com.fitpolo.support.entity.MokoCharacteristic;
 import com.fitpolo.support.entity.OrderType;
+import com.fitpolo.support.log.LogModule;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,12 +39,12 @@ public class MokoCharacteristicHandler {
         return INSTANCE;
     }
 
-    public HashMap<OrderType, MokoCharacteristic> getCharacteristics(BluetoothGatt gatt) {
+    public HashMap<OrderType, MokoCharacteristic> getCharacteristics(final BluetoothGatt gatt) {
         if (mokoCharacteristicMap != null && !mokoCharacteristicMap.isEmpty()) {
             mokoCharacteristicMap.clear();
         }
         List<BluetoothGattService> services = gatt.getServices();
-        for (BluetoothGattService service : services) {
+        for (final BluetoothGattService service : services) {
             String serviceUuid = service.getUuid().toString();
             if (TextUtils.isEmpty(serviceUuid)) {
                 continue;
@@ -48,7 +52,7 @@ public class MokoCharacteristicHandler {
             if (serviceUuid.startsWith("00001800") || serviceUuid.startsWith("00001801")) {
                 continue;
             }
-            List<BluetoothGattCharacteristic> characteristics = service.getCharacteristics();
+            final List<BluetoothGattCharacteristic> characteristics = service.getCharacteristics();
             if (service.getUuid().toString().startsWith(SERVICE_UUID_SET)) {
                 for (BluetoothGattCharacteristic characteristic : characteristics) {
                     String characteristicUuid = characteristic.getUuid().toString();
@@ -56,9 +60,11 @@ public class MokoCharacteristicHandler {
                         continue;
                     }
                     if (characteristicUuid.equals(OrderType.NOTIFY.getUuid())) {
-                        gatt.setCharacteristicNotification(characteristic, true);
+                        boolean success = gatt.setCharacteristicNotification(characteristic, true);
+                        LogModule.i("DATA_SET setCharacteristicNotification"+ success);
                         mokoCharacteristicMap.put(OrderType.NOTIFY, new MokoCharacteristic(characteristic, OrderType.NOTIFY));
                         mokoCharacteristicMap.put(OrderType.WRITE, new MokoCharacteristic(characteristic, OrderType.WRITE));
+                        MokoSupport.getInstance().setNotifyDesc(characteristic);
                         continue;
                     }
 
@@ -68,25 +74,33 @@ public class MokoCharacteristicHandler {
                     }
                 }
             }
-            if(service.getUuid().toString().startsWith(SERVICE_UUID_DATA_PUSH)){
-                for (BluetoothGattCharacteristic characteristic : characteristics) {
-                    String characteristicUuid = characteristic.getUuid().toString();
-                    if (TextUtils.isEmpty(characteristicUuid)) {
-                        continue;
-                    }
-                    if (characteristicUuid.equals(OrderType.DataPushNOTIFY.getUuid())) {
-                        gatt.setCharacteristicNotification(characteristic, true);
-                        mokoCharacteristicMap.put(OrderType.DataPushNOTIFY, new MokoCharacteristic(characteristic, OrderType.DataPushNOTIFY));
-                        mokoCharacteristicMap.put(OrderType.DataPushWRITE, new MokoCharacteristic(characteristic, OrderType.DataPushWRITE));
-                        continue;
-                    }
-
-                    if (characteristicUuid.equals(OrderType.DataPushWRITE.getUuid())) {
-                        mokoCharacteristicMap.put(OrderType.DataPushWRITE, new MokoCharacteristic(characteristic, OrderType.DataPushWRITE));
-                        continue;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // 这里是你想要延迟5秒后执行的代码
+                    if(service.getUuid().toString().startsWith(SERVICE_UUID_DATA_PUSH)){
+                        for (BluetoothGattCharacteristic characteristic : characteristics) {
+                            String characteristicUuid = characteristic.getUuid().toString();
+                            if (TextUtils.isEmpty(characteristicUuid)) {
+                                continue;
+                            }
+                            if (characteristicUuid.equals(OrderType.DataPushNOTIFY.getUuid())) {
+                                boolean success = gatt.setCharacteristicNotification(characteristic, true);
+                                LogModule.i("DATA_PUSH setCharacteristicNotification"+ success);
+                                MokoSupport.getInstance().setNotifyDesc(characteristic);
+                                mokoCharacteristicMap.put(OrderType.DataPushNOTIFY, new MokoCharacteristic(characteristic, OrderType.DataPushNOTIFY));
+                                mokoCharacteristicMap.put(OrderType.DataPushWRITE, new MokoCharacteristic(characteristic, OrderType.DataPushWRITE));
+                                continue;
+                            }
+                            if (characteristicUuid.equals(OrderType.DataPushWRITE.getUuid())) {
+                                mokoCharacteristicMap.put(OrderType.DataPushWRITE, new MokoCharacteristic(characteristic, OrderType.DataPushWRITE));
+                                continue;
+                            }
+                        }
                     }
                 }
-            }
+            }, 1000);
+
         }
         return mokoCharacteristicMap;
     }

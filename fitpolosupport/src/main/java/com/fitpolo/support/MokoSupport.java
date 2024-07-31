@@ -78,8 +78,8 @@ public class MokoSupport implements MokoResponseCallback {
     private Context mContext;
     private MokoConnStateCallback mMokoConnStateCallback;
     private HashMap<OrderType, MokoCharacteristic> mCharacteristicMap;
-    private static final UUID DESCRIPTOR_UUID_NOTIFY = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
-    private static final UUID SERVICE_UUID = UUID.fromString("000023c0-0000-1000-8000-00805f9b34fb");
+    public static final UUID DESCRIPTOR_UUID_NOTIFY = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
+    public static final UUID SERVICE_UUID = UUID.fromString("000023c0-0000-1000-8000-00805f9b34fb");
 
     ///////////////////////////////////////////////////////////////////////////
     // version
@@ -276,7 +276,9 @@ public class MokoSupport implements MokoResponseCallback {
             disConnectBle();
             return;
         }
+        LogModule.i("mCharacteristicMap : "+ mCharacteristicMap.toString());
         final MokoCharacteristic mokoCharacteristic = mCharacteristicMap.get(orderTask.orderType);
+        LogModule.i("mCharacteristicMap : "+ mokoCharacteristic.characteristic.getUuid().toString());
         if (mokoCharacteristic == null) {
             LogModule.i("executeTask : mokoCharacteristic is null");
             return;
@@ -302,6 +304,7 @@ public class MokoSupport implements MokoResponseCallback {
         }
         if (orderTask.response.responseType == OrderTask.RESPONSE_TYPE_NOTIFY) {
             sendNotifyOrder(orderTask, mokoCharacteristic);
+            timeoutHandler(orderTask);
         }
     }
 
@@ -632,21 +635,18 @@ public class MokoSupport implements MokoResponseCallback {
     // 发送可监听命令
     private void sendNotifyOrder(OrderTask orderTask, final MokoCharacteristic mokoCharacteristic) {
         LogModule.i("app set device NOTIFY : " + orderTask.orderType.getName());
-        mokoCharacteristic.characteristic.setValue(orderTask.assemble());
         mokoCharacteristic.characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
-//        final BluetoothGattDescriptor descriptor = mokoCharacteristic.characteristic.getDescriptor(DESCRIPTOR_UUID_NOTIFY);
-//        if (descriptor == null) {
-//            return;
-//        }
-//        if ((mokoCharacteristic.characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0) {
-//            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-//        } else if ((mokoCharacteristic.characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_INDICATE) != 0) {
-//            descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
-//        }
+        final BluetoothGattDescriptor descriptor = mokoCharacteristic.characteristic.getDescriptor(DESCRIPTOR_UUID_NOTIFY);
+        if (descriptor == null) {
+            return;
+        }
+        if ((mokoCharacteristic.characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0) {
+            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+        }
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                mBluetoothGatt.writeCharacteristic(mokoCharacteristic.characteristic);
+                mBluetoothGatt.writeDescriptor(descriptor);
             }
         });
     }
@@ -656,6 +656,7 @@ public class MokoSupport implements MokoResponseCallback {
         LogModule.i("app to device WRITE no response : " + orderTask.orderType.getName());
         LogModule.i(DigitalConver.bytesToHexString(orderTask.assemble()));
         mokoCharacteristic.characteristic.setValue(orderTask.assemble());
+        LogModule.i("app to device WRITE no response : " + mokoCharacteristic.characteristic.getUuid().toString());
         mokoCharacteristic.characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
         mHandler.post(new Runnable() {
             @Override
@@ -694,6 +695,12 @@ public class MokoSupport implements MokoResponseCallback {
                 mBluetoothGatt.writeCharacteristic(mokoCharacteristic.characteristic);
             }
         });
+    }
+
+    public void setNotifyDesc(BluetoothGattCharacteristic characteristic){
+        BluetoothGattDescriptor descriptor = characteristic.getDescriptor(MokoSupport.DESCRIPTOR_UUID_NOTIFY);
+        descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+        mBluetoothGatt.writeDescriptor(descriptor);
     }
 
     public interface IUpgradeDataListener {

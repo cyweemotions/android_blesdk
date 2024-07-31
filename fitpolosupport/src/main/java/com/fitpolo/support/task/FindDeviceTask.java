@@ -22,7 +22,7 @@ public class FindDeviceTask extends OrderTask{
     private byte[] orderData;
 
     public FindDeviceTask(MokoOrderTaskCallback callback, FindDevice findDevice) {
-        super(OrderType.WRITE, OrderEnum.findDevice, callback, OrderTask.RESPONSE_TYPE_NOTIFY);
+        super(OrderType.WRITE, OrderEnum.findDevice, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
         orderData = new byte[ORDERDATA_LENGTH];
         orderData[0] = (byte) MokoConstants.HEADER_READ_SEND;
         orderData[1] = (byte) 0x06;

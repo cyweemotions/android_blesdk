@@ -20,10 +20,6 @@ import java.util.ArrayList;
  */
 public class AllStepsTask extends OrderTask {
     private static final int ORDERDATA_LENGTH = 12;
-    // 获取数据
-    private static final int HEADER_GETDATA = 0x12;
-    // 获取记步数据
-    private static final int GET_DAILY_STEPS = 0x01;
 
     private byte[] orderData;
 
@@ -31,7 +27,7 @@ public class AllStepsTask extends OrderTask {
     private ArrayList<DailyStep> dailySteps;
 
     public AllStepsTask(MokoOrderTaskCallback callback) {
-        super(OrderType.DataPushNOTIFY, OrderEnum.getAllSteps, callback, OrderTask.RESPONSE_TYPE_NOTIFY);
+        super(OrderType.DataPushNOTIFY, OrderEnum.getAllSteps, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
         orderData = new byte[ORDERDATA_LENGTH];
         orderData[0] = (byte) MokoConstants.HEADER_READ_SEND;
         orderData[1] = (byte) 0x0A;
@@ -42,11 +38,10 @@ public class AllStepsTask extends OrderTask {
         orderData[6] = (byte) 0x07;
         orderData[7] = (byte) 0xE8;
         orderData[8] = (byte) 0x07;
-        orderData[9] = (byte) 0x1E;
+        orderData[9] = (byte) 0x1F;
         orderData[10] = (byte) 0xFF;
         orderData[11] = (byte) 0xFF;
-//        orderData[0] = (byte) HEADER_GETDATA;
-//        orderData[1] = (byte) GET_DAILY_STEPS;[255, 10, 3, 2, 5, 0, 7, 232, 7, 30, 255, 255]
+
     }
 
     @Override
