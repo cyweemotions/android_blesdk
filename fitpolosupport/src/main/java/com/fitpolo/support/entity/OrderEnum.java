@@ -45,6 +45,7 @@ public enum OrderEnum implements Serializable {
     setSnapchatNotify("设置Snapchat震动", 0),
     setLineNotify("设置Line震动", 0),
     openNotify("打开设备通知", 0),
+    findDevice("查找设备", 0x04),
 
     READ_ALARMS("读取闹钟", 0x01),
     READ_SIT_ALERT("读取久坐提醒", 0x02),

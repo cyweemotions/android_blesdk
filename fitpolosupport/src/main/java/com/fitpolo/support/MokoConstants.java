@@ -7,7 +7,7 @@ package com.fitpolo.support;
  */
 public class MokoConstants {
     // 读取发送头
-    public static final int HEADER_READ_SEND = 0xB0;
+    public static final int HEADER_READ_SEND = 0xFF;
     // 读取接收头
     public static final int HEADER_READ_GET = 0xB1;
     // 设置发送头
