@@ -77,6 +77,7 @@ public class MokoCharacteristicHandler {
                     if (characteristicUuid.equals(OrderType.DataPushNOTIFY.getUuid())) {
                         gatt.setCharacteristicNotification(characteristic, true);
                         mokoCharacteristicMap.put(OrderType.DataPushNOTIFY, new MokoCharacteristic(characteristic, OrderType.DataPushNOTIFY));
+                        mokoCharacteristicMap.put(OrderType.DataPushWRITE, new MokoCharacteristic(characteristic, OrderType.DataPushWRITE));
                         continue;
                     }
 
