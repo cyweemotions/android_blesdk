@@ -1,5 +1,6 @@
 package com.fitpolo.support.task;
 
+import com.fitpolo.support.MokoConstants;
 import com.fitpolo.support.MokoSupport;
 import com.fitpolo.support.callback.MokoOrderTaskCallback;
 import com.fitpolo.support.entity.DailyStep;
@@ -18,9 +19,9 @@ import java.util.ArrayList;
  * @ClassPath com.fitpolo.support.task.AllStepsTask
  */
 public class AllStepsTask extends OrderTask {
-    private static final int ORDERDATA_LENGTH = 2;
+    private static final int ORDERDATA_LENGTH = 12;
     // 获取数据
-    private static final int HEADER_GETDATA = 0x16;
+    private static final int HEADER_GETDATA = 0x12;
     // 获取记步数据
     private static final int GET_DAILY_STEPS = 0x01;
 
@@ -30,10 +31,22 @@ public class AllStepsTask extends OrderTask {
     private ArrayList<DailyStep> dailySteps;
 
     public AllStepsTask(MokoOrderTaskCallback callback) {
-        super(OrderType.WRITE, OrderEnum.getAllSteps, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
+        super(OrderType.DataPushNOTIFY, OrderEnum.getAllSteps, callback, OrderTask.RESPONSE_TYPE_NOTIFY);
         orderData = new byte[ORDERDATA_LENGTH];
-        orderData[0] = (byte) HEADER_GETDATA;
-        orderData[1] = (byte) GET_DAILY_STEPS;
+        orderData[0] = (byte) MokoConstants.HEADER_READ_SEND;
+        orderData[1] = (byte) 0x0A;
+        orderData[2] = (byte) 0x03;
+        orderData[3] = (byte) 0x02;
+        orderData[4] = (byte) 0x05;
+        orderData[5] = (byte) 0x00;
+        orderData[6] = (byte) 0x07;
+        orderData[7] = (byte) 0xE8;
+        orderData[8] = (byte) 0x07;
+        orderData[9] = (byte) 0x1E;
+        orderData[10] = (byte) 0xFF;
+        orderData[11] = (byte) 0xFF;
+//        orderData[0] = (byte) HEADER_GETDATA;
+//        orderData[1] = (byte) GET_DAILY_STEPS;[255, 10, 3, 2, 5, 0, 7, 232, 7, 30, 255, 255]
     }
 
     @Override
@@ -43,10 +56,10 @@ public class AllStepsTask extends OrderTask {
 
     @Override
     public void parseValue(byte[] value) {
+        LogModule.i(order.getOrderName() + "成功");
         if (order.getOrderHeader() != DigitalConver.byte2Int(value[0])) {
             return;
         }
-        LogModule.i(order.getOrderName() + "成功");
         stepCount = MokoSupport.getInstance().getDailyStepCount();
         dailySteps = MokoSupport.getInstance().getDailySteps();
         if (stepCount > 0) {
