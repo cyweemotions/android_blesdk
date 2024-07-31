@@ -632,20 +632,21 @@ public class MokoSupport implements MokoResponseCallback {
     // 发送可监听命令
     private void sendNotifyOrder(OrderTask orderTask, final MokoCharacteristic mokoCharacteristic) {
         LogModule.i("app set device NOTIFY : " + orderTask.orderType.getName());
+        mokoCharacteristic.characteristic.setValue(orderTask.assemble());
         mokoCharacteristic.characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
-        final BluetoothGattDescriptor descriptor = mokoCharacteristic.characteristic.getDescriptor(DESCRIPTOR_UUID_NOTIFY);
-        if (descriptor == null) {
-            return;
-        }
-        if ((mokoCharacteristic.characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0) {
-            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-        } else if ((mokoCharacteristic.characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_INDICATE) != 0) {
-            descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
-        }
+//        final BluetoothGattDescriptor descriptor = mokoCharacteristic.characteristic.getDescriptor(DESCRIPTOR_UUID_NOTIFY);
+//        if (descriptor == null) {
+//            return;
+//        }
+//        if ((mokoCharacteristic.characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0) {
+//            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+//        } else if ((mokoCharacteristic.characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_INDICATE) != 0) {
+//            descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
+//        }
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                mBluetoothGatt.writeDescriptor(descriptor);
+                mBluetoothGatt.writeCharacteristic(mokoCharacteristic.characteristic);
             }
         });
     }
