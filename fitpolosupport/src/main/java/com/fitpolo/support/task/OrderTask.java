@@ -14,7 +14,7 @@ import com.fitpolo.support.log.LogModule;
  * @ClassPath com.fitpolo.support.task.OrderTask
  */
 public abstract class OrderTask {
-    public static final long DEFAULT_DELAY_TIME = 3000;
+    public static final long DEFAULT_DELAY_TIME = 1500;
     public static final int RESPONSE_TYPE_NOTIFY = 2;
     public static final int RESPONSE_TYPE_WRITE_NO_RESPONSE = 3;
     public static final int ORDER_STATUS_SUCCESS = 1;
@@ -70,6 +70,7 @@ public abstract class OrderTask {
         @Override
         public void run() {
             if (orderStatus != OrderTask.ORDER_STATUS_SUCCESS) {
+                LogModule.i(orderStatus + "----超时----");
                 if (timeoutPreTask()) {
                     MokoSupport.getInstance().pollTask();
                     callback.onOrderTimeout(response);

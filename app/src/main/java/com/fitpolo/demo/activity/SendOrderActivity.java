@@ -40,10 +40,10 @@ import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.AllAlarmTask;
 import com.fitpolo.support.task.AllHeartRateTask;
 import com.fitpolo.support.task.AllSleepIndexTask;
-import com.fitpolo.support.task.AllStepsTask;
+import com.fitpolo.support.task.dataPushTask.AllStepsTask;
 import com.fitpolo.support.task.AutoLightenTask;
 import com.fitpolo.support.task.BatteryDailyStepsCountTask;
-import com.fitpolo.support.task.FindDeviceTask;
+import com.fitpolo.support.task.funcTask.FindDeviceTask;
 import com.fitpolo.support.task.FirmwareParamTask;
 import com.fitpolo.support.task.FirmwareVersionTask;
 import com.fitpolo.support.task.FunctionDisplayTask;
@@ -482,7 +482,7 @@ public class SendOrderActivity extends BaseActivity {
         LogModule.i("开始发送====");
 
         FindDevice findDevice = new FindDevice();
-        findDevice.action = 23;
+        findDevice.action = 1;
         MokoSupport.getInstance().sendOrder(new FindDeviceTask(mService, findDevice));
     }
 

@@ -189,7 +189,7 @@ public class MokoSupport implements MokoResponseCallback {
             return;
         }
         final MokoConnStateHandler gattCallback = MokoConnStateHandler.getInstance();
-        gattCallback.setMokoResponseCallback(this);
+        gattCallback.setMokoResponseCallback(MokoSupport.this);
         gattCallback.setMessageHandler(mHandler);
         mDeviceAddress = address;
         final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
@@ -303,6 +303,7 @@ public class MokoSupport implements MokoResponseCallback {
             timeoutHandler(orderTask);
         }
         if (orderTask.response.responseType == OrderTask.RESPONSE_TYPE_NOTIFY) {
+//            LogModule.i("order==RESPONSE_TYPE_NOTIFY=" + orderTask.order);
             sendNotifyOrder(orderTask, mokoCharacteristic);
             timeoutHandler(orderTask);
         }
@@ -391,10 +392,13 @@ public class MokoSupport implements MokoResponseCallback {
 
     @Override
     public void onCharacteristicChanged(BluetoothGattCharacteristic characteristic, byte[] value) {
+        LogModule.i("onCharacteristicChanged====== : " + value.toString());
         // 非延时应答
         OrderTask orderTask = mQueue.peek();
         if (value != null && value.length > 0 && orderTask != null) {
             OrderEnum orderEnum = orderTask.getOrder();
+            LogModule.i("orderEnum====== : " + orderEnum.toString());
+
             switch (orderEnum) {
                 case getAllSleepIndex:
                     AllSleepIndexTask sleepIndexTask = (AllSleepIndexTask) orderTask;
