@@ -37,22 +37,24 @@ import com.fitpolo.support.entity.SitAlert;
 import com.fitpolo.support.entity.UserInfo;
 import com.fitpolo.support.handler.UpgradeHandler;
 import com.fitpolo.support.log.LogModule;
-import com.fitpolo.support.task.AllAlarmTask;
-import com.fitpolo.support.task.AllHeartRateTask;
-import com.fitpolo.support.task.AllSleepIndexTask;
+import com.fitpolo.support.task.funcTask.TimeAlignTask;
+import com.fitpolo.support.task.funcTask.UnbindDeviceTask;
+import com.fitpolo.support.task.setTask.AllAlarmTask;
+import com.fitpolo.support.task.dataPushTask.AllHeartRateTask;
+import com.fitpolo.support.task.dataPushTask.AllSleepIndexTask;
 import com.fitpolo.support.task.dataPushTask.AllStepsTask;
-import com.fitpolo.support.task.AutoLightenTask;
-import com.fitpolo.support.task.BatteryDailyStepsCountTask;
+import com.fitpolo.support.task.setTask.AutoLightenTask;
+import com.fitpolo.support.task.funcTask.GetBatteryTask;
 import com.fitpolo.support.task.funcTask.FindDeviceTask;
-import com.fitpolo.support.task.FirmwareParamTask;
-import com.fitpolo.support.task.FirmwareVersionTask;
+import com.fitpolo.support.task.funcTask.FirmwareParamTask;
+import com.fitpolo.support.task.funcTask.FirmwareVersionTask;
 import com.fitpolo.support.task.FunctionDisplayTask;
 import com.fitpolo.support.task.HeartRateIntervalTask;
 import com.fitpolo.support.task.InnerVersionTask;
 import com.fitpolo.support.task.LastScreenTask;
-import com.fitpolo.support.task.LastestHeartRateTask;
-import com.fitpolo.support.task.LastestSleepIndexTask;
-import com.fitpolo.support.task.LastestStepsTask;
+import com.fitpolo.support.task.dataPushTask.LastestHeartRateTask;
+import com.fitpolo.support.task.dataPushTask.LastestSleepIndexTask;
+import com.fitpolo.support.task.dataPushTask.LastestStepsTask;
 import com.fitpolo.support.task.NotifyPhoneTask;
 import com.fitpolo.support.task.NotifySmsTask;
 import com.fitpolo.support.task.OrderTask;
@@ -60,12 +62,12 @@ import com.fitpolo.support.task.ReadAlarmsTask;
 import com.fitpolo.support.task.ReadSettingTask;
 import com.fitpolo.support.task.ReadSitAlertTask;
 import com.fitpolo.support.task.ShakeBandTask;
-import com.fitpolo.support.task.SitLongTimeAlertTask;
+import com.fitpolo.support.task.setTask.SitLongTimeAlertTask;
 import com.fitpolo.support.task.SleepHeartCountTask;
-import com.fitpolo.support.task.SystemTimeTask;
+import com.fitpolo.support.task.setTask.SystemTimeTask;
 import com.fitpolo.support.task.TimeFormatTask;
 import com.fitpolo.support.task.UnitTypeTask;
-import com.fitpolo.support.task.UserInfoTask;
+import com.fitpolo.support.task.setTask.UserInfoTask;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -186,7 +188,7 @@ public class SendOrderActivity extends BaseActivity {
                         case getFirmwareVersion:
                             LogModule.i("firmware version：" + MokoSupport.versionCodeShow);
                             break;
-                        case getBatteryDailyStepCount:
+                        case getBattery:
                             LogModule.i("battery：" + MokoSupport.getInstance().getBatteryQuantity());
                             break;
                         case getSleepHeartCount:
@@ -384,10 +386,6 @@ public class SendOrderActivity extends BaseActivity {
         MokoSupport.getInstance().sendOrder(new FirmwareVersionTask(mService));
     }
 
-    public void getBatteryDailyStepCount(View view) {
-        MokoSupport.getInstance().sendOrder(new BatteryDailyStepsCountTask(mService));
-    }
-
     public void getSleepHeartCount(View view) {
         MokoSupport.getInstance().sendOrder(new SleepHeartCountTask(mService));
     }
@@ -478,12 +476,26 @@ public class SendOrderActivity extends BaseActivity {
         startActivity(new Intent(this, MessageNotificationActivity.class));
     }
 
+    public void TimeAlign(View view){
+        LogModule.i("开始校准时间====");
+
+        MokoSupport.getInstance().sendOrder(new TimeAlignTask(mService));
+    }
+    public void getBattery(View view) {
+        MokoSupport.getInstance().sendOrder(new GetBatteryTask(mService));
+    }
+
     public void findDevice(View view){
-        LogModule.i("开始发送====");
+        LogModule.i("开始查找设备====");
 
         FindDevice findDevice = new FindDevice();
         findDevice.action = 1;
         MokoSupport.getInstance().sendOrder(new FindDeviceTask(mService, findDevice));
+    }
+    public void unbindDevice(View view){
+        LogModule.i("开始解绑设备====");
+
+        MokoSupport.getInstance().sendOrder(new UnbindDeviceTask(mService));
     }
 
     private static final int REQUEST_CODE_FILE = 2;

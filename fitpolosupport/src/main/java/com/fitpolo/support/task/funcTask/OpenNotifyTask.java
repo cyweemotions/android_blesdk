@@ -1,8 +1,9 @@
-package com.fitpolo.support.task;
+package com.fitpolo.support.task.funcTask;
 
 import com.fitpolo.support.callback.MokoOrderTaskCallback;
 import com.fitpolo.support.entity.OrderEnum;
 import com.fitpolo.support.entity.OrderType;
+import com.fitpolo.support.task.OrderTask;
 
 
 public class OpenNotifyTask extends OrderTask {

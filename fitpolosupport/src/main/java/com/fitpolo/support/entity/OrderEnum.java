@@ -21,7 +21,6 @@ public enum OrderEnum implements Serializable {
     setHeartRateInterval("设置心率时间间隔", 0x17),
     setFunctionDisplay("设置功能显示", 0x19),
     getFirmwareVersion("获取固件版本", 0x90),
-    getBatteryDailyStepCount("获取电量和记步总数", 0x91),
     getSleepHeartCount("获取睡眠和心率总数", 0x12),
     getAllSteps("获取记步数据", 0x92),
     getAllSleepIndex("获取睡眠index", 0x93),
@@ -45,7 +44,10 @@ public enum OrderEnum implements Serializable {
     setSnapchatNotify("设置Snapchat震动", 0),
     setLineNotify("设置Line震动", 0),
     openNotify("打开设备通知", 0),
+    syncTime("时间校准", 0x01),
+    getBattery("获取电量", 0x03),
     findDevice("查找设备", 0x04),
+    unbindDevice("解绑设备", 0x06),
 
     READ_ALARMS("读取闹钟", 0x01),
     READ_SIT_ALERT("读取久坐提醒", 0x02),

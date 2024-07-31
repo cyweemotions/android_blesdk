@@ -16,20 +16,38 @@
             <TableRow>
 
                 <Button
+                    android:id="@+id/btn_sync_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="TimeAlign"
+                    android:tag="时间校准"
+                    android:text="时间校准" />
+                <Button
+                    android:id="@+id/btn_get_battery"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="getBattery"
+                    android:tag="电量获取"
+                    android:text="电量获取" />
+
+            </TableRow>
+            <TableRow>
+
+                <Button
                     android:id="@+id/btn_find_device"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="findDevice"
-                    android:tag="查找设备"
-                    android:text="findDevice" />
+                    android:tag="查找手表"
+                    android:text="查找手表" />
 
                 <Button
-                    android:id="@+id/btn_get_press"
+                    android:id="@+id/btn_unbind_device"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="setSystemTime"
-                    android:tag="获取压力"
-                    android:text="findDevice" />
+                    android:onClick="unbindDevice"
+                    android:tag="解绑手表"
+                    android:text="解绑手表" />
             </TableRow>
             <TableRow>
 
