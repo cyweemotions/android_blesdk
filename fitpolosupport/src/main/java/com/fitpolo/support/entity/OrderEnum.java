@@ -11,7 +11,6 @@ import java.io.Serializable;
 public enum OrderEnum implements Serializable {
     getInnerVersion("获取内部版本", 0x09),
     setSystemTime("设置手环时间", 0x11),
-    setUserInfo("设置用户信息", 0x12),
     setBandAlarm("设置闹钟数据", 0x26),
     setUnitType("设置单位类型", 0x23),
     setTimeFormat("设置显示时间格式", 0x24),
@@ -44,6 +43,9 @@ public enum OrderEnum implements Serializable {
     setSnapchatNotify("设置Snapchat震动", 0),
     setLineNotify("设置Line震动", 0),
     openNotify("打开设备通知", 0),
+
+
+    /********************* 功能类型 *********************/
     syncTime("时间校准", 0x01),
     setSync("设置同步", 0x02),
     getBattery("获取电量", 0x03),
@@ -57,6 +59,10 @@ public enum OrderEnum implements Serializable {
     positionGPS("定位GPS", 0x0b),
     motionControl("运动控制", 0x0c),
     queryInfo("查询信息", 0xFF),
+    
+    /********************* 设置类型 *********************/
+    setUserInfo("设置用户信息", 0x01),
+
 
 
     READ_ALARMS("读取闹钟", 0x01),

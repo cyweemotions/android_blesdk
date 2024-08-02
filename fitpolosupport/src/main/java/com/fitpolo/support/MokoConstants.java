@@ -23,6 +23,19 @@ public class MokoConstants {
     // 心率接收头
     public static final int HEADER_HEARTRATE_GET = 0xB7;
 
+    ///蓝牙设置SETTING
+     public static final int Setting = 0x00;
+    ///蓝牙获取设置SETTING
+     public static final int GetSetting = 0x01;
+    ///蓝牙功能设置
+     public static final int Function = 0x02;
+    ///数据交互类型
+     public static final int DataNotify = 0x03;
+    ///设备鉴权
+     public static final int DeviceAuth = 0x04;
+    ///数据交互类型
+     public static final int DailPush = 0x05;
+
     // 发现状态
     public static final String ACTION_DISCOVER_SUCCESS = "com.moko.fitpolodemo.ACTION_DISCOVER_SUCCESS";
     public static final String ACTION_DISCOVER_TIMEOUT = "com.moko.fitpolodemo.ACTION_DISCOVER_TIMEOUT";

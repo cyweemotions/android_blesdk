@@ -138,6 +138,14 @@
                     android:onClick="queryInfo"
                     android:tag="查询绑定信息"
                     android:text="查询绑定信息" />
+                <Button
+                    android:id="@+id/btn_user_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="setUserInfo"
+                    android:tag="设置个人数据"
+                    android:text="setUserInfo" />
+
             </TableRow>
 
             <TableRow>
@@ -160,14 +168,6 @@
             </TableRow>
 
             <TableRow>
-
-                <Button
-                    android:id="@+id/btn_user_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:onClick="setUserInfo"
-                    android:tag="设置个人数据"
-                    android:text="setUserInfo" />
 
                 <Button
                     android:id="@+id/btn_band_alarm"

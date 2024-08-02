@@ -55,7 +55,6 @@ import com.fitpolo.support.task.setTask.AutoLightenTask;
 import com.fitpolo.support.task.funcTask.GetBatteryTask;
 import com.fitpolo.support.task.funcTask.FindDeviceTask;
 import com.fitpolo.support.task.funcTask.FirmwareParamTask;
-import com.fitpolo.support.task.funcTask.FirmwareVersionTask;
 import com.fitpolo.support.task.FunctionDisplayTask;
 import com.fitpolo.support.task.HeartRateIntervalTask;
 import com.fitpolo.support.task.InnerVersionTask;
@@ -343,11 +342,13 @@ public class SendOrderActivity extends BaseActivity {
 
     public void setUserInfo(View view) {
         UserInfo userInfo = new UserInfo();
-        userInfo.age = 23;
-        userInfo.gender = 0;
+        userInfo.name = "小明";
+        userInfo.male = 0;
+        userInfo.birth = 20001109;
         userInfo.height = 170;
-        userInfo.weight = 80;
-        userInfo.stepExtent = (int) Math.floor(userInfo.height * 0.45);
+        userInfo.weight = 60;
+        userInfo.hand = 0;
+        userInfo.MHR = 200;
         MokoSupport.getInstance().sendOrder(new UserInfoTask(mService, userInfo));
     }
 
@@ -390,9 +391,6 @@ public class SendOrderActivity extends BaseActivity {
         MokoSupport.getInstance().sendOrder(new FunctionDisplayTask(mService, customScreen));
     }
 
-    public void getFirmwareVersion(View view) {
-        MokoSupport.getInstance().sendOrder(new FirmwareVersionTask(mService));
-    }
 
     public void getSleepHeartCount(View view) {
         MokoSupport.getInstance().sendOrder(new SleepHeartCountTask(mService));
@@ -420,14 +418,6 @@ public class SendOrderActivity extends BaseActivity {
             return;
         }
         MokoSupport.getInstance().sendOrder(new AllHeartRateTask(mService));
-    }
-
-    public void sendMultiOrders(View view) {
-        SystemTimeTask systemTimeTask = new SystemTimeTask(mService);
-        LastScreenTask lastShowTask = new LastScreenTask(mService, 0);
-        AutoLightenTask autoLightenTask = new AutoLightenTask(mService, 1);
-        FirmwareVersionTask firmwareVersionTask = new FirmwareVersionTask(mService);
-        MokoSupport.getInstance().sendOrder(systemTimeTask, lastShowTask, autoLightenTask, firmwareVersionTask);
     }
 
     public void shakeBand(View view) {
