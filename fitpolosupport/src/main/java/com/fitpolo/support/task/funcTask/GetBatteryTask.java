@@ -10,10 +10,7 @@ import com.fitpolo.support.task.OrderTask;
 import com.fitpolo.support.utils.DigitalConver;
 
 /**
- * @Date 2024/7/31
- * @Author luoming
- * @Description 获取电量
- * @ClassPath com.fitpolo.support.task.GetBatteryTask
+ * 获取电量
  */
 public class GetBatteryTask extends OrderTask {
     private static final int ORDERDATA_LENGTH = 8;
@@ -43,14 +40,14 @@ public class GetBatteryTask extends OrderTask {
     @Override
     public void parseValue(byte[] value) {
         LogModule.i(order.getOrderName() + "成功");
-        LogModule.i("数据返回"+value.toString());
-        if (order.getOrderHeader() != DigitalConver.byte2Int(value[0])) {
-            return;
-        }
+        LogModule.i("数据返回"+DigitalConver.bytesToHexString(value));
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
-        int batteryQuantity = DigitalConver.byte2Int(value[3]);
+        int batteryQuantity = DigitalConver.byte2Int(value[5]);
         MokoSupport.getInstance().setBatteryQuantity(batteryQuantity);
         LogModule.i("电池电量：" + batteryQuantity);
+        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) {
+            return;
+        }
         MokoSupport.getInstance().pollTask();
         callback.onOrderResult(response);
         MokoSupport.getInstance().executeTask(callback);

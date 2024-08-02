@@ -35,8 +35,16 @@ import com.fitpolo.support.entity.OrderEnum;
 import com.fitpolo.support.entity.OrderTaskResponse;
 import com.fitpolo.support.entity.SitAlert;
 import com.fitpolo.support.entity.UserInfo;
+import com.fitpolo.support.entity.funcEntity.MotionControl;
 import com.fitpolo.support.handler.UpgradeHandler;
 import com.fitpolo.support.log.LogModule;
+import com.fitpolo.support.task.funcTask.DeviceInfoTask;
+import com.fitpolo.support.task.funcTask.LanguageSupportTask;
+import com.fitpolo.support.task.funcTask.MessageNotifyTask;
+import com.fitpolo.support.task.funcTask.MotionControlTask;
+import com.fitpolo.support.task.funcTask.PositionGPSTask;
+import com.fitpolo.support.task.funcTask.RemotePhotoTask;
+import com.fitpolo.support.task.funcTask.QueryInfoTask;
 import com.fitpolo.support.task.funcTask.TimeAlignTask;
 import com.fitpolo.support.task.funcTask.UnbindDeviceTask;
 import com.fitpolo.support.task.setTask.AllAlarmTask;
@@ -492,10 +500,77 @@ public class SendOrderActivity extends BaseActivity {
         findDevice.action = 1;
         MokoSupport.getInstance().sendOrder(new FindDeviceTask(mService, findDevice));
     }
+
     public void unbindDevice(View view){
         LogModule.i("开始解绑设备====");
 
         MokoSupport.getInstance().sendOrder(new UnbindDeviceTask(mService));
+    }
+
+    public void languageSupport(View view){
+        LogModule.i("开始语言支持====");
+
+        MokoSupport.getInstance().sendOrder(new LanguageSupportTask(mService));
+    }
+
+    public void deviceInfo(View view){
+        LogModule.i("开始设备信息====");
+
+        MokoSupport.getInstance().sendOrder(new DeviceInfoTask(mService));
+    }
+
+    public void remotePhoto(View view){
+        LogModule.i("开始远程拍照====");
+
+        MokoSupport.getInstance().sendOrder(new RemotePhotoTask(mService));
+    }
+
+    public void messageNotify(View view){
+        LogModule.i("开始消息通知====");
+
+        MokoSupport.getInstance().sendOrder(new MessageNotifyTask(mService));
+    }
+
+    public void positionGPS(View view){
+        LogModule.i("开始定位GPS====");
+
+        MokoSupport.getInstance().sendOrder(new PositionGPSTask(mService));
+    }
+
+    public void motionControl(View view){
+        LogModule.i("开始运动控制====");
+        MotionControl motionControl = new MotionControl();
+        motionControl.type = 1;
+        motionControl.action = 1;
+        MokoSupport.getInstance().sendOrder(new MotionControlTask(mService, motionControl));
+    }
+
+    public void pauseMotion(View view){
+        LogModule.i("开始暂停运动====");
+        MotionControl motionControl = new MotionControl();
+        motionControl.type = 1;
+        motionControl.action = 3;
+        MokoSupport.getInstance().sendOrder(new MotionControlTask(mService, motionControl));
+    }
+    public void resumeMotion(View view){
+        LogModule.i("开始继续运动====");
+        MotionControl motionControl = new MotionControl();
+        motionControl.type = 1;
+        motionControl.action = 4;
+        MokoSupport.getInstance().sendOrder(new MotionControlTask(mService, motionControl));
+    }
+
+    public void stopMotion(View view){
+        LogModule.i("开始停止运动====");
+        MotionControl motionControl = new MotionControl();
+        motionControl.type = 1;
+        motionControl.action = 5;
+        MokoSupport.getInstance().sendOrder(new MotionControlTask(mService, motionControl));
+    }
+    public void queryInfo(View view){
+        LogModule.i("开始查询信息====");
+
+        MokoSupport.getInstance().sendOrder(new QueryInfoTask(mService));
     }
 
     private static final int REQUEST_CODE_FILE = 2;

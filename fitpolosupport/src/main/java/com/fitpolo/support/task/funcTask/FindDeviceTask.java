@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 
+/**
+ * 查找设备
+ */
 public class FindDeviceTask extends OrderTask {
 
     private static final int ORDERDATA_LENGTH = 8;

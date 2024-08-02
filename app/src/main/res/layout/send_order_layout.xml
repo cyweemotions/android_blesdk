@@ -49,6 +49,97 @@
                     android:tag="解绑手表"
                     android:text="解绑手表" />
             </TableRow>
+
+            <TableRow>
+                <Button
+                    android:id="@+id/btn_language"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="languageSupport"
+                    android:tag="设置语言"
+                    android:text="语言支持" />
+
+                <Button
+                    android:id="@+id/btn_device_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="deviceInfo"
+                    android:tag="设备信息"
+                    android:text="设备信息" />
+            </TableRow>
+
+            <TableRow>
+                <Button
+                    android:id="@+id/btn_remote_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="remotePhoto"
+                    android:tag="远程拍照"
+                    android:text="远程拍照" />
+
+                <Button
+                    android:id="@+id/btn_message_notify"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="messageNotify"
+                    android:tag="消息通知"
+                    android:text="消息通知" />
+            </TableRow>
+
+            <TableRow>
+                <Button
+                    android:id="@+id/btn_GPS"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="positionGPS"
+                    android:tag="定位GPS"
+                    android:text="定位GPS" />
+
+            </TableRow>
+            <TableRow>
+                <Button
+                    android:id="@+id/btn_motion_control"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="motionControl"
+                    android:tag="运动控制"
+                    android:text="运动控制" />
+                <Button
+                    android:id="@+id/btn_pause_motion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="pauseMotion"
+                    android:tag="暂停运动"
+                    android:text="暂停运动" />
+            </TableRow>
+
+            <TableRow>
+                <Button
+                    android:id="@+id/btn_resume_motion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="resumeMotion"
+                    android:tag="继续运动"
+                    android:text="继续运动" />
+
+                <Button
+                    android:id="@+id/btn_stop_motion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="stopMotion"
+                    android:tag="停止运动"
+                    android:text="停止运动" />
+            </TableRow>
+            <TableRow>
+                <Button
+                    android:id="@+id/btn_search_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="queryInfo"
+                    android:tag="查询绑定信息"
+                    android:text="查询绑定信息" />
+            </TableRow>
+
             <TableRow>
 
                 <Button
