@@ -1,5 +1,13 @@
 package com.fitpolo.support.utils;
 
+import com.google.gson.Gson;
+
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @Date 2017/5/15
  * @Author wenzheng.liu
@@ -167,5 +175,16 @@ public class DigitalConver {
             }
         }
         return data;
+    }
+    public static byte[] mergeBitArrays(byte[] array1, byte[] array2) {
+        // 计算合并后数组的长度
+        int totalLength = array1.length + array2.length;
+        // 创建一个新的数组来存储合并后的结果
+        byte[] mergedArray = new byte[totalLength];
+        // 复制第一个数组
+        System.arraycopy(array1, 0, mergedArray, 0, array1.length);
+        // 复制第二个数组到合并数组的末尾
+        System.arraycopy(array2, 0, mergedArray, array1.length, array2.length);
+        return mergedArray;
     }
 }

@@ -1,5 +1,6 @@
 package com.fitpolo.support.task.setTask;
 
+import com.fitpolo.support.MokoConstants;
 import com.fitpolo.support.MokoSupport;
 import com.fitpolo.support.callback.MokoOrderTaskCallback;
 import com.fitpolo.support.entity.OrderEnum;
@@ -9,6 +10,8 @@ import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.OrderTask;
 import com.fitpolo.support.utils.DigitalConver;
 
+import java.util.Arrays;
+
 /**
  * @Date 2017/5/11
  * @Author wenzheng.liu
@@ -17,20 +20,29 @@ import com.fitpolo.support.utils.DigitalConver;
  */
 public class UserInfoTask extends OrderTask {
     private static final int ORDERDATA_LENGTH = 6;
-    // 设置个人信息
-    private static final int HEADER_SET_USERINFO = 0x12;
-
     private byte[] orderData;
 
     public UserInfoTask(MokoOrderTaskCallback callback, UserInfo userInfo) {
         super(OrderType.WRITE, OrderEnum.setUserInfo, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
-        orderData = new byte[ORDERDATA_LENGTH];
-        orderData[0] = (byte) HEADER_SET_USERINFO;
-        orderData[1] = (byte) userInfo.weight;
-        orderData[2] = (byte) userInfo.height;
-        orderData[3] = (byte) userInfo.age;
-        orderData[4] = (byte) userInfo.gender;
-        orderData[5] = (byte) userInfo.stepExtent;
+        String userInfoStr = userInfo.toJson();
+        LogModule.i("userinfo数据"+userInfoStr);
+        String hexString = DigitalConver.string2Hex(userInfoStr);
+        byte[] dataBytes = DigitalConver.hex2bytes(hexString);
+//        LogModule.i(hexString);
+//        LogModule.i(Arrays.toString(dataBytes));
+        byte[] array1 = new byte[]{
+            (byte) MokoConstants.HEADER_READ_SEND,
+            (byte) (5 + dataBytes.length),
+            (byte) MokoConstants.Setting,
+            (byte) order.getOrderHeader(),
+            (byte) dataBytes.length,
+        };
+        byte[] array2 = DigitalConver.mergeBitArrays(array1, dataBytes);
+        byte[] array3 = new byte[]{
+            (byte) 0xFF,
+            (byte) 0xFF,
+        };
+        orderData = DigitalConver.mergeBitArrays(array2, array3);
     }
 
     @Override
