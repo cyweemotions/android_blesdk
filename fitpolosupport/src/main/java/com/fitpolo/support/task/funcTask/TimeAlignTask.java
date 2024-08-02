@@ -22,21 +22,22 @@ public class TimeAlignTask extends OrderTask {
 
     public TimeAlignTask(MokoOrderTaskCallback callback) {
         super(OrderType.WRITE, OrderEnum.syncTime, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
-        orderData = new byte[ORDERDATA_LENGTH];
-        orderData[0] = (byte) MokoConstants.HEADER_READ_SEND;
-        orderData[1] = (byte) 0x0C;
-        orderData[2] = (byte) 0x02;
-        orderData[3] = (byte) order.getOrderHeader();
-        orderData[4] = (byte) 0x07;
-        orderData[5] = (byte) 0x18;
-        orderData[6] = (byte) 0x07;
-        orderData[7] = (byte) 0x1F;
-        orderData[8] = (byte) 0x12;
-        orderData[9] = (byte) 0x06;
-        orderData[10] = (byte) 0x05;
-        orderData[11] = (byte) 0x03;
-        orderData[12] = (byte) 0xFF;
-        orderData[13] = (byte) 0xFF;
+        orderData = new byte[]{
+            (byte) MokoConstants.HEADER_READ_SEND,
+            (byte) 0x0C,
+            (byte) MokoConstants.Function,
+            (byte) order.getOrderHeader(),
+            (byte) 0x07,
+            (byte) 0x18,
+            (byte) 0x07,
+            (byte) 0x1F,
+            (byte) 0x12,
+            (byte) 0x06,
+            (byte) 0x05,
+            (byte) 0x03,
+            (byte) 0xFF,
+            (byte) 0xFF,
+        };
 //        [255, 12, 2, 1, 7, 24, 7, 31, 18, 6, 5, 3, 255, 255]
     }
 

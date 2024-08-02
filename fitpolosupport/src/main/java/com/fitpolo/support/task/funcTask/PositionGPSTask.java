@@ -25,7 +25,7 @@ public class PositionGPSTask extends OrderTask {
         orderData = new byte[]{
                 (byte) MokoConstants.HEADER_READ_SEND,
                 (byte) 0x0e,
-                (byte) 0x02,
+                (byte) MokoConstants.Function,
                 (byte) order.getOrderHeader(),
                 (byte) 0x09,
                 (byte) 0x00,

@@ -22,13 +22,14 @@ public class RemotePhotoTask extends OrderTask {
 
     public RemotePhotoTask(MokoOrderTaskCallback callback) {
         super(OrderType.WRITE, OrderEnum.remotePhoto, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
-        orderData = new byte[ORDERDATA_LENGTH];
-        orderData[0] = (byte) MokoConstants.HEADER_READ_SEND;
-        orderData[1] = (byte) 0x04;
-        orderData[2] = (byte) 0x02;
-        orderData[3] = (byte) order.getOrderHeader();
-        orderData[4] = (byte) 0xFF;
-        orderData[5] = (byte) 0xFF;
+        orderData = new byte[]{
+            (byte) MokoConstants.HEADER_READ_SEND,
+            (byte) 0x04,
+            (byte) MokoConstants.Function,
+            (byte) order.getOrderHeader(),
+            (byte) 0xFF,
+            (byte) 0xFF,
+        };
 //      FF 4 2 7 FF FF
     }
 

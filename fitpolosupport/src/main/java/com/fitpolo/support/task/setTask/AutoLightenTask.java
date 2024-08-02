@@ -9,10 +9,7 @@ import com.fitpolo.support.task.OrderTask;
 import com.fitpolo.support.utils.DigitalConver;
 
 /**
- * @Date 2017/5/11
- * @Author wenzheng.liu
- * @Description 设置自动亮屏
- * @ClassPath com.fitpolo.support.task.AutoLightenTask
+ * 抬手亮屏
  */
 public class AutoLightenTask extends OrderTask {
     private static final int ORDERDATA_LENGTH = 2;
