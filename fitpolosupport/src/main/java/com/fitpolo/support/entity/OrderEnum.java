@@ -11,13 +11,8 @@ import java.io.Serializable;
 public enum OrderEnum implements Serializable {
     getInnerVersion("获取内部版本", 0x09),
     setSystemTime("设置手环时间", 0x11),
-    setBandAlarm("设置闹钟数据", 0x26),
     setUnitType("设置单位类型", 0x23),
-    setTimeFormat("设置显示时间格式", 0x24),
-    setAutoLigten("设置翻腕自动亮屏", 0x25),
-    setSitLongTimeAlert("设置久坐提醒", 0x2A),
     setLastScreen("设置最后显示", 0x27),
-    setHeartRateInterval("设置心率时间间隔", 0x17),
     setFunctionDisplay("设置功能显示", 0x19),
     getFirmwareVersion("获取固件版本", 0x90),
     getSleepHeartCount("获取睡眠和心率总数", 0x12),
@@ -59,9 +54,17 @@ public enum OrderEnum implements Serializable {
     positionGPS("定位GPS", 0x0b),
     motionControl("运动控制", 0x0c),
     queryInfo("查询信息", 0xFF),
-    
+
     /********************* 设置类型 *********************/
     setUserInfo("设置用户信息", 0x01),
+    setTarget("目标设置", 0x02),
+    setTimeFormat("时间设置", 0x03),
+    setSleep("睡眠设置", 0x04),
+    setSitLongTimeAlert("设置久坐提醒", 0x05),
+    setAutoLigten("设置抬手亮屏", 0x06),
+    setHeartRateMonitor("设置心率", 0x07),
+    setBandAlarm("设置闹钟数据", 0x08),
+    setPhoneCallReminder("来电提醒", 0x09),
 
 
 

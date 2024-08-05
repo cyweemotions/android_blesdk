@@ -144,8 +144,39 @@
                     android:layout_height="wrap_content"
                     android:onClick="setUserInfo"
                     android:tag="设置个人数据"
-                    android:text="setUserInfo" />
-
+                    android:text="设置个人数据" />
+            </TableRow>
+            <TableRow>
+                <Button
+                    android:id="@+id/btn_set_target"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="setTarget"
+                    android:tag="目标设置"
+                    android:text="目标设置" />
+                <Button
+                    android:id="@+id/btn_time_set"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="setTimeFormat"
+                    android:tag="时间设置"
+                    android:text="时间设置" />
+            </TableRow>
+            <TableRow>
+                <Button
+                    android:id="@+id/btn_set_target1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="setTarget"
+                    android:tag="睡眠设置"
+                    android:text="睡眠设置" />
+                <Button
+                    android:id="@+id/btn_time_set1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="setTimeFormat"
+                    android:tag="时间设置"
+                    android:text="时间设置" />
             </TableRow>
 
             <TableRow>

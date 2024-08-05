@@ -71,9 +71,9 @@ import com.fitpolo.support.task.ReadSitAlertTask;
 import com.fitpolo.support.task.ShakeBandTask;
 import com.fitpolo.support.task.setTask.SitLongTimeAlertTask;
 import com.fitpolo.support.task.SleepHeartCountTask;
-import com.fitpolo.support.task.setTask.SystemTimeTask;
-import com.fitpolo.support.task.TimeFormatTask;
 import com.fitpolo.support.task.UnitTypeTask;
+import com.fitpolo.support.task.setTask.TargetTask;
+import com.fitpolo.support.task.setTask.TimeTask;
 import com.fitpolo.support.task.setTask.UserInfoTask;
 
 import java.util.ArrayList;
@@ -352,16 +352,19 @@ public class SendOrderActivity extends BaseActivity {
         MokoSupport.getInstance().sendOrder(new UserInfoTask(mService, userInfo));
     }
 
+    public void setTarget(View view) {
+        MokoSupport.getInstance().sendOrder(new TargetTask(mService));
+    }
+    public void setTimeFormat(View view) {
+        MokoSupport.getInstance().sendOrder(new TimeTask(mService));
+    }
+
     public void setAllAlarms(View view) {
         MokoSupport.getInstance().sendOrder(new AllAlarmTask(mService, new ArrayList<BandAlarm>()));
     }
 
     public void setUnitType(View view) {
         MokoSupport.getInstance().sendOrder(new UnitTypeTask(mService, 0));
-    }
-
-    public void setTimeFormat(View view) {
-        MokoSupport.getInstance().sendOrder(new TimeFormatTask(mService, 0));
     }
 
     public void setAutoLigten(View view) {

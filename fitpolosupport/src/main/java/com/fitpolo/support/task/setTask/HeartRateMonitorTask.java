@@ -1,16 +1,17 @@
-package com.fitpolo.support.task;
+package com.fitpolo.support.task.setTask;
 
 import com.fitpolo.support.MokoSupport;
 import com.fitpolo.support.callback.MokoOrderTaskCallback;
 import com.fitpolo.support.entity.OrderEnum;
 import com.fitpolo.support.entity.OrderType;
 import com.fitpolo.support.log.LogModule;
+import com.fitpolo.support.task.OrderTask;
 import com.fitpolo.support.utils.DigitalConver;
 
 /**
  * @Date 2017/5/11
  * @Author wenzheng.liu
- * @Description 设置心率间隔
+ * @Description 设置心率监控
  * @ClassPath com.fitpolo.support.task.HeartRateIntervalTask
  */
 public class HeartRateIntervalTask extends OrderTask {
@@ -23,7 +24,7 @@ public class HeartRateIntervalTask extends OrderTask {
     private byte[] orderData;
 
     public HeartRateIntervalTask(MokoOrderTaskCallback callback, int heartRateInterval) {
-        super(OrderType.WRITE, OrderEnum.setHeartRateInterval, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
+        super(OrderType.WRITE, OrderEnum.setHeartRate, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
         int interval = heartRateInterval;
         orderData = new byte[ORDERDATA_LENGTH];
         orderData[0] = (byte) HEADER_GETDATA;
