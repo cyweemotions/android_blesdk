@@ -7,9 +7,10 @@ package com.fitpolo.support.entity;
  * @ClassPath com.fitpolo.support.entity.SitAlert
  */
 public class SitAlert {
-    public int alertSwitch; // 久坐提醒开关，1：开；0：关；
-    public String startTime;// 开始时间，格式：HH:mm;
-    public String endTime;// 结束时间，格式：HH:mm;
+    public int alertSwitch; // 久坐提醒开关 开0，关1
+    public int startTime;// 开始时间 hour
+    public int endTime;// 结束时间 hour
+    public int interval;// 结束时间 hour
 
     @Override
     public String toString() {
@@ -17,6 +18,7 @@ public class SitAlert {
                 "alertSwitch=" + alertSwitch +
                 ", startTime='" + startTime + '\'' +
                 ", endTime='" + endTime + '\'' +
+                ", interval='" + interval + '\'' +
                 '}';
     }
 }

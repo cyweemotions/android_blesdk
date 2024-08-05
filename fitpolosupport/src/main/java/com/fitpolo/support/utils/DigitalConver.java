@@ -1,7 +1,9 @@
 package com.fitpolo.support.utils;
 
+import com.fitpolo.support.log.LogModule;
 import com.google.gson.Gson;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -186,5 +188,49 @@ public class DigitalConver {
         // 复制第二个数组到合并数组的末尾
         System.arraycopy(array2, 0, mergedArray, array1.length, array2.length);
         return mergedArray;
+    }
+
+    public static List<Byte> convert(int source, ByteType type) {
+        // 1、将整数转换为十六进制字符串，并确保长度为偶数
+        String hexStr = Integer.toHexString(source).toUpperCase();
+        if (hexStr.length() % 2 != 0) {
+            hexStr = "0" + hexStr;
+        }
+        // 2、使用ByteBuffer将十六进制字符串转换为byte数组
+        ByteBuffer buffer = ByteBuffer.allocate(hexStr.length() / 2);
+        for (int i = 0; i < hexStr.length(); i += 2) {
+            String byteString = hexStr.substring(i, i + 2);
+            buffer.put((byte) Integer.parseInt(byteString, 16));
+        }
+        byte[] byteArray = buffer.array();
+        List<Integer> list = new ArrayList<>();
+        switch (type) {
+            case BYTE:
+                break;
+            case WORD:
+                if (byteArray.length == 1) {
+                    list.add(0);
+                }
+                break;
+            case DWORD:
+                for (int i = 0; i < 4 - byteArray.length; i++) {
+                    list.add(0);
+                }
+                break;
+        }
+        //3、将byteArray中的每个byte添加到list中
+        for (byte b : byteArray) {
+            list.add(b & 0xFF); // 确保是正数
+        }
+        //4、将byte[]转换为List<Byte>
+        List<Byte> result = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            int value = list.get(i);
+            if (value < 0 || value > 255) {
+                throw new IllegalArgumentException("List contains values outside the byte range");
+            }
+            result.add((byte) value);
+        }
+        return result;
     }
 }

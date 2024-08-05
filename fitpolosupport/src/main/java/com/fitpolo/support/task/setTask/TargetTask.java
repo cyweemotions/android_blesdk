@@ -23,7 +23,7 @@ public class TargetTask extends OrderTask {
             (byte) MokoConstants.Setting,
             (byte) order.getOrderHeader(),
             (byte) 0x04,
-            (byte) 0x03,
+            (byte) 0x08,
             (byte) 0x03,
             (byte) 0x06,
             (byte) 0x04,

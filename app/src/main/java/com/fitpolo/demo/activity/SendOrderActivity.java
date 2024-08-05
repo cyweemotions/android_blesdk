@@ -56,7 +56,7 @@ import com.fitpolo.support.task.funcTask.GetBatteryTask;
 import com.fitpolo.support.task.funcTask.FindDeviceTask;
 import com.fitpolo.support.task.funcTask.FirmwareParamTask;
 import com.fitpolo.support.task.FunctionDisplayTask;
-import com.fitpolo.support.task.HeartRateIntervalTask;
+import com.fitpolo.support.task.setTask.HeartRateMonitorTask;
 import com.fitpolo.support.task.InnerVersionTask;
 import com.fitpolo.support.task.LastScreenTask;
 import com.fitpolo.support.task.dataPushTask.LastestHeartRateTask;
@@ -72,6 +72,7 @@ import com.fitpolo.support.task.ShakeBandTask;
 import com.fitpolo.support.task.setTask.SitLongTimeAlertTask;
 import com.fitpolo.support.task.SleepHeartCountTask;
 import com.fitpolo.support.task.UnitTypeTask;
+import com.fitpolo.support.task.setTask.SleepTask;
 import com.fitpolo.support.task.setTask.TargetTask;
 import com.fitpolo.support.task.setTask.TimeTask;
 import com.fitpolo.support.task.setTask.UserInfoTask;
@@ -188,7 +189,7 @@ public class SendOrderActivity extends BaseActivity {
                             break;
                         case setLastScreen:
                             break;
-                        case setHeartRateInterval:
+                        case setHeartRateMonitor:
                             break;
                         case setFunctionDisplay:
                             break;
@@ -340,25 +341,6 @@ public class SendOrderActivity extends BaseActivity {
         MokoSupport.getInstance().sendOrder(new ReadSettingTask(mService));
     }
 
-    public void setUserInfo(View view) {
-        UserInfo userInfo = new UserInfo();
-        userInfo.name = "小明";
-        userInfo.male = 0;
-        userInfo.birth = 20001109;
-        userInfo.height = 170;
-        userInfo.weight = 60;
-        userInfo.hand = 0;
-        userInfo.MHR = 200;
-        MokoSupport.getInstance().sendOrder(new UserInfoTask(mService, userInfo));
-    }
-
-    public void setTarget(View view) {
-        MokoSupport.getInstance().sendOrder(new TargetTask(mService));
-    }
-    public void setTimeFormat(View view) {
-        MokoSupport.getInstance().sendOrder(new TimeTask(mService));
-    }
-
     public void setAllAlarms(View view) {
         MokoSupport.getInstance().sendOrder(new AllAlarmTask(mService, new ArrayList<BandAlarm>()));
     }
@@ -373,20 +355,13 @@ public class SendOrderActivity extends BaseActivity {
         MokoSupport.getInstance().sendOrder(new AutoLightenTask(mService, autoLighten.autoLighten));
     }
 
-    public void setSitAlert(View view) {
-        SitAlert alert = new SitAlert();
-        alert.alertSwitch = 0;
-        alert.startTime = "11:00";
-        alert.endTime = "18:00";
-        MokoSupport.getInstance().sendOrder(new SitLongTimeAlertTask(mService, alert));
-    }
 
     public void setLastScreen(View view) {
         MokoSupport.getInstance().sendOrder(new LastScreenTask(mService, 1));
     }
 
-    public void setHeartRateInterval(View view) {
-        MokoSupport.getInstance().sendOrder(new HeartRateIntervalTask(mService, 3));
+    public void setHeartRateMonitor(View view) {
+        MokoSupport.getInstance().sendOrder(new HeartRateMonitorTask(mService, 3));
     }
 
     public void setFunctionDisplay(View view) {
@@ -477,59 +452,44 @@ public class SendOrderActivity extends BaseActivity {
         startActivity(new Intent(this, MessageNotificationActivity.class));
     }
 
+    /********************* 功能类型 begin *****************/
     public void TimeAlign(View view){
         LogModule.i("开始校准时间====");
-
         MokoSupport.getInstance().sendOrder(new TimeAlignTask(mService));
     }
     public void getBattery(View view) {
         MokoSupport.getInstance().sendOrder(new GetBatteryTask(mService));
     }
-
     public void findDevice(View view){
         LogModule.i("开始查找设备====");
-
         FindDevice findDevice = new FindDevice();
         findDevice.action = 1;
         MokoSupport.getInstance().sendOrder(new FindDeviceTask(mService, findDevice));
     }
-
     public void unbindDevice(View view){
         LogModule.i("开始解绑设备====");
-
         MokoSupport.getInstance().sendOrder(new UnbindDeviceTask(mService));
     }
-
     public void languageSupport(View view){
         LogModule.i("开始语言支持====");
-
         MokoSupport.getInstance().sendOrder(new LanguageSupportTask(mService));
     }
-
     public void deviceInfo(View view){
         LogModule.i("开始设备信息====");
-
         MokoSupport.getInstance().sendOrder(new DeviceInfoTask(mService));
     }
-
     public void remotePhoto(View view){
         LogModule.i("开始远程拍照====");
-
         MokoSupport.getInstance().sendOrder(new RemotePhotoTask(mService));
     }
-
     public void messageNotify(View view){
         LogModule.i("开始消息通知====");
-
         MokoSupport.getInstance().sendOrder(new MessageNotifyTask(mService));
     }
-
     public void positionGPS(View view){
         LogModule.i("开始定位GPS====");
-
         MokoSupport.getInstance().sendOrder(new PositionGPSTask(mService));
     }
-
     public void motionControl(View view){
         LogModule.i("开始运动控制====");
         MotionControl motionControl = new MotionControl();
@@ -537,7 +497,6 @@ public class SendOrderActivity extends BaseActivity {
         motionControl.action = 1;
         MokoSupport.getInstance().sendOrder(new MotionControlTask(mService, motionControl));
     }
-
     public void pauseMotion(View view){
         LogModule.i("开始暂停运动====");
         MotionControl motionControl = new MotionControl();
@@ -552,7 +511,6 @@ public class SendOrderActivity extends BaseActivity {
         motionControl.action = 4;
         MokoSupport.getInstance().sendOrder(new MotionControlTask(mService, motionControl));
     }
-
     public void stopMotion(View view){
         LogModule.i("开始停止运动====");
         MotionControl motionControl = new MotionControl();
@@ -562,9 +520,45 @@ public class SendOrderActivity extends BaseActivity {
     }
     public void queryInfo(View view){
         LogModule.i("开始查询信息====");
-
         MokoSupport.getInstance().sendOrder(new QueryInfoTask(mService));
     }
+    /********************* 功能类型 end *****************/
+
+    /********************* 设置类型 begin *****************/
+    public void setUserInfo(View view) {
+        UserInfo userInfo = new UserInfo();
+        userInfo.name = "小明";
+        userInfo.male = 0;
+        userInfo.birth = 20001109;
+        userInfo.height = 170;
+        userInfo.weight = 60;
+        userInfo.hand = 0;
+        userInfo.MHR = 200;
+        MokoSupport.getInstance().sendOrder(new UserInfoTask(mService, userInfo));
+    }
+    public void setTarget(View view) {
+        MokoSupport.getInstance().sendOrder(new TargetTask(mService));
+    }
+    public void setTimeFormat(View view) {
+        MokoSupport.getInstance().sendOrder(new TimeTask(mService));
+    }
+    public void setSleep(View view) {
+        int startTime = 8;
+        int endTime = 23;
+        MokoSupport.getInstance().sendOrder(new SleepTask(mService, startTime, endTime));
+    }
+    public void setSitAlert(View view) {
+        SitAlert alert = new SitAlert();
+        alert.alertSwitch = 0;
+        alert.startTime = 8;
+        alert.endTime = 21;
+        alert.interval = 60;
+        MokoSupport.getInstance().sendOrder(new SitLongTimeAlertTask(mService, alert));
+    }
+
+
+    /********************* 设置类型 end *****************/
+
 
     private static final int REQUEST_CODE_FILE = 2;
 

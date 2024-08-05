@@ -164,19 +164,19 @@
             </TableRow>
             <TableRow>
                 <Button
-                    android:id="@+id/btn_set_target1"
+                    android:id="@+id/btn_set_Sleep"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="setTarget"
+                    android:onClick="setSleep"
                     android:tag="睡眠设置"
                     android:text="睡眠设置" />
                 <Button
-                    android:id="@+id/btn_time_set1"
+                    android:id="@+id/btn_Set_Sit_Long_Time_Alert"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="setTimeFormat"
-                    android:tag="时间设置"
-                    android:text="时间设置" />
+                    android:onClick="setSitAlert"
+                    android:tag="久坐提醒"
+                    android:text="久坐提醒" />
             </TableRow>
 
             <TableRow>

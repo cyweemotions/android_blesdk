@@ -50,12 +50,12 @@ public class ReadSitAlertTask extends OrderTask {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, startHour);
         calendar.set(Calendar.MINUTE, startMin);
-        sitAlert.startTime = new SimpleDateFormat("HH:mm").format(calendar.getTime());
+//        sitAlert.startTime = new SimpleDateFormat("HH:mm").format(calendar.getTime());
         int endHour = DigitalConver.byte2Int(value[6]);
         int endMin = DigitalConver.byte2Int(value[7]);
         calendar.set(Calendar.HOUR_OF_DAY, endHour);
         calendar.set(Calendar.MINUTE, endMin);
-        sitAlert.endTime = new SimpleDateFormat("HH:mm").format(calendar.getTime());
+//        sitAlert.endTime = new SimpleDateFormat("HH:mm").format(calendar.getTime());
         MokoSupport.getInstance().setSitAlert(sitAlert);
 
         LogModule.i(order.getOrderName() + "成功");
