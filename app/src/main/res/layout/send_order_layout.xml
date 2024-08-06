@@ -234,6 +234,22 @@
                     android:onClick="setStandardAlert"
                     android:tag="达标提醒"
                     android:text="达标提醒" />
+                <Button
+                    android:id="@+id/btn_set_language"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="setLanguage"
+                    android:tag="语言设置"
+                    android:text="语言设置" />
+            </TableRow>
+            <TableRow>
+                <Button
+                    android:id="@+id/btn_set_notify"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="setNotify"
+                    android:tag="通知设置"
+                    android:text="通知设置" />
             </TableRow>
 
             <TableRow>

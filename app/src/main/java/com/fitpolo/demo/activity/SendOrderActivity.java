@@ -72,6 +72,7 @@ import com.fitpolo.support.task.ReadAlarmsTask;
 import com.fitpolo.support.task.ReadSettingTask;
 import com.fitpolo.support.task.ReadSitAlertTask;
 import com.fitpolo.support.task.ShakeBandTask;
+import com.fitpolo.support.task.setTask.LanguageTask;
 import com.fitpolo.support.task.setTask.MotionTargetTask;
 import com.fitpolo.support.task.setTask.SitLongTimeAlertTask;
 import com.fitpolo.support.task.SleepHeartCountTask;
@@ -596,6 +597,12 @@ public class SendOrderActivity extends BaseActivity {
     }
     public void setStandardAlert(View view) {
         MokoSupport.getInstance().sendOrder(new StandardAlertTask(mService, 0));
+    }
+    public void setLanguage(View view) {
+        MokoSupport.getInstance().sendOrder(new LanguageTask(mService, 1));
+    }
+    public void setNotify(View view) {
+        MokoSupport.getInstance().sendOrder(new LanguageTask(mService, 1));
     }
 
     /********************* 设置类型 end *****************/

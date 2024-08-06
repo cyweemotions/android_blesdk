@@ -67,6 +67,8 @@ public enum OrderEnum implements Serializable {
     setCallReminder("来电提醒", 0x09),
     setMotionTarget("运动目标设置", 0x0a),
     setStandardAlert("达标提醒", 0x0b),
+    setLanguage("语言设置", 0x0c),
+    setNotify("通知设置", 0x0d),
 
 
 
