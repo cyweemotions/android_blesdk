@@ -194,6 +194,22 @@
                     android:tag="心率设置"
                     android:text="心率设置" />
             </TableRow>
+            <TableRow>
+                <Button
+                    android:id="@+id/btn_set_alarm_clock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="setAlarmClock"
+                    android:tag="闹钟设置"
+                    android:text="闹钟设置" />
+                <Button
+                    android:id="@+id/btn_set_call_reminder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="setCallReminder"
+                    android:tag="来电提醒"
+                    android:text="来电提醒" />
+            </TableRow>
 
             <TableRow>
 

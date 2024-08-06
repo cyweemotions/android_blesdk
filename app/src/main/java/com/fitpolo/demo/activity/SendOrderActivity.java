@@ -25,7 +25,7 @@ import com.fitpolo.demo.utils.Utils;
 import com.fitpolo.support.MokoConstants;
 import com.fitpolo.support.MokoSupport;
 import com.fitpolo.support.entity.AutoLighten;
-import com.fitpolo.support.entity.BandAlarm;
+import com.fitpolo.support.entity.setEntity.AlarmClock;
 import com.fitpolo.support.entity.CustomScreen;
 import com.fitpolo.support.entity.DailySleep;
 import com.fitpolo.support.entity.DailyStep;
@@ -48,7 +48,7 @@ import com.fitpolo.support.task.funcTask.RemotePhotoTask;
 import com.fitpolo.support.task.funcTask.QueryInfoTask;
 import com.fitpolo.support.task.funcTask.TimeAlignTask;
 import com.fitpolo.support.task.funcTask.UnbindDeviceTask;
-import com.fitpolo.support.task.setTask.AllAlarmTask;
+import com.fitpolo.support.task.setTask.AlarmClockTask;
 import com.fitpolo.support.task.dataPushTask.AllHeartRateTask;
 import com.fitpolo.support.task.dataPushTask.AllSleepIndexTask;
 import com.fitpolo.support.task.dataPushTask.AllStepsTask;
@@ -57,6 +57,7 @@ import com.fitpolo.support.task.funcTask.GetBatteryTask;
 import com.fitpolo.support.task.funcTask.FindDeviceTask;
 import com.fitpolo.support.task.funcTask.FirmwareParamTask;
 import com.fitpolo.support.task.FunctionDisplayTask;
+import com.fitpolo.support.task.setTask.CallReminderTask;
 import com.fitpolo.support.task.setTask.HeartRateMonitorTask;
 import com.fitpolo.support.task.InnerVersionTask;
 import com.fitpolo.support.task.LastScreenTask;
@@ -178,7 +179,7 @@ public class SendOrderActivity extends BaseActivity {
                             break;
                         case setUserInfo:
                             break;
-                        case setBandAlarm:
+                        case setAlarmClock:
                             break;
                         case setUnitType:
                             break;
@@ -263,8 +264,8 @@ public class SendOrderActivity extends BaseActivity {
                             LogModule.i("Product batch：" + MokoSupport.getInstance().getProductBatch());
                             break;
                         case READ_ALARMS:
-                            ArrayList<BandAlarm> bandAlarms = MokoSupport.getInstance().getAlarms();
-                            for (BandAlarm bandAlarm : bandAlarms) {
+                            ArrayList<AlarmClock> bandAlarms = MokoSupport.getInstance().getAlarms();
+                            for (AlarmClock bandAlarm : bandAlarms) {
                                 LogModule.i(bandAlarm.toString());
                             }
                             break;
@@ -340,10 +341,6 @@ public class SendOrderActivity extends BaseActivity {
         Toast.makeText(this, "Connect successp-[1", Toast.LENGTH_SHORT).show();
 //        MokoSupport.getInstance().sendOrder(new SystemTimeTask(mService));
         MokoSupport.getInstance().sendOrder(new ReadSettingTask(mService));
-    }
-
-    public void setAllAlarms(View view) {
-        MokoSupport.getInstance().sendOrder(new AllAlarmTask(mService, new ArrayList<BandAlarm>()));
     }
 
     public void setUnitType(View view) {
@@ -559,7 +556,20 @@ public class SendOrderActivity extends BaseActivity {
         heartRateMonitor.maxLimit = 190;
         MokoSupport.getInstance().sendOrder(new HeartRateMonitorTask(mService, heartRateMonitor));
     }
-
+    public void setAlarmClock(View view) {
+        AlarmClock alarmClock = new AlarmClock();
+        alarmClock.action = 0;
+        alarmClock.index = 1;
+        alarmClock.toggle = 0;
+        alarmClock.mode = 2;
+        alarmClock.time = 23 * 60;
+        alarmClock.repeat = 0;
+        alarmClock.activeDay = 0;
+        MokoSupport.getInstance().sendOrder(new AlarmClockTask(mService, alarmClock));
+    }
+    public void setCallReminder(View view) {
+        MokoSupport.getInstance().sendOrder(new CallReminderTask(mService, 1));
+    }
 
     /********************* 设置类型 end *****************/
 

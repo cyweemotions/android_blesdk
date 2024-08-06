@@ -18,7 +18,7 @@ import com.fitpolo.support.callback.MokoOrderTaskCallback;
 import com.fitpolo.support.callback.MokoResponseCallback;
 import com.fitpolo.support.callback.MokoScanDeviceCallback;
 import com.fitpolo.support.entity.AutoLighten;
-import com.fitpolo.support.entity.BandAlarm;
+import com.fitpolo.support.entity.setEntity.AlarmClock;
 import com.fitpolo.support.entity.BleDevice;
 import com.fitpolo.support.entity.CustomScreen;
 import com.fitpolo.support.entity.DailySleep;
@@ -909,13 +909,13 @@ public class MokoSupport implements MokoResponseCallback {
     ///////////////////////////////////////////////////////////////////////////
     // alarm
     ///////////////////////////////////////////////////////////////////////////
-    private ArrayList<BandAlarm> mAlarms;
+    private ArrayList<AlarmClock> mAlarms;
 
-    public void setAlarms(ArrayList<BandAlarm> alarms) {
+    public void setAlarms(ArrayList<AlarmClock> alarms) {
         mAlarms = alarms;
     }
 
-    public ArrayList<BandAlarm> getAlarms() {
+    public ArrayList<AlarmClock> getAlarms() {
         return mAlarms;
     }
 

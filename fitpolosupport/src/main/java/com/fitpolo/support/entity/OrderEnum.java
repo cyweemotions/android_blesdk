@@ -63,8 +63,8 @@ public enum OrderEnum implements Serializable {
     setSitLongTimeAlert("设置久坐提醒", 0x05),
     setAutoLigten("设置抬手亮屏", 0x06),
     setHeartRateMonitor("设置心率", 0x07),
-    setBandAlarm("设置闹钟数据", 0x08),
-    setPhoneCallReminder("来电提醒", 0x09),
+    setAlarmClock("设置闹钟数据", 0x08),
+    setCallReminder("来电提醒", 0x09),
 
 
 
