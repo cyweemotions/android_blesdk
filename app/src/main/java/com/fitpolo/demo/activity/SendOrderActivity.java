@@ -36,6 +36,7 @@ import com.fitpolo.support.entity.OrderTaskResponse;
 import com.fitpolo.support.entity.SitAlert;
 import com.fitpolo.support.entity.UserInfo;
 import com.fitpolo.support.entity.funcEntity.MotionControl;
+import com.fitpolo.support.entity.setEntity.HeartRateMonitor;
 import com.fitpolo.support.handler.UpgradeHandler;
 import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.funcTask.DeviceInfoTask;
@@ -349,19 +350,10 @@ public class SendOrderActivity extends BaseActivity {
         MokoSupport.getInstance().sendOrder(new UnitTypeTask(mService, 0));
     }
 
-    public void setAutoLigten(View view) {
-        AutoLighten autoLighten = new AutoLighten();
-        autoLighten.autoLighten = 0;
-        MokoSupport.getInstance().sendOrder(new AutoLightenTask(mService, autoLighten.autoLighten));
-    }
 
 
     public void setLastScreen(View view) {
         MokoSupport.getInstance().sendOrder(new LastScreenTask(mService, 1));
-    }
-
-    public void setHeartRateMonitor(View view) {
-        MokoSupport.getInstance().sendOrder(new HeartRateMonitorTask(mService, 3));
     }
 
     public void setFunctionDisplay(View view) {
@@ -554,6 +546,18 @@ public class SendOrderActivity extends BaseActivity {
         alert.endTime = 21;
         alert.interval = 60;
         MokoSupport.getInstance().sendOrder(new SitLongTimeAlertTask(mService, alert));
+    }
+    public void setAutoLigten(View view) {
+        MokoSupport.getInstance().sendOrder(new AutoLightenTask(mService));
+    }
+    public void setHeartRateMonitor(View view) {
+        HeartRateMonitor heartRateMonitor = new HeartRateMonitor();
+        heartRateMonitor.monitorSwitch = 0;
+        heartRateMonitor.interval = 10;
+        heartRateMonitor.alarmSwitch = 1;
+        heartRateMonitor.minLimit = 50;
+        heartRateMonitor.maxLimit = 190;
+        MokoSupport.getInstance().sendOrder(new HeartRateMonitorTask(mService, heartRateMonitor));
     }
 
 

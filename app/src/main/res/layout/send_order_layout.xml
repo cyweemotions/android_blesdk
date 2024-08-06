@@ -178,6 +178,22 @@
                     android:tag="久坐提醒"
                     android:text="久坐提醒" />
             </TableRow>
+            <TableRow>
+                <Button
+                    android:id="@+id/btn_set_auto_ligten"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="setAutoLigten"
+                    android:tag="抬手亮屏"
+                    android:text="抬手亮屏" />
+                <Button
+                    android:id="@+id/btn_set_heart_rate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="setHeartRateMonitor"
+                    android:tag="心率设置"
+                    android:text="心率设置" />
+            </TableRow>
 
             <TableRow>
 
@@ -273,9 +289,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_span="2"
-                    android:onClick="setHeartRateInterval"
-                    android:tag="设置心率监测间隔"
-                    android:text="setHeartRateInterval" />
+                    android:onClick="setHeartRateMonitor"
+                    android:tag="设置心率监测"
+                    android:text="setHeartRateMonitor" />
             </TableRow>
 
             <TableRow>
