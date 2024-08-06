@@ -65,6 +65,8 @@ public enum OrderEnum implements Serializable {
     setHeartRateMonitor("设置心率", 0x07),
     setAlarmClock("设置闹钟数据", 0x08),
     setCallReminder("来电提醒", 0x09),
+    setMotionTarget("运动目标设置", 0x0a),
+    setStandardAlert("达标提醒", 0x0b),
 
 
 

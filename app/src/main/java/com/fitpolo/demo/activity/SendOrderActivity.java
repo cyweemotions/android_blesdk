@@ -37,6 +37,7 @@ import com.fitpolo.support.entity.SitAlert;
 import com.fitpolo.support.entity.UserInfo;
 import com.fitpolo.support.entity.funcEntity.MotionControl;
 import com.fitpolo.support.entity.setEntity.HeartRateMonitor;
+import com.fitpolo.support.entity.setEntity.MotionTarget;
 import com.fitpolo.support.handler.UpgradeHandler;
 import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.funcTask.DeviceInfoTask;
@@ -71,10 +72,12 @@ import com.fitpolo.support.task.ReadAlarmsTask;
 import com.fitpolo.support.task.ReadSettingTask;
 import com.fitpolo.support.task.ReadSitAlertTask;
 import com.fitpolo.support.task.ShakeBandTask;
+import com.fitpolo.support.task.setTask.MotionTargetTask;
 import com.fitpolo.support.task.setTask.SitLongTimeAlertTask;
 import com.fitpolo.support.task.SleepHeartCountTask;
 import com.fitpolo.support.task.UnitTypeTask;
 import com.fitpolo.support.task.setTask.SleepTask;
+import com.fitpolo.support.task.setTask.StandardAlertTask;
 import com.fitpolo.support.task.setTask.TargetTask;
 import com.fitpolo.support.task.setTask.TimeTask;
 import com.fitpolo.support.task.setTask.UserInfoTask;
@@ -569,6 +572,30 @@ public class SendOrderActivity extends BaseActivity {
     }
     public void setCallReminder(View view) {
         MokoSupport.getInstance().sendOrder(new CallReminderTask(mService, 1));
+    }
+    public void setMotionTarget(View view) {
+        MotionTarget motionTarget = new MotionTarget();
+        motionTarget.setType = 0;
+        motionTarget.sportType = 0;
+        if(motionTarget.setType == 0) {
+            motionTarget.distance = 1;
+            motionTarget.sportTime = 2;
+            motionTarget.calorie = 3;
+            motionTarget.targetType = 2;
+        } else {
+            motionTarget.autoPauseSwitch = 0;
+        }
+        MokoSupport.getInstance().sendOrder(new MotionTargetTask(mService, motionTarget));
+    }
+    public void setAutoPause(View view) {
+        MotionTarget motionTarget = new MotionTarget();
+        motionTarget.setType = 1;
+        motionTarget.sportType = 0;
+        motionTarget.autoPauseSwitch = 0;
+        MokoSupport.getInstance().sendOrder(new MotionTargetTask(mService, motionTarget));
+    }
+    public void setStandardAlert(View view) {
+        MokoSupport.getInstance().sendOrder(new StandardAlertTask(mService, 0));
     }
 
     /********************* 设置类型 end *****************/

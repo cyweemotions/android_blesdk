@@ -210,6 +210,31 @@
                     android:tag="来电提醒"
                     android:text="来电提醒" />
             </TableRow>
+            <TableRow>
+                <Button
+                    android:id="@+id/btn_set_motion_target"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="setMotionTarget"
+                    android:tag="运动目标设置"
+                    android:text="运动目标设置" />
+                <Button
+                    android:id="@+id/btn_set_motion_target2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="setAutoPause"
+                    android:tag="运动自动暂停"
+                    android:text="运动自动暂停" />
+            </TableRow>
+            <TableRow>
+                <Button
+                    android:id="@+id/btn_set_standard_alert"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="setStandardAlert"
+                    android:tag="达标提醒"
+                    android:text="达标提醒" />
+            </TableRow>
 
             <TableRow>
 
