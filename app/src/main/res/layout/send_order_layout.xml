@@ -254,9 +254,18 @@
                     android:id="@+id/btn_set_on_screen_duration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="SetOnScreenDuration"
+                    android:onClick="setOnScreenDuration"
                     android:tag="亮屏时长"
                     android:text="亮屏时长" />
+            </TableRow>
+            <TableRow>
+                <Button
+                    android:id="@+id/btn_set_do_not_disturb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="setDoNotDisturb"
+                    android:tag="勿扰模式"
+                    android:text="勿扰模式" />
             </TableRow>
 
             <TableRow>

@@ -36,6 +36,7 @@ import com.fitpolo.support.entity.OrderTaskResponse;
 import com.fitpolo.support.entity.SitAlert;
 import com.fitpolo.support.entity.UserInfo;
 import com.fitpolo.support.entity.funcEntity.MotionControl;
+import com.fitpolo.support.entity.setEntity.DoNotDisturb;
 import com.fitpolo.support.entity.setEntity.HeartRateMonitor;
 import com.fitpolo.support.entity.setEntity.MotionTarget;
 import com.fitpolo.support.entity.setEntity.NotifyType;
@@ -60,6 +61,7 @@ import com.fitpolo.support.task.funcTask.FindDeviceTask;
 import com.fitpolo.support.task.funcTask.FirmwareParamTask;
 import com.fitpolo.support.task.FunctionDisplayTask;
 import com.fitpolo.support.task.setTask.CallReminderTask;
+import com.fitpolo.support.task.setTask.DoNotDisturbTask;
 import com.fitpolo.support.task.setTask.HeartRateMonitorTask;
 import com.fitpolo.support.task.InnerVersionTask;
 import com.fitpolo.support.task.LastScreenTask;
@@ -625,8 +627,16 @@ public class SendOrderActivity extends BaseActivity {
         notifyType.other3 = 1;
         MokoSupport.getInstance().sendOrder(new NotifyTask(mService, notifyType));
     }
-    public void SetOnScreenDuration(View view) {
+    public void setOnScreenDuration(View view) {
         MokoSupport.getInstance().sendOrder(new OnScreenDurationTask(mService, 15));
+    }
+    public void setDoNotDisturb(View view) {
+        DoNotDisturb doNotDisturb = new DoNotDisturb();
+        doNotDisturb.allToggle = 0;
+        doNotDisturb.partToggle = 1;
+        doNotDisturb.startTime = 22*60+10;
+        doNotDisturb.endTime = 8*60+20;
+        MokoSupport.getInstance().sendOrder(new DoNotDisturbTask(mService, doNotDisturb));
     }
 
     /********************* 设置类型 end *****************/
