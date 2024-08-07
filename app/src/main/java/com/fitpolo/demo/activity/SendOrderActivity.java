@@ -76,6 +76,7 @@ import com.fitpolo.support.task.ShakeBandTask;
 import com.fitpolo.support.task.setTask.LanguageTask;
 import com.fitpolo.support.task.setTask.MotionTargetTask;
 import com.fitpolo.support.task.setTask.NotifyTask;
+import com.fitpolo.support.task.setTask.OnScreenDurationTask;
 import com.fitpolo.support.task.setTask.SitLongTimeAlertTask;
 import com.fitpolo.support.task.SleepHeartCountTask;
 import com.fitpolo.support.task.UnitTypeTask;
@@ -623,6 +624,9 @@ public class SendOrderActivity extends BaseActivity {
         notifyType.other2 = 1;
         notifyType.other3 = 1;
         MokoSupport.getInstance().sendOrder(new NotifyTask(mService, notifyType));
+    }
+    public void SetOnScreenDuration(View view) {
+        MokoSupport.getInstance().sendOrder(new OnScreenDurationTask(mService, 15));
     }
 
     /********************* 设置类型 end *****************/

@@ -250,6 +250,13 @@
                     android:onClick="setNotify"
                     android:tag="通知设置"
                     android:text="通知设置" />
+                <Button
+                    android:id="@+id/btn_set_on_screen_duration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="SetOnScreenDuration"
+                    android:tag="亮屏时长"
+                    android:text="亮屏时长" />
             </TableRow>
 
             <TableRow>

@@ -69,6 +69,7 @@ public enum OrderEnum implements Serializable {
     setStandardAlert("达标提醒", 0x0b),
     setLanguage("语言设置", 0x0c),
     setNotify("通知设置", 0x0d),
+    setOnScreenDuration("亮屏时长", 0x0e),
 
 
 
