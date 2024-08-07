@@ -38,6 +38,7 @@ import com.fitpolo.support.entity.UserInfo;
 import com.fitpolo.support.entity.funcEntity.MotionControl;
 import com.fitpolo.support.entity.setEntity.HeartRateMonitor;
 import com.fitpolo.support.entity.setEntity.MotionTarget;
+import com.fitpolo.support.entity.setEntity.NotifyType;
 import com.fitpolo.support.handler.UpgradeHandler;
 import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.funcTask.DeviceInfoTask;
@@ -74,6 +75,7 @@ import com.fitpolo.support.task.ReadSitAlertTask;
 import com.fitpolo.support.task.ShakeBandTask;
 import com.fitpolo.support.task.setTask.LanguageTask;
 import com.fitpolo.support.task.setTask.MotionTargetTask;
+import com.fitpolo.support.task.setTask.NotifyTask;
 import com.fitpolo.support.task.setTask.SitLongTimeAlertTask;
 import com.fitpolo.support.task.SleepHeartCountTask;
 import com.fitpolo.support.task.UnitTypeTask;
@@ -602,7 +604,25 @@ public class SendOrderActivity extends BaseActivity {
         MokoSupport.getInstance().sendOrder(new LanguageTask(mService, 1));
     }
     public void setNotify(View view) {
-        MokoSupport.getInstance().sendOrder(new LanguageTask(mService, 1));
+        NotifyType notifyType = new NotifyType();
+        notifyType.toggle = 0;
+        notifyType.common = 1;
+        notifyType.facebook = 1;
+        notifyType.instagram = 0;
+        notifyType.kakaotalk = 1;
+        notifyType.line = 1;
+        notifyType.linkedin = 1;
+        notifyType.SMS = 1;
+        notifyType.QQ = 0;
+        notifyType.twitter = 0;
+        notifyType.viber = 1;
+        notifyType.vkontaket = 1;
+        notifyType.whatsapp = 0;
+        notifyType.wechat = 1;
+        notifyType.other1 = 1;
+        notifyType.other2 = 1;
+        notifyType.other3 = 1;
+        MokoSupport.getInstance().sendOrder(new NotifyTask(mService, notifyType));
     }
 
     /********************* 设置类型 end *****************/
