@@ -15,6 +15,9 @@ import com.fitpolo.support.utils.DigitalConver;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 通知设置
+ */
 public class NotifyTask extends OrderTask {
     private byte[] orderData;
     public NotifyTask (MokoOrderTaskCallback callback, NotifyType notifyType) {

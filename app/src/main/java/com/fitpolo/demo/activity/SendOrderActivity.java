@@ -25,6 +25,7 @@ import com.fitpolo.demo.utils.Utils;
 import com.fitpolo.support.MokoConstants;
 import com.fitpolo.support.MokoSupport;
 import com.fitpolo.support.entity.AutoLighten;
+import com.fitpolo.support.entity.setEntity.AddressBook;
 import com.fitpolo.support.entity.setEntity.AlarmClock;
 import com.fitpolo.support.entity.CustomScreen;
 import com.fitpolo.support.entity.DailySleep;
@@ -51,6 +52,7 @@ import com.fitpolo.support.task.funcTask.RemotePhotoTask;
 import com.fitpolo.support.task.funcTask.QueryInfoTask;
 import com.fitpolo.support.task.funcTask.TimeAlignTask;
 import com.fitpolo.support.task.funcTask.UnbindDeviceTask;
+import com.fitpolo.support.task.setTask.AddressBookTask;
 import com.fitpolo.support.task.setTask.AlarmClockTask;
 import com.fitpolo.support.task.dataPushTask.AllHeartRateTask;
 import com.fitpolo.support.task.dataPushTask.AllSleepIndexTask;
@@ -641,6 +643,13 @@ public class SendOrderActivity extends BaseActivity {
     }
     public void setPowerSaveMode(View view) {
         MokoSupport.getInstance().sendOrder(new PowerSaveTask(mService, 1));
+    }
+    public void setAddressBook(View view) {
+        AddressBook addressBook = new AddressBook();
+        addressBook.action = 1;
+        addressBook.name = "小刚";
+        addressBook.phoneNumber = "152666655550987";
+        MokoSupport.getInstance().sendOrder(new AddressBookTask(mService, addressBook));
     }
 
     /********************* 设置类型 end *****************/

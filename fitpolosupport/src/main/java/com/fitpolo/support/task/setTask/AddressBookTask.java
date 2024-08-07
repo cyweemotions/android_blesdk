@@ -5,6 +5,7 @@ import com.fitpolo.support.MokoSupport;
 import com.fitpolo.support.callback.MokoOrderTaskCallback;
 import com.fitpolo.support.entity.OrderEnum;
 import com.fitpolo.support.entity.OrderType;
+import com.fitpolo.support.entity.setEntity.AddressBook;
 import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.OrderTask;
 import com.fitpolo.support.utils.DigitalConver;
@@ -13,14 +14,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 省电设置
+ * 通讯录设置
  */
-public class PowerSaveTask extends OrderTask {
+public class AddressBookTask extends OrderTask {
     private byte[] orderData;
-    public PowerSaveTask (MokoOrderTaskCallback callback, int toggle) {
-        super(OrderType.WRITE, OrderEnum.setPowerSaveMode, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
+    public AddressBookTask (MokoOrderTaskCallback callback, AddressBook addressBook) {
+        super(OrderType.WRITE, OrderEnum.setAddressBook, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
         List<Byte> dataList = new ArrayList<>();
-        dataList.add((byte) (toggle & 0xFF));// 开关
+        dataList.add((byte) (addressBook.action & 0xFF));// 0-添加 1-删除
+
+        List<Byte> nameByteList = string2bytes(addressBook.name, 20);
+        dataList.addAll(nameByteList);//名字
+
+        List<Byte> phoneByteList = string2bytes(addressBook.phoneNumber, 15);
+        dataList.addAll(phoneByteList);//电话号码
+
         int dataLength = dataList.size();
 
         List<Byte> byteList = new ArrayList<>();
@@ -38,6 +46,19 @@ public class PowerSaveTask extends OrderTask {
             dataBytes[i] = byteList.get(i);
         }
         orderData = dataBytes;
+    }
+    private List<Byte> string2bytes(String valueStr,int limit) {
+        byte[] byteArray = valueStr.getBytes();
+        List<Byte> byteList = new ArrayList<>();
+        // 将字节数组复制到 List<Byte> 中，并在不足 20 的索引位置补充 0
+        for (int i = 0; i < limit; i++) {
+            if (i < byteArray.length) {
+                byteList.add(byteArray[i]);
+            } else {
+                byteList.add((byte) 0); // 补充 0
+            }
+        }
+        return byteList;
     }
     @Override
     public byte[] assemble() {

@@ -274,6 +274,15 @@
                     android:tag="省电模式"
                     android:text="省电模式" />
             </TableRow>
+            <TableRow>
+                <Button
+                    android:id="@+id/btn_set_address_book"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="setAddressBook"
+                    android:tag="通讯录设置"
+                    android:text="通讯录设置" />
+            </TableRow>
 
             <TableRow>
 
