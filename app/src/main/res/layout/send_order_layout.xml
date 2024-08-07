@@ -283,6 +283,22 @@
                     android:tag="通讯录设置"
                     android:text="通讯录设置" />
             </TableRow>
+            <TableRow>
+                <Button
+                    android:id="@+id/btn_set_sleep_monitor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="setSleepMonitor"
+                    android:tag="睡眠算法设置"
+                    android:text="睡眠算法设置" />
+                <Button
+                    android:id="@+id/btn_get_sleep_monitor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="getSleepMonitor"
+                    android:tag="睡眠算法获取"
+                    android:text="睡眠算法获取" />
+            </TableRow>
 
             <TableRow>
 

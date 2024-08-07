@@ -41,6 +41,7 @@ import com.fitpolo.support.entity.setEntity.DoNotDisturb;
 import com.fitpolo.support.entity.setEntity.HeartRateMonitor;
 import com.fitpolo.support.entity.setEntity.MotionTarget;
 import com.fitpolo.support.entity.setEntity.NotifyType;
+import com.fitpolo.support.entity.setEntity.SleepMonitor;
 import com.fitpolo.support.handler.UpgradeHandler;
 import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.funcTask.DeviceInfoTask;
@@ -52,6 +53,7 @@ import com.fitpolo.support.task.funcTask.RemotePhotoTask;
 import com.fitpolo.support.task.funcTask.QueryInfoTask;
 import com.fitpolo.support.task.funcTask.TimeAlignTask;
 import com.fitpolo.support.task.funcTask.UnbindDeviceTask;
+import com.fitpolo.support.task.getTask.SleepMonitorDataTask;
 import com.fitpolo.support.task.setTask.AddressBookTask;
 import com.fitpolo.support.task.setTask.AlarmClockTask;
 import com.fitpolo.support.task.dataPushTask.AllHeartRateTask;
@@ -85,6 +87,7 @@ import com.fitpolo.support.task.setTask.PowerSaveTask;
 import com.fitpolo.support.task.setTask.SitLongTimeAlertTask;
 import com.fitpolo.support.task.SleepHeartCountTask;
 import com.fitpolo.support.task.UnitTypeTask;
+import com.fitpolo.support.task.setTask.SleepMonitorTask;
 import com.fitpolo.support.task.setTask.SleepTask;
 import com.fitpolo.support.task.setTask.StandardAlertTask;
 import com.fitpolo.support.task.setTask.TargetTask;
@@ -650,6 +653,15 @@ public class SendOrderActivity extends BaseActivity {
         addressBook.name = "小刚";
         addressBook.phoneNumber = "152666655550987";
         MokoSupport.getInstance().sendOrder(new AddressBookTask(mService, addressBook));
+    }
+    public void setSleepMonitor(View view) {
+        SleepMonitor sleepMonitor = new SleepMonitor();
+        sleepMonitor.heighPrecisionDetec = 1;
+        sleepMonitor.breatheQualityDetec = 1;
+        MokoSupport.getInstance().sendOrder(new SleepMonitorTask(mService,sleepMonitor));
+    }
+    public void getSleepMonitor(View view) {
+        MokoSupport.getInstance().sendOrder(new SleepMonitorDataTask(mService));
     }
 
     /********************* 设置类型 end *****************/
