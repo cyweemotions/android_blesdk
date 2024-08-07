@@ -71,6 +71,7 @@ public enum OrderEnum implements Serializable {
     setNotify("通知设置", 0x0d),
     setOnScreenDuration("亮屏时长", 0x0e),
     setDoNotDisturb("勿扰设置", 0x0f),
+    setPowerSaveMode("省电模式", 0x10),
 
 
 

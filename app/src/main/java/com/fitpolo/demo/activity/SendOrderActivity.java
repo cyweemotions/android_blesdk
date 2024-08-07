@@ -79,6 +79,7 @@ import com.fitpolo.support.task.setTask.LanguageTask;
 import com.fitpolo.support.task.setTask.MotionTargetTask;
 import com.fitpolo.support.task.setTask.NotifyTask;
 import com.fitpolo.support.task.setTask.OnScreenDurationTask;
+import com.fitpolo.support.task.setTask.PowerSaveTask;
 import com.fitpolo.support.task.setTask.SitLongTimeAlertTask;
 import com.fitpolo.support.task.SleepHeartCountTask;
 import com.fitpolo.support.task.UnitTypeTask;
@@ -637,6 +638,9 @@ public class SendOrderActivity extends BaseActivity {
         doNotDisturb.startTime = 22*60+10;
         doNotDisturb.endTime = 8*60+20;
         MokoSupport.getInstance().sendOrder(new DoNotDisturbTask(mService, doNotDisturb));
+    }
+    public void setPowerSaveMode(View view) {
+        MokoSupport.getInstance().sendOrder(new PowerSaveTask(mService, 1));
     }
 
     /********************* 设置类型 end *****************/

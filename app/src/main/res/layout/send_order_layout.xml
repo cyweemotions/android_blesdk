@@ -266,6 +266,13 @@
                     android:onClick="setDoNotDisturb"
                     android:tag="勿扰模式"
                     android:text="勿扰模式" />
+                <Button
+                    android:id="@+id/btn_set_power_save"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="setPowerSaveMode"
+                    android:tag="省电模式"
+                    android:text="省电模式" />
             </TableRow>
 
             <TableRow>
