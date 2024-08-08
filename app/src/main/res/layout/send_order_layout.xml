@@ -282,6 +282,13 @@
                     android:onClick="setAddressBook"
                     android:tag="通讯录设置"
                     android:text="通讯录设置" />
+                <Button
+                    android:id="@+id/btn_get_address_book"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="getAddressBook"
+                    android:tag="获取通讯录"
+                    android:text="获取通讯录" />
             </TableRow>
             <TableRow>
                 <Button

@@ -53,6 +53,7 @@ import com.fitpolo.support.task.funcTask.RemotePhotoTask;
 import com.fitpolo.support.task.funcTask.QueryInfoTask;
 import com.fitpolo.support.task.funcTask.TimeAlignTask;
 import com.fitpolo.support.task.funcTask.UnbindDeviceTask;
+import com.fitpolo.support.task.getTask.AddressBookDataTask;
 import com.fitpolo.support.task.getTask.SleepMonitorDataTask;
 import com.fitpolo.support.task.setTask.AddressBookTask;
 import com.fitpolo.support.task.setTask.AlarmClockTask;
@@ -653,6 +654,9 @@ public class SendOrderActivity extends BaseActivity {
         addressBook.name = "小刚";
         addressBook.phoneNumber = "152666655550987";
         MokoSupport.getInstance().sendOrder(new AddressBookTask(mService, addressBook));
+    }
+    public void getAddressBook(View view) {
+        MokoSupport.getInstance().sendOrder(new AddressBookDataTask(mService));
     }
     public void setSleepMonitor(View view) {
         SleepMonitor sleepMonitor = new SleepMonitor();

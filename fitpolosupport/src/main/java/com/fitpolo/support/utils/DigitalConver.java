@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -233,4 +234,28 @@ public class DigitalConver {
         }
         return result;
     }
+    public static List<Byte> bytes2ListByte(byte[] bytes) {
+        List<Byte> byteList = new ArrayList<>();
+        for (byte b : bytes) {
+            byteList.add(b); // 自动装箱，将 byte 转为 Byte
+        }
+        return byteList;
+    }
+    public static byte[] listByte2bytes(List<Byte> list) {
+        byte[] byteArray = new byte[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            byteArray[i] = list.get(i); // 自动拆箱，将 Byte 转为 byte
+        }
+        return byteArray;
+    }
+    public static List<Byte> removeZero(List<Byte> list) {
+        List<Byte> newList = new ArrayList<>();
+        for (Byte b : list) {
+            if (b != (byte) 0x00) {
+                newList.add(b);
+            }
+        }
+        return newList;
+    }
+
 }

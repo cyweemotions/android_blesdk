@@ -37,6 +37,7 @@ import com.fitpolo.support.task.dataPushTask.AllSleepIndexTask;
 import com.fitpolo.support.task.dataPushTask.LastestSleepIndexTask;
 import com.fitpolo.support.task.OrderTask;
 import com.fitpolo.support.task.UpgradeBandTask;
+import com.fitpolo.support.task.getTask.AddressBookDataTask;
 import com.fitpolo.support.utils.BaseHandler;
 import com.fitpolo.support.utils.BleConnectionCompat;
 import com.fitpolo.support.utils.DigitalConver;
@@ -391,13 +392,12 @@ public class MokoSupport implements MokoResponseCallback {
 
     @Override
     public void onCharacteristicChanged(BluetoothGattCharacteristic characteristic, byte[] value) {
-        LogModule.i("onCharacteristicChanged====== : " + value.toString());
+        LogModule.i("onCharacteristicChanged====== : ");
         // 非延时应答
         OrderTask orderTask = mQueue.peek();
         if (value != null && value.length > 0 && orderTask != null) {
             OrderEnum orderEnum = orderTask.getOrder();
             LogModule.i("orderEnum====== : " + orderEnum.toString());
-
             switch (orderEnum) {
                 case getAllSleepIndex:
                     AllSleepIndexTask sleepIndexTask = (AllSleepIndexTask) orderTask;
