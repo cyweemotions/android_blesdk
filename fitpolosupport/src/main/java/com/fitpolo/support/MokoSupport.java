@@ -299,6 +299,9 @@ public class MokoSupport implements MokoResponseCallback {
                     }
                     mHeartRatesMap.put(mHeartRateCount, false);
                     break;
+                case bindAuth:
+                    orderTask.delayTime = 10000;
+                    break;
             }
             timeoutHandler(orderTask);
         }
@@ -395,6 +398,7 @@ public class MokoSupport implements MokoResponseCallback {
         LogModule.i("onCharacteristicChanged====== : ");
         // 非延时应答
         OrderTask orderTask = mQueue.peek();
+        LogModule.i("orderTask====== : " + (orderTask == null));
         if (value != null && value.length > 0 && orderTask != null) {
             OrderEnum orderEnum = orderTask.getOrder();
             LogModule.i("orderEnum====== : " + orderEnum.toString());

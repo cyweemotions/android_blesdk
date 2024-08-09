@@ -44,6 +44,9 @@ import com.fitpolo.support.entity.setEntity.NotifyType;
 import com.fitpolo.support.entity.setEntity.SleepMonitor;
 import com.fitpolo.support.handler.UpgradeHandler;
 import com.fitpolo.support.log.LogModule;
+import com.fitpolo.support.task.authTask.DeviceBindTask;
+import com.fitpolo.support.task.authTask.SendBindCodeTask;
+import com.fitpolo.support.task.authTask.QueryAuthStateTask;
 import com.fitpolo.support.task.funcTask.DeviceInfoTask;
 import com.fitpolo.support.task.funcTask.LanguageSupportTask;
 import com.fitpolo.support.task.funcTask.MessageNotifyTask;
@@ -97,6 +100,7 @@ import com.fitpolo.support.task.setTask.UserInfoTask;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -456,6 +460,21 @@ public class SendOrderActivity extends BaseActivity {
     public void notification(View view) {
         startActivity(new Intent(this, MessageNotificationActivity.class));
     }
+
+    /********************* 鉴权 begin *****************/
+    public void queryAuthState(View view) {
+        MokoSupport.getInstance().sendOrder(new QueryAuthStateTask(mService));
+    }
+    public void bindAuth(View view) {
+        List<Byte> dataList = new ArrayList<>();
+        dataList.add((byte) 1);
+        dataList.add((byte) 0);
+        dataList.add((byte) 0);
+        dataList.add((byte) 0);
+        dataList.add((byte) 1);
+        MokoSupport.getInstance().sendOrder(new DeviceBindTask(mService, 1, 0, dataList));
+    }
+    /********************* 鉴权 end *****************/
 
     /********************* 功能类型 begin *****************/
     public void TimeAlign(View view){

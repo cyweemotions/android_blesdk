@@ -40,6 +40,10 @@ public enum OrderEnum implements Serializable {
     openNotify("打开设备通知", 0),
 
 
+    /********************* 鉴权 *********************/
+    bindAuth("绑定鉴权", 0x01),
+    queryAuthState("查询鉴权状态", 0x02),
+
     /********************* 功能类型 *********************/
     syncTime("时间校准", 0x01),
     setSync("设置同步", 0x02),

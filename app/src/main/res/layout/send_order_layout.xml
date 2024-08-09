@@ -14,6 +14,22 @@
             android:stretchColumns="*">
 
             <TableRow>
+                <Button
+                    android:id="@+id/btn_query_auth_state"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="queryAuthState"
+                    android:tag="查询鉴权状态"
+                    android:text="查询鉴权状态" />
+                <Button
+                    android:id="@+id/btn_set_bind_auth"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="bindAuth"
+                    android:tag="绑定鉴权"
+                    android:text="绑定鉴权" />
+            </TableRow>
+            <TableRow>
 
                 <Button
                     android:id="@+id/btn_sync_time"
