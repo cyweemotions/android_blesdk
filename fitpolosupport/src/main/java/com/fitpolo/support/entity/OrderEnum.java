@@ -79,6 +79,8 @@ public enum OrderEnum implements Serializable {
     setAddressBook("通讯录设置", 0x11),
     setSleepMonitor("睡眠算法设置", 0x13),
 
+    /********************* 数据交互类型 *********************/
+    syncWeather("天气同步", 0x01),
 
 
     READ_ALARMS("读取闹钟", 0x01),

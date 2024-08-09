@@ -47,6 +47,7 @@ import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.authTask.DeviceBindTask;
 import com.fitpolo.support.task.authTask.SendBindCodeTask;
 import com.fitpolo.support.task.authTask.QueryAuthStateTask;
+import com.fitpolo.support.task.dataPushTask.WeatherTask;
 import com.fitpolo.support.task.funcTask.DeviceInfoTask;
 import com.fitpolo.support.task.funcTask.LanguageSupportTask;
 import com.fitpolo.support.task.funcTask.MessageNotifyTask;
@@ -686,8 +687,14 @@ public class SendOrderActivity extends BaseActivity {
     public void getSleepMonitor(View view) {
         MokoSupport.getInstance().sendOrder(new SleepMonitorDataTask(mService));
     }
-
     /********************* 设置类型 end *****************/
+
+    /********************* 数据交互类型 begin *****************/
+
+    public void syncWeather(View view) {
+        MokoSupport.getInstance().sendOrder(new WeatherTask(mService));
+    }
+    /********************* 数据交互类型 end *****************/
 
 
     private static final int REQUEST_CODE_FILE = 2;

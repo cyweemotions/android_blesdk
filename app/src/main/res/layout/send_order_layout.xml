@@ -322,6 +322,22 @@
                     android:tag="睡眠算法获取"
                     android:text="睡眠算法获取" />
             </TableRow>
+            <TableRow>
+                <Button
+                    android:id="@+id/btn_sync_weather"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="syncWeather"
+                    android:tag="天气同步"
+                    android:text="天气同步" />
+                <Button
+                    android:id="@+id/btn_sync_steps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="syncSteps"
+                    android:tag="步数同步"
+                    android:text="步数同步" />
+            </TableRow>
 
             <TableRow>
 
