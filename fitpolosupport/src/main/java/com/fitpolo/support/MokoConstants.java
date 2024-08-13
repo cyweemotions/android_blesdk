@@ -35,6 +35,7 @@ public class MokoConstants {
      public static final int DeviceAuth = 0x04;
     ///数据交互类型
      public static final int DailPush = 0x05;
+     public static final String century = "20";
 
     // 发现状态
     public static final String ACTION_DISCOVER_SUCCESS = "com.moko.fitpolodemo.ACTION_DISCOVER_SUCCESS";

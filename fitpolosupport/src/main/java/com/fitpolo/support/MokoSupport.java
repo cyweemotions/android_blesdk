@@ -18,6 +18,7 @@ import com.fitpolo.support.callback.MokoOrderTaskCallback;
 import com.fitpolo.support.callback.MokoResponseCallback;
 import com.fitpolo.support.callback.MokoScanDeviceCallback;
 import com.fitpolo.support.entity.AutoLighten;
+import com.fitpolo.support.entity.dataEntity.Steps;
 import com.fitpolo.support.entity.setEntity.AlarmClock;
 import com.fitpolo.support.entity.BleDevice;
 import com.fitpolo.support.entity.CustomScreen;
@@ -301,6 +302,9 @@ public class MokoSupport implements MokoResponseCallback {
                     break;
                 case bindAuth:
                     orderTask.delayTime = 10000;
+                    break;
+                case syncSteps:
+                    orderTask.delayTime = 7000;
                     break;
             }
             timeoutHandler(orderTask);
@@ -833,6 +837,10 @@ public class MokoSupport implements MokoResponseCallback {
 
     public void setSleepsMap(HashMap<Integer, DailySleep> mSleepsMap) {
         this.mSleepsMap = mSleepsMap;
+    }
+    public List<Steps> mStepsData;
+    public void setStepsData(List<Steps> mStepsData) {
+        this.mStepsData = mStepsData;
     }
 
     ///////////////////////////////////////////////////////////////////////////
