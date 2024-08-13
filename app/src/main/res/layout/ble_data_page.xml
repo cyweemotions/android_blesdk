@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="*">
+        <Button
+            android:id="@+id/btn_sync_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="syncStepsData"
+            android:tag="同步数据"
+            android:text="同步数据" />
+    </TableLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!-- 内容可以是任意视图，例如一个垂直排列的线性布局 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- 示例内容 -->
+            <TextView
+                android:id="@+id/steps_data_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=" " />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+<!--    <ListView-->
+<!--        android:id="@+id/steps_data_list"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_weight="1.0"-->
+<!--        android:cacheColorHint="@android:color/transparent"-->
+<!--        android:divider="#333333"-->
+<!--        android:dividerHeight="1dp" />-->
+</LinearLayout>

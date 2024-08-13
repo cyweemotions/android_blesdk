@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.fitpolo.demo.AppConstants;
 import com.fitpolo.demo.R;
+import com.fitpolo.demo.activity.dataPushActivity.BleDataActivity;
 import com.fitpolo.demo.service.MokoService;
 import com.fitpolo.demo.utils.FileUtils;
 import com.fitpolo.demo.utils.Utils;
@@ -47,6 +48,7 @@ import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.authTask.DeviceBindTask;
 import com.fitpolo.support.task.authTask.SendBindCodeTask;
 import com.fitpolo.support.task.authTask.QueryAuthStateTask;
+import com.fitpolo.support.task.dataPushTask.StepTask;
 import com.fitpolo.support.task.dataPushTask.WeatherTask;
 import com.fitpolo.support.task.funcTask.DeviceInfoTask;
 import com.fitpolo.support.task.funcTask.LanguageSupportTask;
@@ -693,6 +695,14 @@ public class SendOrderActivity extends BaseActivity {
 
     public void syncWeather(View view) {
         MokoSupport.getInstance().sendOrder(new WeatherTask(mService));
+    }
+    public void syncSteps(View view) {
+        Intent stepsIntent = new Intent(SendOrderActivity.this, BleDataActivity.class);
+//        orderIntent.putExtra("deviceMacAddress", deviceMacAddress);
+        startActivity(stepsIntent);
+
+//        int type = 1;
+//        MokoSupport.getInstance().sendOrder(new StepTask(mService, type));
     }
     /********************* 数据交互类型 end *****************/
 
