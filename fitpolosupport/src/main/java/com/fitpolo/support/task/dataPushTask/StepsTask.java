@@ -18,12 +18,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StepTask extends OrderTask {
+public class StepsTask extends OrderTask {
     private byte[] orderData;
     private int typeData; // record—— 1  current—— 0
     private int index = 1; // record=1 —— package index
     private Map<String, byte[]> res = new HashMap<>();
-    public StepTask(MokoOrderTaskCallback callback, int type) {
+    public StepsTask(MokoOrderTaskCallback callback, int type) {
         super(OrderType.DataPushWRITE, OrderEnum.syncSteps, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
         typeData = type;
         List<Byte> dataList = new ArrayList<>();

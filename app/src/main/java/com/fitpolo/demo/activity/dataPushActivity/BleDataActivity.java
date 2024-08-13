@@ -19,7 +19,7 @@ import com.fitpolo.demo.service.MokoService;
 import com.fitpolo.support.MokoConstants;
 import com.fitpolo.support.MokoSupport;
 import com.fitpolo.support.entity.dataEntity.Steps;
-import com.fitpolo.support.task.dataPushTask.StepTask;
+import com.fitpolo.support.task.dataPushTask.StepsTask;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -86,7 +86,7 @@ public class BleDataActivity extends BaseActivity{
         textView.setText("正在获取数据。。。");
         // 处理按钮点击事件
         int type = 1;
-        MokoSupport.getInstance().sendOrder(new StepTask(mService, type));
+        MokoSupport.getInstance().sendOrder(new StepsTask(mService, type));
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -132,7 +132,7 @@ public class BleDataActivity extends BaseActivity{
         textView.setText("正在获取数据。。。");
         // 处理按钮点击事件
         int type = 1;
-        MokoSupport.getInstance().sendOrder(new StepTask(mService, type));
+        MokoSupport.getInstance().sendOrder(new StepsTask(mService, type));
 
         new Handler().postDelayed(new Runnable() {
             @Override
