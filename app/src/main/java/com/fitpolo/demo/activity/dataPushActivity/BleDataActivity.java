@@ -18,21 +18,26 @@ import com.fitpolo.demo.activity.BaseActivity;
 import com.fitpolo.demo.service.MokoService;
 import com.fitpolo.support.MokoConstants;
 import com.fitpolo.support.MokoSupport;
-import com.fitpolo.support.entity.dataEntity.Steps;
+import com.fitpolo.support.entity.dataEntity.HeartRateModel;
+import com.fitpolo.support.entity.dataEntity.StepsModel;
+import com.fitpolo.support.task.dataPushTask.HeartRateTask;
 import com.fitpolo.support.task.dataPushTask.StepsTask;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class BleDataActivity extends BaseActivity{
-    @BindView(R.id.steps_data_text)
+    @BindView(R.id.data_text)
     TextView textView;
+    public String title = "";
+    public String type = "";
     private MokoService mService;
 
     @Override
@@ -40,7 +45,9 @@ public class BleDataActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ble_data_page);
         ButterKnife.bind(this);
+        type = getIntent().getStringExtra("orderType");
         bindService(new Intent(this, MokoService.class), mServiceConnection, BIND_AUTO_CREATE);
+        initPageTitle(type);
     }
 
     @Override
@@ -79,90 +86,67 @@ public class BleDataActivity extends BaseActivity{
         public void onServiceDisconnected(ComponentName name) {
         }
     };
-    // Java 示例
-    @OnClick(R.id.btn_sync_data)
-    public void onMyButtonClick() {
-        // 设置 TextView 的文本
-        textView.setText("正在获取数据。。。");
-        // 处理按钮点击事件
-        int type = 1;
-        MokoSupport.getInstance().sendOrder(new StepsTask(mService, type));
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // 这里是你想要延迟5秒后执行的代码
-
-                // 获取 TextView
-                TextView textView = findViewById(R.id.steps_data_text);
-
-                // 定义变量
-                StringBuilder contentStr = new StringBuilder();
-                List<Steps> stepsData = MokoSupport.getInstance().mStepsData;
-                for(int i = 0; i<stepsData.size(); i++){
-                    Steps stepsItem = stepsData.get(i);
-                    contentStr.append("第").append(i + 1).append("项：").append("\n");
-                    String step = String.valueOf(stepsItem.step);
-                    String calorie = String.valueOf(stepsItem.calorie);
-                    String distance = String.valueOf(stepsItem.distance);
-                    String datetime = "";
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm")
-                                .withZone(ZoneId.systemDefault());
-                        Instant instant = Instant.ofEpochSecond(stepsItem.datetime);
-                        datetime = formatter.format(instant);
-                    } else {
-                        datetime = String.valueOf(stepsItem.datetime);
-                    }
-                    contentStr.append("步数：").append(step).append(" ");
-                    contentStr.append("卡路里：").append(calorie).append(" ");
-                    contentStr.append("距离：").append(distance).append(" ");
-                    contentStr.append("时间：").append(datetime).append(" ");
-                    contentStr.append("\n");
-                }
-
-                // 设置 TextView 的文本
-                textView.setText(contentStr.toString());
-            }
-        }, 2000);
+    private void initPageTitle(String type) {
+        TextView titleText = findViewById(R.id.title_text);
+        switch (type) {
+            case "steps":
+                title = "步数同步";
+                break;
+            case "heartRate":
+                title = "心率同步";
+                break;
+            default:
+                title = "同步数据";
+                break;
+        }
+        titleText.setText(title);
     }
 
-    public void syncStepsData(View view) {
-        // 设置 TextView 的文本
+    public void syncDataPushData(View view) {
         textView.setText("正在获取数据。。。");
-        // 处理按钮点击事件
+
+        switch (type) {
+            case "steps":
+                syncStepsData();
+                break;
+            case "heartRate":
+                syncHeartRateData();
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 步数同步
+     */
+    public void syncStepsData() {
+
         int type = 1;
         MokoSupport.getInstance().sendOrder(new StepsTask(mService, type));
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                // 这里是你想要延迟5秒后执行的代码
+                TextView textView = findViewById(R.id.data_text);
 
-                // 获取 TextView
-                TextView textView = findViewById(R.id.steps_data_text);
-
-                // 定义变量
                 StringBuilder contentStr = new StringBuilder();
-                List<Steps> stepsData = MokoSupport.getInstance().mStepsData;
-                for(int i = 0; i<stepsData.size(); i++){
-                    Steps stepsItem = stepsData.get(i);
+                List<StepsModel> stepsModelData = MokoSupport.getInstance().mStepsDataModels;
+                for(int i = 0; i< stepsModelData.size(); i++){
+                    StepsModel stepsModelItem = stepsModelData.get(i);
                     contentStr.append("第").append(i + 1).append("项：").append("\n");
-                    String step = String.valueOf(stepsItem.step);
-                    String calorie = String.valueOf(stepsItem.calorie);
-                    String distance = String.valueOf(stepsItem.distance);
-
-//                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-//                    Date date = new Date(stepsItem.datetime);
-//                    String datetime = dateFormat.format(date);
+                    String step = String.valueOf(stepsModelItem.step);
+                    String calorie = String.valueOf(stepsModelItem.calorie);
+                    String distance = String.valueOf(stepsModelItem.distance);
                     String datetime = "";
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm")
                                 .withZone(ZoneId.systemDefault());
-                        Instant instant = Instant.ofEpochSecond(stepsItem.datetime);
+                        Instant instant = Instant.ofEpochSecond(stepsModelItem.datetime);
                         datetime = formatter.format(instant);
                     } else {
-                        datetime = String.valueOf(stepsItem.datetime);
+                        datetime = String.valueOf(stepsModelItem.datetime);
                     }
                     contentStr.append("步数：").append(step).append(" ");
                     contentStr.append("卡路里：").append(calorie).append(" ");
@@ -171,7 +155,44 @@ public class BleDataActivity extends BaseActivity{
                     contentStr.append("\n");
                 }
 
-                // 设置 TextView 的文本
+                textView.setText(contentStr.toString());
+            }
+        }, 1500);
+    }
+
+    /**
+     * 心率同步
+     */
+    public void syncHeartRateData() {
+        Calendar calendar = Calendar.getInstance();
+        int type = 1;
+        MokoSupport.getInstance().sendOrder(new HeartRateTask(mService, calendar, type));
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                TextView textView = findViewById(R.id.data_text);
+
+                StringBuilder contentStr = new StringBuilder();
+                List<HeartRateModel> heartRateData = MokoSupport.getInstance().mHeartRateModelData;
+                for(int i = 0; i<heartRateData.size(); i++){
+                    HeartRateModel heartRateItem = heartRateData.get(i);
+                    contentStr.append("第").append(i + 1).append("项：").append("\n");
+                    String heartRate = String.valueOf(heartRateItem.heartRate);
+                    String datetime = "";
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
+                                .withZone(ZoneId.systemDefault());
+                        Instant instant = Instant.ofEpochSecond(heartRateItem.datetime);
+                        datetime = formatter.format(instant);
+                    } else {
+                        datetime = String.valueOf(heartRateItem.datetime);
+                    }
+                    contentStr.append("心率：").append(heartRate).append(" ");
+                    contentStr.append("时间：").append(datetime).append(" ");
+                    contentStr.append("\n");
+                }
+
                 textView.setText(contentStr.toString());
             }
         }, 2000);

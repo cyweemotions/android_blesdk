@@ -18,14 +18,15 @@ import com.fitpolo.support.callback.MokoOrderTaskCallback;
 import com.fitpolo.support.callback.MokoResponseCallback;
 import com.fitpolo.support.callback.MokoScanDeviceCallback;
 import com.fitpolo.support.entity.AutoLighten;
-import com.fitpolo.support.entity.dataEntity.Steps;
+import com.fitpolo.support.entity.HeartRate;
+import com.fitpolo.support.entity.dataEntity.StepsModel;
 import com.fitpolo.support.entity.setEntity.AlarmClock;
 import com.fitpolo.support.entity.BleDevice;
 import com.fitpolo.support.entity.CustomScreen;
 import com.fitpolo.support.entity.DailySleep;
 import com.fitpolo.support.entity.DailyStep;
 import com.fitpolo.support.entity.FirmwareEnum;
-import com.fitpolo.support.entity.HeartRate;
+import com.fitpolo.support.entity.dataEntity.HeartRateModel;
 import com.fitpolo.support.entity.MokoCharacteristic;
 import com.fitpolo.support.entity.OrderEnum;
 import com.fitpolo.support.entity.OrderType;
@@ -38,7 +39,6 @@ import com.fitpolo.support.task.dataPushTask.AllSleepIndexTask;
 import com.fitpolo.support.task.dataPushTask.LastestSleepIndexTask;
 import com.fitpolo.support.task.OrderTask;
 import com.fitpolo.support.task.UpgradeBandTask;
-import com.fitpolo.support.task.getTask.AddressBookDataTask;
 import com.fitpolo.support.utils.BaseHandler;
 import com.fitpolo.support.utils.BleConnectionCompat;
 import com.fitpolo.support.utils.DigitalConver;
@@ -304,6 +304,9 @@ public class MokoSupport implements MokoResponseCallback {
                     orderTask.delayTime = 10000;
                     break;
                 case syncSteps:
+                    orderTask.delayTime = 7000;
+                    break;
+                case syncHeartRate:
                     orderTask.delayTime = 7000;
                     break;
             }
@@ -838,9 +841,13 @@ public class MokoSupport implements MokoResponseCallback {
     public void setSleepsMap(HashMap<Integer, DailySleep> mSleepsMap) {
         this.mSleepsMap = mSleepsMap;
     }
-    public List<Steps> mStepsData;
-    public void setStepsData(List<Steps> mStepsData) {
-        this.mStepsData = mStepsData;
+    public List<StepsModel> mStepsDataModels = new ArrayList<>();
+    public void setStepsData(List<StepsModel> mStepsDatumModels) {
+        this.mStepsDataModels = mStepsDatumModels;
+    }
+    public List<HeartRateModel> mHeartRateModelData = new ArrayList<>();
+    public void setHeartRateData(List<HeartRateModel> mHeartRateModelData) {
+        this.mHeartRateModelData = mHeartRateModelData;
     }
 
     ///////////////////////////////////////////////////////////////////////////

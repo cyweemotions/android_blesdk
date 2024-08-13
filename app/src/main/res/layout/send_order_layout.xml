@@ -338,6 +338,15 @@
                     android:tag="步数同步"
                     android:text="步数同步" />
             </TableRow>
+            <TableRow>
+                <Button
+                    android:id="@+id/btn_sync_heart_rate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="syncHeartRate"
+                    android:tag="心率同步"
+                    android:text="心率同步" />
+            </TableRow>
 
             <TableRow>
 

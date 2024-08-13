@@ -695,15 +695,19 @@ public class SendOrderActivity extends BaseActivity {
         MokoSupport.getInstance().sendOrder(new WeatherTask(mService));
     }
     public void syncSteps(View view) {
-        Intent stepsIntent = new Intent(SendOrderActivity.this, BleDataActivity.class);
-//        orderIntent.putExtra("deviceMacAddress", deviceMacAddress);
-        startActivity(stepsIntent);
+        Intent orderIntent = new Intent(SendOrderActivity.this, BleDataActivity.class);
+        orderIntent.putExtra("orderType", "steps");
+        startActivity(orderIntent);
 
 //        int type = 1;
 //        MokoSupport.getInstance().sendOrder(new StepTask(mService, type));
     }
+    public void syncHeartRate(View view) {
+        Intent orderIntent = new Intent(SendOrderActivity.this, BleDataActivity.class);
+        orderIntent.putExtra("orderType", "heartRate");
+        startActivity(orderIntent);
+    }
     /********************* 数据交互类型 end *****************/
-
 
     private static final int REQUEST_CODE_FILE = 2;
 

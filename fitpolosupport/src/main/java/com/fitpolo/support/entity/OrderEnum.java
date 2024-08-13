@@ -82,6 +82,7 @@ public enum OrderEnum implements Serializable {
     /********************* 数据交互类型 *********************/
     syncWeather("天气同步", 0x01),
     syncSteps("步数同步", 0x02),
+    syncHeartRate("心率同步", 0x03),
 
 
     READ_ALARMS("读取闹钟", 0x01),

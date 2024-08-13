@@ -1,7 +1,5 @@
 package com.fitpolo.support.entity.dataEntity;
 
-import android.annotation.SuppressLint;
-
 import com.fitpolo.support.MokoConstants;
 
 import java.text.SimpleDateFormat;
@@ -11,13 +9,13 @@ import java.util.List;
 import java.util.TimeZone;
 import java.text.ParseException;
 import java.util.Date;
-public class Steps {
+public class StepsModel {
     public int step;// 步数
     public int distance;// 距离
     public int calorie;// 卡路里
     public long datetime;// 时间
 
-    public Steps(int step, int distance, int calorie, long datetime) {
+    public StepsModel(int step, int distance, int calorie, long datetime) {
         this.step = step;
         this.distance = distance;
         this.calorie = calorie;
@@ -34,8 +32,8 @@ public class Steps {
             '}';
     }
 
-    public static Steps StringTurnModel(String content){
-        Steps model = new Steps(0, 0,0,0);
+    public static StepsModel StringTurnModel(String content){
+        StepsModel model = new StepsModel(0, 0,0,0);
         if(content.contains(",")){
             List<String> array = Arrays.asList(content.split(","));
             String dateStr = MokoConstants.century + array.get(array.size()-1).toString();
