@@ -19,6 +19,7 @@ import com.fitpolo.support.callback.MokoResponseCallback;
 import com.fitpolo.support.callback.MokoScanDeviceCallback;
 import com.fitpolo.support.entity.AutoLighten;
 import com.fitpolo.support.entity.HeartRate;
+import com.fitpolo.support.entity.dataEntity.BloodOxygenModel;
 import com.fitpolo.support.entity.dataEntity.StepsModel;
 import com.fitpolo.support.entity.setEntity.AlarmClock;
 import com.fitpolo.support.entity.BleDevice;
@@ -307,6 +308,9 @@ public class MokoSupport implements MokoResponseCallback {
                     orderTask.delayTime = 7000;
                     break;
                 case syncHeartRate:
+                    orderTask.delayTime = 7000;
+                    break;
+                case syncBloodOxygen:
                     orderTask.delayTime = 7000;
                     break;
             }
@@ -841,13 +845,17 @@ public class MokoSupport implements MokoResponseCallback {
     public void setSleepsMap(HashMap<Integer, DailySleep> mSleepsMap) {
         this.mSleepsMap = mSleepsMap;
     }
-    public List<StepsModel> mStepsDataModels = new ArrayList<>();
-    public void setStepsData(List<StepsModel> mStepsDatumModels) {
-        this.mStepsDataModels = mStepsDatumModels;
+    public List<StepsModel> mStepsData = new ArrayList<>();
+    public void setStepsData(List<StepsModel> data) {
+        this.mStepsData = data;
     }
-    public List<HeartRateModel> mHeartRateModelData = new ArrayList<>();
-    public void setHeartRateData(List<HeartRateModel> mHeartRateModelData) {
-        this.mHeartRateModelData = mHeartRateModelData;
+    public List<HeartRateModel> mHeartRateData = new ArrayList<>();
+    public void setHeartRateData(List<HeartRateModel> data) {
+        this.mHeartRateData = data;
+    }
+    public List<BloodOxygenModel> mBloodOxygenData = new ArrayList<>();
+    public void setBloodOxygenData(List<BloodOxygenModel> data) {
+        this.mBloodOxygenData = data;
     }
 
     ///////////////////////////////////////////////////////////////////////////

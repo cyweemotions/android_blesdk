@@ -1,7 +1,6 @@
 package com.fitpolo.support.entity.dataEntity;
 
 import com.fitpolo.support.MokoConstants;
-import com.fitpolo.support.log.LogModule;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,24 +10,24 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-public class HeartRateModel {
-    public int heartRate;// 心率
+public class BloodOxygenModel {
+    public int bloodOxygen;// 心率
     public long datetime;// 时间
-    public HeartRateModel(int heartRate, int datetime) {
-        this.heartRate = heartRate;
+    public BloodOxygenModel(int bloodOxygen, int datetime) {
+        this.bloodOxygen = bloodOxygen;
         this.datetime = datetime;
     }
 
     @Override
     public String toString() {
-        return "HeartRateModel{" +
-                "heartRate=" + heartRate +
+        return "BloodOxygenModel{" +
+                "bloodOxygen=" + bloodOxygen +
                 ", datetime=" + datetime +
                 '}';
     }
 
-    public static HeartRateModel StringTurnModel(String content){
-        HeartRateModel model = new HeartRateModel(0, 0);
+    public static BloodOxygenModel StringTurnModel(String content){
+        BloodOxygenModel model = new BloodOxygenModel(0, 0);
         if(content.contains(",")){
             List<String> array = Arrays.asList(content.split(","));
             String dateStr = MokoConstants.century + array.get(array.size()-1).toString();
@@ -47,7 +46,7 @@ public class HeartRateModel {
                 e.printStackTrace();
             }
             model.datetime = timestamp;
-            model.heartRate = Integer.parseInt(array.get(0));
+            model.bloodOxygen = Integer.parseInt(array.get(0));
         }
         return model;
     }

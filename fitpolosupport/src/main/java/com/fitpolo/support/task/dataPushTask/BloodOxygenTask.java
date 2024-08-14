@@ -5,6 +5,7 @@ import com.fitpolo.support.MokoSupport;
 import com.fitpolo.support.callback.MokoOrderTaskCallback;
 import com.fitpolo.support.entity.OrderEnum;
 import com.fitpolo.support.entity.OrderType;
+import com.fitpolo.support.entity.dataEntity.BloodOxygenModel;
 import com.fitpolo.support.entity.dataEntity.HeartRateModel;
 import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.OrderTask;
@@ -14,17 +15,15 @@ import com.fitpolo.support.utils.DigitalConver;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class HeartRateTask extends OrderTask {
+public class BloodOxygenTask extends OrderTask {
     private byte[] orderData;
     private int typeData; // record—— 1  current—— 0
     private int index = 1; // record=1 —— package index
     private List<byte[]> res = new ArrayList<>();
-    public HeartRateTask(MokoOrderTaskCallback callback, Calendar calendar, int type) {
-        super(OrderType.DataPushWRITE, OrderEnum.syncHeartRate, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
+    public BloodOxygenTask(MokoOrderTaskCallback callback, Calendar calendar, int type) {
+        super(OrderType.DataPushWRITE, OrderEnum.syncBloodOxygen, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
         typeData = type;
         List<Byte> dataList = new ArrayList<>();
         byte isRecordByte = type == 1 ? (byte) 0x01 : (byte) 0x00;
@@ -120,24 +119,25 @@ public class HeartRateTask extends OrderTask {
 //            LogModule.i("获取步数数据类型packType====="+ res);
             if(packType == 0 || packType == 2) { //结束 后面没有数据接收了
                 StringBuilder resultStr = new StringBuilder(); // 最后的数据
-                List<HeartRateModel> dataSource = new ArrayList<>();
+                List<BloodOxygenModel> dataSource = new ArrayList<>();
                 for (int i=0; i<res.size(); i++) {
                     // 1、byte[]数据转换为String数据
                     byte[] value = res.get(i);
                     String resultHexStr = DigitalConver.bytesToHexString(value);
                     String heartStr = DigitalConver.hex2String(resultHexStr);
+                    System.out.println("这是血氧数据" + heartStr.toString());
                     resultStr.append(heartStr);
                 }
                 List<String> contents = Arrays.asList(resultStr.toString().split("\n"));
                 for(int j=0;j<contents.size();j++){
-                    String contentStr = contents.get(j).replace("[HR]", "");
-                    dataSource.add(HeartRateModel.StringTurnModel(contentStr));
+                    String contentStr = contents.get(j).replace("[BO]", "");
+                    dataSource.add(BloodOxygenModel.StringTurnModel(contentStr));
                 }
-                for (HeartRateModel heartRate : dataSource) {
+                for (BloodOxygenModel heartRate : dataSource) {
                     System.out.println("这是最终的数据格式" + heartRate.toString());
                 }
-                LogModule.i("获取心率数据长度======="+dataSource.size());
-                MokoSupport.getInstance().setHeartRateData(dataSource);
+                LogModule.i("获取血氧数据长度======="+dataSource.size());
+                MokoSupport.getInstance().setBloodOxygenData(dataSource);
                 orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
                 MokoSupport.getInstance().pollTask();
                 callback.onOrderResult(response);

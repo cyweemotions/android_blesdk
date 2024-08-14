@@ -18,8 +18,10 @@ import com.fitpolo.demo.activity.BaseActivity;
 import com.fitpolo.demo.service.MokoService;
 import com.fitpolo.support.MokoConstants;
 import com.fitpolo.support.MokoSupport;
+import com.fitpolo.support.entity.dataEntity.BloodOxygenModel;
 import com.fitpolo.support.entity.dataEntity.HeartRateModel;
 import com.fitpolo.support.entity.dataEntity.StepsModel;
+import com.fitpolo.support.task.dataPushTask.BloodOxygenTask;
 import com.fitpolo.support.task.dataPushTask.HeartRateTask;
 import com.fitpolo.support.task.dataPushTask.StepsTask;
 
@@ -96,6 +98,9 @@ public class BleDataActivity extends BaseActivity{
             case "heartRate":
                 title = "心率同步";
                 break;
+            case "bloodOxygen":
+                title = "血氧同步";
+                break;
             default:
                 title = "同步数据";
                 break;
@@ -112,6 +117,9 @@ public class BleDataActivity extends BaseActivity{
                 break;
             case "heartRate":
                 syncHeartRateData();
+                break;
+            case "bloodOxygen":
+                syncBloodOxygenData();
                 break;
             default:
                 break;
@@ -132,7 +140,7 @@ public class BleDataActivity extends BaseActivity{
                 TextView textView = findViewById(R.id.data_text);
 
                 StringBuilder contentStr = new StringBuilder();
-                List<StepsModel> stepsModelData = MokoSupport.getInstance().mStepsDataModels;
+                List<StepsModel> stepsModelData = MokoSupport.getInstance().mStepsData;
                 for(int i = 0; i< stepsModelData.size(); i++){
                     StepsModel stepsModelItem = stepsModelData.get(i);
                     contentStr.append("第").append(i + 1).append("项：").append("\n");
@@ -174,7 +182,7 @@ public class BleDataActivity extends BaseActivity{
                 TextView textView = findViewById(R.id.data_text);
 
                 StringBuilder contentStr = new StringBuilder();
-                List<HeartRateModel> heartRateData = MokoSupport.getInstance().mHeartRateModelData;
+                List<HeartRateModel> heartRateData = MokoSupport.getInstance().mHeartRateData;
                 for(int i = 0; i<heartRateData.size(); i++){
                     HeartRateModel heartRateItem = heartRateData.get(i);
                     contentStr.append("第").append(i + 1).append("项：").append("\n");
@@ -189,6 +197,44 @@ public class BleDataActivity extends BaseActivity{
                         datetime = String.valueOf(heartRateItem.datetime);
                     }
                     contentStr.append("心率：").append(heartRate).append(" ");
+                    contentStr.append("时间：").append(datetime).append(" ");
+                    contentStr.append("\n");
+                }
+
+                textView.setText(contentStr.toString());
+            }
+        }, 2000);
+    }
+
+    /**
+     * 血氧同步
+     */
+    public void syncBloodOxygenData() {
+        Calendar calendar = Calendar.getInstance();
+        int type = 1;
+        MokoSupport.getInstance().sendOrder(new BloodOxygenTask(mService, calendar, type));
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                TextView textView = findViewById(R.id.data_text);
+
+                StringBuilder contentStr = new StringBuilder();
+                List<BloodOxygenModel> bloodOxygenData = MokoSupport.getInstance().mBloodOxygenData;
+                for(int i = 0; i<bloodOxygenData.size(); i++){
+                    BloodOxygenModel bloodOxygenItem = bloodOxygenData.get(i);
+                    contentStr.append("第").append(i + 1).append("项：").append("\n");
+                    String bloodOxygen = String.valueOf(bloodOxygenItem.bloodOxygen);
+                    String datetime = "";
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
+                                .withZone(ZoneId.systemDefault());
+                        Instant instant = Instant.ofEpochSecond(bloodOxygenItem.datetime);
+                        datetime = formatter.format(instant);
+                    } else {
+                        datetime = String.valueOf(bloodOxygenItem.datetime);
+                    }
+                    contentStr.append("血氧：").append(bloodOxygen).append(" ");
                     contentStr.append("时间：").append(datetime).append(" ");
                     contentStr.append("\n");
                 }

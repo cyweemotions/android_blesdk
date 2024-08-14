@@ -346,6 +346,13 @@
                     android:onClick="syncHeartRate"
                     android:tag="心率同步"
                     android:text="心率同步" />
+                <Button
+                    android:id="@+id/btn_sync_blood_oxygen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="syncBloodOxygen"
+                    android:tag="血氧同步"
+                    android:text="血氧同步" />
             </TableRow>
 
             <TableRow>

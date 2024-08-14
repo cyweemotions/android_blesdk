@@ -119,7 +119,7 @@ public class StepsTask extends OrderTask {
             String key = String.valueOf(packIndex);
             res.add(resultArray);
             // LogModule.i("获取步数数据类型packType====="+ res);
-            if(packType == 2) { //结束 后面没有数据接收了
+            if(packType == 0 || packType == 2) { //结束 后面没有数据接收了
                 StringBuilder resultStr = new StringBuilder(); // 最后的数据
                 List<StepsModel> dataSource = new ArrayList<>();
                 for (int i=0; i<res.size(); i++) {
