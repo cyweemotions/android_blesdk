@@ -712,6 +712,11 @@ public class SendOrderActivity extends BaseActivity {
         orderIntent.putExtra("orderType", "bloodOxygen");
         startActivity(orderIntent);
     }
+    public void syncSleep(View view) {
+        Intent orderIntent = new Intent(SendOrderActivity.this, BleDataActivity.class);
+        orderIntent.putExtra("orderType", "sleep");
+        startActivity(orderIntent);
+    }
     /********************* 数据交互类型 end *****************/
 
     private static final int REQUEST_CODE_FILE = 2;

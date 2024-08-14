@@ -354,6 +354,15 @@
                     android:tag="血氧同步"
                     android:text="血氧同步" />
             </TableRow>
+            <TableRow>
+                <Button
+                    android:id="@+id/btn_sync_sleep"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="syncSleep"
+                    android:tag="睡眠同步"
+                    android:text="睡眠同步" />
+            </TableRow>
 
             <TableRow>
 

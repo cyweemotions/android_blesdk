@@ -20,10 +20,12 @@ import com.fitpolo.support.MokoConstants;
 import com.fitpolo.support.MokoSupport;
 import com.fitpolo.support.entity.dataEntity.BloodOxygenModel;
 import com.fitpolo.support.entity.dataEntity.HeartRateModel;
+import com.fitpolo.support.entity.dataEntity.SleepModel;
 import com.fitpolo.support.entity.dataEntity.StepsModel;
 import com.fitpolo.support.task.dataPushTask.BloodOxygenTask;
 import com.fitpolo.support.task.dataPushTask.HeartRateTask;
 import com.fitpolo.support.task.dataPushTask.StepsTask;
+import com.fitpolo.support.task.dataPushTask.SyncSleepTask;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -101,6 +103,9 @@ public class BleDataActivity extends BaseActivity{
             case "bloodOxygen":
                 title = "血氧同步";
                 break;
+            case "sleep":
+                title = "睡眠同步";
+                break;
             default:
                 title = "同步数据";
                 break;
@@ -120,6 +125,9 @@ public class BleDataActivity extends BaseActivity{
                 break;
             case "bloodOxygen":
                 syncBloodOxygenData();
+                break;
+            case "sleep":
+                syncSleepData();
                 break;
             default:
                 break;
@@ -236,6 +244,71 @@ public class BleDataActivity extends BaseActivity{
                     }
                     contentStr.append("血氧：").append(bloodOxygen).append(" ");
                     contentStr.append("时间：").append(datetime).append(" ");
+                    contentStr.append("\n");
+                }
+
+                textView.setText(contentStr.toString());
+            }
+        }, 2000);
+    }
+    /**
+     * 睡眠同步
+     */
+    public void syncSleepData() {
+        Calendar calendar = Calendar.getInstance();
+        int type = 1;
+        MokoSupport.getInstance().sendOrder(new SyncSleepTask(mService, calendar, type));
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                TextView textView = findViewById(R.id.data_text);
+
+                StringBuilder contentStr = new StringBuilder();
+                List<SleepModel> sleepData = MokoSupport.getInstance().mSleepData;
+                for(int i = 0; i<sleepData.size(); i++){
+                    SleepModel sleepItem = sleepData.get(i);
+                    contentStr.append("第").append(i + 1).append("项：").append("\n");
+                    String type;
+                    String slice;
+                    if(sleepItem.type == 0){
+                        type = "夜间睡眠";
+                        if(sleepItem.slice != 0) {
+                            slice = String.valueOf(sleepItem.slice);
+                            contentStr.append("第").append(slice).append("段夜间睡眠， ");
+                        }
+                    } else {
+                        type = "小睡";
+                        slice = String.valueOf(sleepItem.slice);
+                        contentStr.append("第").append(slice).append("段小睡， ");
+                    }
+                    String state;
+                    if(sleepItem.state == 0){
+                        state = "入睡";
+                    } else if(sleepItem.state == 1){
+                        state = "浅睡";
+                    } else if(sleepItem.state == 2){
+                        state = "深睡";
+                    } else if(sleepItem.state == 3){
+                        state = "清醒";
+                    } else if(sleepItem.state == 12){
+                        state = "REM";
+                    } else { // 4或14  4-夜间睡眠醒来  14-小睡醒来
+                        state = "醒来";
+                    }
+                    String datetime = "";
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
+                                .withZone(ZoneId.systemDefault());
+                        Instant instant = Instant.ofEpochSecond(sleepItem.datetime);
+                        datetime = formatter.format(instant);
+                    } else {
+                        datetime = String.valueOf(sleepItem.datetime);
+                    }
+                    contentStr.append("类型：").append(type).append(", ");
+                    contentStr.append("状态：").append(state).append(", ");
+                    contentStr.append("时间：").append(datetime).append("。 ");
+                    contentStr.append("\n");
                     contentStr.append("\n");
                 }
 

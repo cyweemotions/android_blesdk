@@ -5,8 +5,7 @@ import com.fitpolo.support.MokoSupport;
 import com.fitpolo.support.callback.MokoOrderTaskCallback;
 import com.fitpolo.support.entity.OrderEnum;
 import com.fitpolo.support.entity.OrderType;
-import com.fitpolo.support.entity.dataEntity.BloodOxygenModel;
-import com.fitpolo.support.entity.dataEntity.HeartRateModel;
+import com.fitpolo.support.entity.dataEntity.SleepModel;
 import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.OrderTask;
 import com.fitpolo.support.utils.ByteType;
@@ -17,13 +16,13 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-public class BloodOxygenTask extends OrderTask {
+public class SyncSleepTask extends OrderTask {
     private byte[] orderData;
     private int typeData; // record—— 1  current—— 0
     private int index = 1; // record=1 —— package index
     private List<byte[]> res = new ArrayList<>();
-    public BloodOxygenTask(MokoOrderTaskCallback callback, Calendar calendar, int type) {
-        super(OrderType.DataPushWRITE, OrderEnum.syncBloodOxygen, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
+    public SyncSleepTask(MokoOrderTaskCallback callback, Calendar calendar, int type) {
+        super(OrderType.DataPushWRITE, OrderEnum.syncSleep, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
         typeData = type;
         List<Byte> dataList = new ArrayList<>();
         byte isRecordByte = type == 1 ? (byte) 0x01 : (byte) 0x00;
@@ -87,10 +86,10 @@ public class BloodOxygenTask extends OrderTask {
             }
 //            LogModule.i("获取数据类型======"+type);
             if(type == 0) {
-                // 获取当天的血氧数据
+                // 获取当天的睡眠数据
                 parseCurrentData(subArray);
             } else {
-                // 获取血氧记录
+                // 获取睡眠记录
                 parseRecordData(subArray);
             }
         }
@@ -101,7 +100,7 @@ public class BloodOxygenTask extends OrderTask {
         byte[] resultArray = Arrays.copyOfRange(list, 1, list.length);
         String resultHexStr = DigitalConver.bytesToHexString(resultArray);
         String resultStr = DigitalConver.hex2String(resultHexStr);
-        LogModule.i("获取血氧数据成功");
+        LogModule.i("获取睡眠数据成功");
         LogModule.i(resultStr);
 
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
@@ -116,28 +115,33 @@ public class BloodOxygenTask extends OrderTask {
         byte[] resultArray = Arrays.copyOfRange(list, 8, list.length);
         if(packIndex == index) {
             res.add(resultArray);
-//            LogModule.i("获取血氧数据类型packType====="+ res);
+//            LogModule.i("获取睡眠数据类型packType====="+ res);
             if(packType == 0 || packType == 2) { //结束 后面没有数据接收了
                 StringBuilder resultStr = new StringBuilder(); // 最后的数据
-                List<BloodOxygenModel> dataSource = new ArrayList<>();
+                List<SleepModel> dataSource = new ArrayList<>();
                 for (int i=0; i<res.size(); i++) {
                     // 1、byte[]数据转换为String数据
                     byte[] value = res.get(i);
                     String resultHexStr = DigitalConver.bytesToHexString(value);
                     String heartStr = DigitalConver.hex2String(resultHexStr);
-                    System.out.println("这是血氧数据" + heartStr.toString());
+                    System.out.println("这是睡眠数据" + heartStr.toString());
                     resultStr.append(heartStr);
                 }
                 List<String> contents = Arrays.asList(resultStr.toString().split("\n"));
                 for(int j=0;j<contents.size();j++){
-                    String contentStr = contents.get(j).replace("[BO]", "");
-                    dataSource.add(BloodOxygenModel.StringTurnModel(contentStr));
+                    if(contents.get(j).startsWith("[SL]")) {
+                        String contentStr = contents.get(j).replace("[SL]", "");
+                        dataSource.add(SleepModel.StringTurnModel(contentStr, 0));
+                    } else if (contents.get(j).startsWith("[NA]")) {
+                        String contentStr = contents.get(j).replace("[NA]", "");
+                        dataSource.add(SleepModel.StringTurnModel(contentStr, 1));
+                    }
                 }
-                for (BloodOxygenModel heartRate : dataSource) {
+                for (SleepModel heartRate : dataSource) {
                     System.out.println("这是最终的数据格式" + heartRate.toString());
                 }
-                LogModule.i("获取血氧数据长度======="+dataSource.size());
-                MokoSupport.getInstance().setBloodOxygenData(dataSource);
+                LogModule.i("获取睡眠数据长度======="+dataSource.size());
+                MokoSupport.getInstance().setSleepData(dataSource);
                 orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
                 MokoSupport.getInstance().pollTask();
                 callback.onOrderResult(response);
