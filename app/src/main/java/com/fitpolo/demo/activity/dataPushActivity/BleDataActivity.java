@@ -350,21 +350,12 @@ public class BleDataActivity extends BaseActivity{
             @Override
             public void onOrderResult(OrderTaskResponse response) {
                 LogModule.i("onOrderResult--onOrderResult"+response);
-            }
-            @Override
-            public void onOrderTimeout(OrderTaskResponse response) {}
-            @Override
-            public void onOrderFinish() {}
-        };
-        MokoSupport.getInstance().sendOrder(syncSportTask);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
                 TextView textView = findViewById(R.id.data_text);
 
                 StringBuilder contentStr = new StringBuilder();
-                List<SportModel> sportData = MokoSupport.getInstance().mSportData;
+//                List<SportModel> sportData = MokoSupport.getInstance().mSportData;
+                List<SportModel> sportData = (List<SportModel>) response.responseObject;
                 for(int i = 0; i<sportData.size(); i++){
                     SportModel sportItem = sportData.get(i);
                     contentStr.append("第").append(i + 1).append("项：").append("\n");
@@ -416,6 +407,12 @@ public class BleDataActivity extends BaseActivity{
                     }
                 });
             }
-        }, 2000);
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) {}
+            @Override
+            public void onOrderFinish() {}
+        };
+        MokoSupport.getInstance().sendOrder(syncSportTask);
+
     }
 }

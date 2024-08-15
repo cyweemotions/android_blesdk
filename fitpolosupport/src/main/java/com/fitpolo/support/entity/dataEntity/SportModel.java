@@ -97,6 +97,33 @@ public class SportModel {
                 ", extentsion=" + extentsion +
                 '}';
     }
+    private static int formatNum(String value) {
+        int result;
+        if (value != null && !value.isEmpty()) {
+            try {
+                result = Integer.parseInt(value);
+            } catch (NumberFormatException e) {
+                result = 0;
+            }
+        } else {
+            result = 0;
+        }
+        return result;
+    }
+
+    private static Float formatFloatNum(String value) {
+        Float result;
+        if (value != null && !value.isEmpty()) {
+            try {
+                result = Float.parseFloat(value);
+            } catch (NumberFormatException e) {
+                result = 0.0F;
+            }
+        } else {
+            result = 0.0F;
+        }
+        return result;
+    }
 
     public static SportModel StringTurnModel(String content,long start,int type,List<String> sportContent,String rawData){
         SportModel model = new SportModel();
@@ -105,39 +132,39 @@ public class SportModel {
             List<String> array = Arrays.asList(content.split(","));
             model.start = Long.parseLong(array.get(0));
             model.date = Long.parseLong(array.get(1));
-            model.sportType = Integer.parseInt(array.get(2));
-            model.total_steps = Integer.parseInt(array.get(3));
-            model.total_distance = Float.parseFloat(array.get(4));
-            model.total_calories = Float.parseFloat(array.get(5));
-            model.avg_step_freq = Float.parseFloat(array.get(7));
-            model.max_step_freq = Float.parseFloat(array.get(8));
-            model.avg_step_len = Float.parseFloat(array.get(10));
-            model.avg_pace = Float.parseFloat(array.get(12));
-            model.max_pace = Float.parseFloat(array.get(13));
-            model.hr_zone1 = Integer.parseInt(array.get(15));
-            model.hr_zone2 = Integer.parseInt(array.get(16));
-            model.hr_zone3 = Integer.parseInt(array.get(17));
-            model.hr_zone4 = Integer.parseInt(array.get(18));
-            model.hr_zone5 = Integer.parseInt(array.get(19));
-            model.avg_heart = Float.parseFloat(array.get(20));
-            model.max_heart = Integer.parseInt(array.get(21));
-            model.min_heart = Integer.parseInt(array.get(22));
-            model.vo2max = Float.parseFloat(array.get(23));
-            model.training_time = Integer.parseInt(array.get(24));
+            model.sportType = formatNum(array.get(2));
+            model.total_steps = formatNum(array.get(3));
+            model.total_distance = formatFloatNum(array.get(4));
+            model.total_calories = formatFloatNum(array.get(5));
+            model.avg_step_freq = formatFloatNum(array.get(7));
+            model.max_step_freq = formatFloatNum(array.get(8));
+            model.avg_step_len = formatFloatNum(array.get(10));
+            model.avg_pace = formatFloatNum(array.get(12));
+            model.max_pace = formatFloatNum(array.get(13));
+            model.hr_zone1 = formatNum(array.get(15));
+            model.hr_zone2 = formatNum(array.get(16));
+            model.hr_zone3 = formatNum(array.get(17));
+            model.hr_zone4 = formatNum(array.get(18));
+            model.hr_zone5 = formatNum(array.get(19));
+            model.avg_heart = formatFloatNum(array.get(20));
+            model.max_heart = formatNum(array.get(21));
+            model.min_heart = formatNum(array.get(22));
+            model.vo2max = formatFloatNum(array.get(23));
+            model.training_time = formatNum(array.get(24));
             model.second = model.training_time*60;
             if(skipType.contains(type)){
-                model.jumpCount = Integer.parseInt(array.get(38));
-                model.jumpfreq = Integer.parseInt(array.get(39));
+                model.jumpCount = formatNum(array.get(38));
+                model.jumpfreq = formatNum(array.get(39));
             }else if(type == 6){
                 //室内游泳
-                model.strokeCount = Integer.parseInt(array.get(25));
-                model.strokeLaps = Integer.parseInt(array.get(26));
-                model.strokeFreq = Integer.parseInt(array.get(27));
-                model.strokeAvgFreq = Integer.parseInt(array.get(28));
-                model.strokeAvgSwolf = Integer.parseInt(array.get(29));
-                model.strokeMaxFreq = Integer.parseInt(array.get(30));
-                model.strokeBestSwolf = Integer.parseInt(array.get(31));
-                model.strokeType = Integer.parseInt(array.get(32));
+                model.strokeCount = formatNum(array.get(25));
+                model.strokeLaps = formatNum(array.get(26));
+                model.strokeFreq = formatNum(array.get(27));
+                model.strokeAvgFreq = formatNum(array.get(28));
+                model.strokeAvgSwolf = formatNum(array.get(29));
+                model.strokeMaxFreq = formatNum(array.get(30));
+                model.strokeBestSwolf = formatNum(array.get(31));
+                model.strokeType = formatNum(array.get(32));
             }
         }
         if(!sportContent.isEmpty()){
@@ -145,39 +172,40 @@ public class SportModel {
                 List<String> values = Arrays.asList(sportContent.get(i).split(","));
 
                 // 运动内容数据:150314,,,0,,,119
+                // 运动内容数据:110635,,,97,,0
                 if(values.get(1).isEmpty()){
                     model.step_freqs.add(0);
                 }else{
-                    model.step_freqs.add(Integer.parseInt(values.get(1)));
+                    model.step_freqs.add(formatNum(values.get(1)));
                 }
                 if(values.get(2).isEmpty()){
                     model.speeds.add(0);
                 }else{
-                    model.speeds.add(Integer.parseInt(values.get(2)));
+                    model.speeds.add(formatNum(values.get(2)));
                 }
                 if(values.get(3).isEmpty()){
                     model.hr_values.add(0);
                 }else{
-                    model.hr_values.add(Integer.parseInt(values.get(3)));
+                    model.hr_values.add(formatNum(values.get(3)));
                 }
                 if(skipType.contains(type)) {
                     if(values.get(6).isEmpty()){
                         model.jumpfreqs.add(0);
                     }else{
-                        model.jumpfreqs.add(Integer.parseInt(values.get(6)));
+                        model.jumpfreqs.add(formatNum(values.get(6)));
                     }
                 }else if(type==6){
                     ///室内游泳
                     if(values.get(4).isEmpty()){
                         model.swimfreqs.add(0);
                     }else{
-                        model.swimfreqs.add(Integer.parseInt(values.get(4)));
+                        model.swimfreqs.add(formatNum(values.get(4)));
                     }
                 }else if(type== 5){
                     ///户外骑行
                     LogModule.i("户外骑行数据存在问题:${element.toString()}");
                     if(!values.get(5).isEmpty()){
-                        model.bikeSpeed.add(Integer.parseInt(values.get(5)));
+                        model.bikeSpeed.add(formatNum(values.get(5)));
                     }
                 }
             }

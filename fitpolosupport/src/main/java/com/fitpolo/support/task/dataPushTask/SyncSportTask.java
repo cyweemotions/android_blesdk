@@ -39,7 +39,7 @@ public class SyncSportTask extends OrderTask {
         int month = calendar.get(Calendar.MONTH) + 1;
         dataList.add((byte) (month & 0xFF));
         //日
-        int day = calendar.get(Calendar.DAY_OF_MONTH) - 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
         dataList.add((byte) (day & 0xFF));
         dataList.add((byte) 0x00);
         int dataLength = dataList.size();
@@ -120,7 +120,7 @@ public class SyncSportTask extends OrderTask {
         byte[] resultArray = Arrays.copyOfRange(list, 5, list.length);
         if(packIndex == index && fileLocation == location) {
             res.add(resultArray);
-//            LogModule.i("获取运动数据类型packType====="+ res);
+            LogModule.i("获取运动数据类型packType====="+ res);
             if(packType == 0 || packType == 2) {
                 StringBuilder resultStr = new StringBuilder(); // 最后的数据
                 for (int i=0; i<res.size(); i++) {
@@ -145,10 +145,10 @@ public class SyncSportTask extends OrderTask {
             int sportType = 0;
             for(int j=0;j<sportHistoryDatas.size();j++){
                 String sportSubStr = sportHistoryDatas.get(j);
-//                System.out.println("这是运动数据sportSubStr" + sportSubStr);
+                System.out.println("这是运动数据sportSubStr" + sportSubStr);
                 List<String> contents = Arrays.asList(sportSubStr.split("\n"));
+                List<String> sportDetails = new ArrayList<>();
                 for(int i=0; i<contents.size(); i++) {
-                    List<String> sportDetails = new ArrayList<>();
                     if(contents.get(i).startsWith(MokoConstants.SS)) {
                         String contentStr = contents.get(i).replace(MokoConstants.SS, "");
                         if(contentStr.contains(",")) {
@@ -161,8 +161,8 @@ public class SyncSportTask extends OrderTask {
                         dataSource.add(SportModel.StringTurnModel(contentStr, start, sportType,sportDetails,sportSubStr));
                     } else if (contents.get(i).startsWith(MokoConstants.SP)) {
                         String contentStr = contents.get(i).replace(MokoConstants.SP, "");
-                        System.out.println("这是contentStr" + contentStr);
-
+//                        System.out.println("这是contentStr" + contentStr);
+                        sportDetails.add(contentStr);
                     }
                 }
             }
@@ -171,6 +171,7 @@ public class SyncSportTask extends OrderTask {
                 System.out.println("这是最终的运动数据" + sportdata.toString());
             }
             LogModule.i("获取运动数据长度======="+dataSource.size());
+            response.responseObject = dataSource;
             MokoSupport.getInstance().setSportData(dataSource);
             orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
             MokoSupport.getInstance().pollTask();
