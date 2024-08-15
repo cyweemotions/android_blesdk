@@ -12,4 +12,5 @@ public class OrderTaskResponse implements Serializable {
     public OrderEnum order;
     public int responseType;
     public byte[] responseValue;
+    public Object responseObject;
 }

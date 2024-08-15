@@ -37,6 +37,9 @@ public class MokoConstants {
      public static final int DailPush = 0x05;
      public static final String century = "20";
 
+     public static final String SS = "[1]"; //运动开始
+     public static final String SE = "[5]"; //运动结束
+     public static final String SP = "[2]"; //运动进行
     // 发现状态
     public static final String ACTION_DISCOVER_SUCCESS = "com.moko.fitpolodemo.ACTION_DISCOVER_SUCCESS";
     public static final String ACTION_DISCOVER_TIMEOUT = "com.moko.fitpolodemo.ACTION_DISCOVER_TIMEOUT";

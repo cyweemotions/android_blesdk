@@ -717,6 +717,11 @@ public class SendOrderActivity extends BaseActivity {
         orderIntent.putExtra("orderType", "sleep");
         startActivity(orderIntent);
     }
+    public void syncSport(View view) {
+        Intent orderIntent = new Intent(SendOrderActivity.this, BleDataActivity.class);
+        orderIntent.putExtra("orderType", "sport");
+        startActivity(orderIntent);
+    }
     /********************* 数据交互类型 end *****************/
 
     private static final int REQUEST_CODE_FILE = 2;

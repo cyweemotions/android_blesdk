@@ -362,6 +362,13 @@
                     android:onClick="syncSleep"
                     android:tag="睡眠同步"
                     android:text="睡眠同步" />
+                <Button
+                    android:id="@+id/btn_sync_sport"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="syncSport"
+                    android:tag="运动同步"
+                    android:text="运动同步" />
             </TableRow>
 
             <TableRow>

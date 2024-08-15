@@ -21,6 +21,7 @@ import com.fitpolo.support.entity.AutoLighten;
 import com.fitpolo.support.entity.HeartRate;
 import com.fitpolo.support.entity.dataEntity.BloodOxygenModel;
 import com.fitpolo.support.entity.dataEntity.SleepModel;
+import com.fitpolo.support.entity.dataEntity.SportModel;
 import com.fitpolo.support.entity.dataEntity.StepsModel;
 import com.fitpolo.support.entity.setEntity.AlarmClock;
 import com.fitpolo.support.entity.BleDevice;
@@ -315,6 +316,9 @@ public class MokoSupport implements MokoResponseCallback {
                     orderTask.delayTime = 7000;
                     break;
                 case syncSleep:
+                    orderTask.delayTime = 7000;
+                    break;
+                case syncSport:
                     orderTask.delayTime = 7000;
                     break;
             }
@@ -864,6 +868,10 @@ public class MokoSupport implements MokoResponseCallback {
     public List<SleepModel> mSleepData = new ArrayList<>();
     public void setSleepData(List<SleepModel> data) {
         this.mSleepData = data;
+    }
+    public List<SportModel> mSportData = new ArrayList<>();
+    public void setSportData(List<SportModel> data) {
+        this.mSportData = data;
     }
 
     ///////////////////////////////////////////////////////////////////////////
