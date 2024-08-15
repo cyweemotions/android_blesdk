@@ -138,6 +138,7 @@ public class StepsTask extends OrderTask {
                 }
                 LogModule.i("获取步数数据长度======="+dataSource.size());
                 MokoSupport.getInstance().setStepsData(dataSource);
+                response.responseObject = dataSource;
                 orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
                 MokoSupport.getInstance().pollTask();
                 callback.onOrderResult(response);

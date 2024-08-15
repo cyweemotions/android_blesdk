@@ -150,17 +150,18 @@ public class BleDataActivity extends BaseActivity{
      * 步数同步
      */
     public void syncStepsData() {
-
         int type = 1;
-        MokoSupport.getInstance().sendOrder(new StepsTask(mService, type));
 
-        new Handler().postDelayed(new Runnable() {
+        StepsTask stepsTask = new StepsTask(mService, type);
+        stepsTask.callback = new MokoOrderTaskCallback() {
             @Override
-            public void run() {
+            public void onOrderResult(OrderTaskResponse response) {
+                LogModule.i("onOrderResult--onOrderResult"+response.responseObject.toString());
                 TextView textView = findViewById(R.id.data_text);
 
                 StringBuilder contentStr = new StringBuilder();
-                List<StepsModel> stepsModelData = MokoSupport.getInstance().mStepsData;
+//                List<StepsModel> stepsModelData = MokoSupport.getInstance().mStepsData;
+                List<StepsModel> stepsModelData = (List<StepsModel>) response.responseObject;
                 for(int i = 0; i< stepsModelData.size(); i++){
                     StepsModel stepsModelItem = stepsModelData.get(i);
                     contentStr.append("第").append(i + 1).append("项：").append("\n");
@@ -182,10 +183,19 @@ public class BleDataActivity extends BaseActivity{
                     contentStr.append("时间：").append(datetime).append(" ");
                     contentStr.append("\n");
                 }
-
-                textView.setText(contentStr.toString());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        textView.setText(contentStr.toString());
+                    }
+                });
             }
-        }, 1500);
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) {}
+            @Override
+            public void onOrderFinish() {}
+        };
+        MokoSupport.getInstance().sendOrder(stepsTask);
     }
 
     /**
