@@ -20,6 +20,7 @@ import com.fitpolo.support.callback.MokoScanDeviceCallback;
 import com.fitpolo.support.entity.AutoLighten;
 import com.fitpolo.support.entity.HeartRate;
 import com.fitpolo.support.entity.dataEntity.BloodOxygenModel;
+import com.fitpolo.support.entity.dataEntity.PaiModel;
 import com.fitpolo.support.entity.dataEntity.SleepModel;
 import com.fitpolo.support.entity.dataEntity.SportModel;
 import com.fitpolo.support.entity.dataEntity.StepsModel;
@@ -48,6 +49,7 @@ import com.fitpolo.support.utils.DigitalConver;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -440,6 +442,21 @@ public class MokoSupport implements MokoResponseCallback {
                     return;
             }
             orderTask.parseValue(value);
+        }else{
+            LogModule.i("数据监听");
+            LogModule.i(characteristic.getUuid().toString());
+            ///判断 set  datapush
+            String characteristicUuid = characteristic.getUuid().toString();
+            if (characteristicUuid.equals(OrderType.DataPushNOTIFY.getUuid())) {
+                ///运动
+                System.out.println(Arrays.toString(value));
+            }else if(characteristicUuid.equals(OrderType.NOTIFY.getUuid())){
+                //查找手机
+                System.out.println(Arrays.toString(value));
+            } else {
+                //流控
+                System.out.println(Arrays.toString(value));
+            }
         }
     }
 
