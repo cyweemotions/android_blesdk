@@ -22,6 +22,7 @@ import com.fitpolo.support.callback.MokoOrderTaskCallback;
 import com.fitpolo.support.entity.OrderTaskResponse;
 import com.fitpolo.support.entity.dataEntity.BloodOxygenModel;
 import com.fitpolo.support.entity.dataEntity.HeartRateModel;
+import com.fitpolo.support.entity.dataEntity.PaiModel;
 import com.fitpolo.support.entity.dataEntity.SleepModel;
 import com.fitpolo.support.entity.dataEntity.SportModel;
 import com.fitpolo.support.entity.dataEntity.StepsModel;
@@ -29,14 +30,13 @@ import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.dataPushTask.BloodOxygenTask;
 import com.fitpolo.support.task.dataPushTask.HeartRateTask;
 import com.fitpolo.support.task.dataPushTask.StepsTask;
+import com.fitpolo.support.task.dataPushTask.SyncPaiTask;
 import com.fitpolo.support.task.dataPushTask.SyncSleepTask;
 import com.fitpolo.support.task.dataPushTask.SyncSportTask;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -115,6 +115,9 @@ public class BleDataActivity extends BaseActivity{
             case "sport":
                 title = "运动同步";
                 break;
+            case "PAI":
+                title = "PAI同步";
+                break;
             default:
                 title = "同步数据";
                 break;
@@ -140,6 +143,9 @@ public class BleDataActivity extends BaseActivity{
                 break;
             case "sport":
                 syncSportData();
+                break;
+            case "PAI":
+                syncPaiData();
                 break;
             default:
                 break;
@@ -415,4 +421,63 @@ public class BleDataActivity extends BaseActivity{
         MokoSupport.getInstance().sendOrder(syncSportTask);
 
     }
+
+    /**
+     * PAI同步
+     */
+    public void syncPaiData() {
+        int type = 1;
+
+        SyncPaiTask syncPaiTask = new SyncPaiTask(mService, type);
+        syncPaiTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                LogModule.i("onOrderResult--onOrderResult"+response.responseObject.toString());
+                TextView textView = findViewById(R.id.data_text);
+
+                StringBuilder contentStr = new StringBuilder();
+//                List<PaiModel> stepsModelData = MokoSupport.getInstance().mPaiData;
+                List<PaiModel> paiModelData = (List<PaiModel>) response.responseObject;
+                for(int i = 0; i< paiModelData.size(); i++){
+                    PaiModel paiModelItem = paiModelData.get(i);
+                    contentStr.append("第").append(i + 1).append("项：").append("\n ");
+                    String id = String.valueOf(paiModelItem.id);
+                    String year = String.valueOf(paiModelItem.year);
+                    String month = String.valueOf(paiModelItem.month);
+                    String day = String.valueOf(paiModelItem.day);
+                    String pai = String.valueOf(paiModelItem.pai);
+                    String totals = String.valueOf(paiModelItem.totals);
+                    String low = String.valueOf(paiModelItem.low);
+                    String lowMins = String.valueOf(paiModelItem.lowMins);
+                    String medium = String.valueOf(paiModelItem.medium);
+                    String mediumMins = String.valueOf(paiModelItem.mediumMins);
+                    String high = String.valueOf(paiModelItem.high);
+                    String highMins = String.valueOf(paiModelItem.highMins);
+                    contentStr.append("时间戳：").append(id).append("\n ");
+                    contentStr.append("时间：").append(year).append(month).append(day).append("\n ");
+                    contentStr.append("值：").append(pai).append("\n ");
+                    contentStr.append("总数：").append(totals).append("\n ");
+                    contentStr.append("最低强度：").append(low).append("\n ");
+                    contentStr.append("最低强度持续时间（min）：").append(lowMins).append("\n ");
+                    contentStr.append("中强度：").append(medium).append("\n ");
+                    contentStr.append("中强度持续时间（min）：").append(mediumMins).append("\n ");
+                    contentStr.append("高强度：").append(high).append("\n ");
+                    contentStr.append("最高强度持续时间（min）：").append(highMins).append("\n ");
+                    contentStr.append("\n");
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        textView.setText(contentStr.toString());
+                    }
+                });
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) {}
+            @Override
+            public void onOrderFinish() {}
+        };
+        MokoSupport.getInstance().sendOrder(syncPaiTask);
+    }
+
 }

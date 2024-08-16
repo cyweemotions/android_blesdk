@@ -873,6 +873,10 @@ public class MokoSupport implements MokoResponseCallback {
     public void setSportData(List<SportModel> data) {
         this.mSportData = data;
     }
+    public List<PaiModel> mPaiData = new ArrayList<>();
+    public void setPaiData(List<PaiModel> data) {
+        this.mPaiData = data;
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     // heartRate

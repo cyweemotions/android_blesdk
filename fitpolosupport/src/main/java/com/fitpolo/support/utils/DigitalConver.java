@@ -5,11 +5,16 @@ import com.google.gson.Gson;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * @Date 2017/5/15
@@ -256,6 +261,24 @@ public class DigitalConver {
             }
         }
         return newList;
+    }
+    // 20240814 -> 时间戳（秒）
+    public static long formatTimeStamp(String dateStr, String formatType) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat(formatType);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC")); // 设置时区为UTC
+        long timestamp = 0;
+        try {
+            Date date = sdf.parse(dateStr);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.HOUR, -8); // 减去8小时
+            Date newDate = calendar.getTime();
+            timestamp = newDate.getTime() / 1000; // 转换为秒
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return timestamp;
     }
 
 }

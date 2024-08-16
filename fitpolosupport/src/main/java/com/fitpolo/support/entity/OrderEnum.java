@@ -86,6 +86,7 @@ public enum OrderEnum implements Serializable {
     syncBloodOxygen("血氧同步", 0x04),
     syncSleep("睡眠同步", 0x05),
     syncSport("运动同步", 0x06),
+    syncPAI("PAI同步", 0x07),
 
 
     READ_ALARMS("读取闹钟", 0x01),
