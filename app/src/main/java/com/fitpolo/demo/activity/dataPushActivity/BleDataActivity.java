@@ -27,6 +27,7 @@ import com.fitpolo.support.entity.dataEntity.PressureModel;
 import com.fitpolo.support.entity.dataEntity.SleepModel;
 import com.fitpolo.support.entity.dataEntity.SportModel;
 import com.fitpolo.support.entity.dataEntity.StepsModel;
+import com.fitpolo.support.entity.dataEntity.TemperatureModel;
 import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.dataPushTask.BloodOxygenTask;
 import com.fitpolo.support.task.dataPushTask.HeartRateTask;
@@ -35,6 +36,7 @@ import com.fitpolo.support.task.dataPushTask.SyncPaiTask;
 import com.fitpolo.support.task.dataPushTask.SyncPressureTask;
 import com.fitpolo.support.task.dataPushTask.SyncSleepTask;
 import com.fitpolo.support.task.dataPushTask.SyncSportTask;
+import com.fitpolo.support.task.dataPushTask.SyncTemperatureTask;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -123,6 +125,9 @@ public class BleDataActivity extends BaseActivity{
             case "pressure":
                 title = "压力同步";
                 break;
+            case "temperature":
+                title = "体温同步";
+                break;
             default:
                 title = "同步数据";
                 break;
@@ -154,6 +159,9 @@ public class BleDataActivity extends BaseActivity{
                 break;
             case "pressure":
                 syncPressureData();
+                break;
+            case "temperature":
+                syncTemperatureData();
                 break;
             default:
                 break;
@@ -545,6 +553,56 @@ public class BleDataActivity extends BaseActivity{
             public void onOrderFinish() {}
         };
         MokoSupport.getInstance().sendOrder(syncPressureTask);
+    }
+
+    /**
+     * 体温同步
+     */
+    public void syncTemperatureData() {
+        int type = 1;
+
+        SyncTemperatureTask syncTemperatureTask = new SyncTemperatureTask(mService, type);
+        syncTemperatureTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                LogModule.i("onOrderResult--onOrderResult"+response.responseObject.toString());
+                TextView textView = findViewById(R.id.data_text);
+
+                StringBuilder contentStr = new StringBuilder();
+//                List<StepsModel> stepsModelData = MokoSupport.getInstance().mStepsData;
+                List<TemperatureModel> temperatureModelData = (List<TemperatureModel>) response.responseObject;
+                for(int i = 0; i< temperatureModelData.size(); i++){
+                    TemperatureModel temperatureModelItem = temperatureModelData.get(i);
+                    String datetime = "";
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm")
+                                .withZone(ZoneId.systemDefault());
+                        Instant instant = Instant.ofEpochSecond(temperatureModelItem.datetime);
+                        datetime = formatter.format(instant);
+                    } else {
+                        datetime = String.valueOf(temperatureModelItem.datetime);
+                    }
+                    String skinTemperature = String.valueOf(temperatureModelItem.skinTemperature);
+                    String bodyTemperature = String.valueOf(temperatureModelItem.bodyTemperature);
+                    contentStr.append("第").append(i + 1).append("项：").append("\n ");
+                    contentStr.append("时间：").append(datetime).append("\n ");
+                    contentStr.append("皮肤温度：").append(skinTemperature).append("\n ");
+                    contentStr.append("体温：").append(bodyTemperature).append("\n ");
+                    contentStr.append("\n");
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        textView.setText(contentStr.toString());
+                    }
+                });
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) {}
+            @Override
+            public void onOrderFinish() {}
+        };
+        MokoSupport.getInstance().sendOrder(syncTemperatureTask);
     }
 
 }

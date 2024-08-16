@@ -386,6 +386,15 @@
                     android:tag="压力同步"
                     android:text="压力同步" />
             </TableRow>
+            <TableRow>
+                <Button
+                    android:id="@+id/btn_sync_temperature"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="syncTemperature"
+                    android:tag="体温同步"
+                    android:text="体温同步" />
+            </TableRow>
 
             <TableRow>
 
