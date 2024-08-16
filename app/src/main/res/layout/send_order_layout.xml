@@ -378,6 +378,13 @@
                     android:onClick="syncPAI"
                     android:tag="PAI同步"
                     android:text="PAI同步" />
+                <Button
+                    android:id="@+id/btn_sync_pressure"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="syncPressure"
+                    android:tag="压力同步"
+                    android:text="压力同步" />
             </TableRow>
 
             <TableRow>

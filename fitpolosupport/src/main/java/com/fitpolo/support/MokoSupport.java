@@ -21,6 +21,7 @@ import com.fitpolo.support.entity.AutoLighten;
 import com.fitpolo.support.entity.HeartRate;
 import com.fitpolo.support.entity.dataEntity.BloodOxygenModel;
 import com.fitpolo.support.entity.dataEntity.PaiModel;
+import com.fitpolo.support.entity.dataEntity.PressureModel;
 import com.fitpolo.support.entity.dataEntity.SleepModel;
 import com.fitpolo.support.entity.dataEntity.SportModel;
 import com.fitpolo.support.entity.dataEntity.StepsModel;
@@ -893,6 +894,10 @@ public class MokoSupport implements MokoResponseCallback {
     public List<PaiModel> mPaiData = new ArrayList<>();
     public void setPaiData(List<PaiModel> data) {
         this.mPaiData = data;
+    }
+    public List<PressureModel> mPressureData = new ArrayList<>();
+    public void setPressureData(List<PressureModel> data) {
+        this.mPressureData = data;
     }
 
     ///////////////////////////////////////////////////////////////////////////

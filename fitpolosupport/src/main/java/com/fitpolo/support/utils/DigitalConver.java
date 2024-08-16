@@ -281,4 +281,15 @@ public class DigitalConver {
         return timestamp;
     }
 
+    public static String join (String str, List<String> list) {
+        StringBuilder pressTime = new StringBuilder();
+        for (int i = 0; i < list.size(); i++) {
+            pressTime.append(list.get(i));
+            if (i < list.size() - 1) {
+                pressTime.append(str); // 添加分隔符
+            }
+        }
+        return pressTime.toString();
+    }
+
 }

@@ -23,6 +23,7 @@ import com.fitpolo.support.entity.OrderTaskResponse;
 import com.fitpolo.support.entity.dataEntity.BloodOxygenModel;
 import com.fitpolo.support.entity.dataEntity.HeartRateModel;
 import com.fitpolo.support.entity.dataEntity.PaiModel;
+import com.fitpolo.support.entity.dataEntity.PressureModel;
 import com.fitpolo.support.entity.dataEntity.SleepModel;
 import com.fitpolo.support.entity.dataEntity.SportModel;
 import com.fitpolo.support.entity.dataEntity.StepsModel;
@@ -31,6 +32,7 @@ import com.fitpolo.support.task.dataPushTask.BloodOxygenTask;
 import com.fitpolo.support.task.dataPushTask.HeartRateTask;
 import com.fitpolo.support.task.dataPushTask.StepsTask;
 import com.fitpolo.support.task.dataPushTask.SyncPaiTask;
+import com.fitpolo.support.task.dataPushTask.SyncPressureTask;
 import com.fitpolo.support.task.dataPushTask.SyncSleepTask;
 import com.fitpolo.support.task.dataPushTask.SyncSportTask;
 
@@ -118,6 +120,9 @@ public class BleDataActivity extends BaseActivity{
             case "PAI":
                 title = "PAI同步";
                 break;
+            case "pressure":
+                title = "压力同步";
+                break;
             default:
                 title = "同步数据";
                 break;
@@ -146,6 +151,9 @@ public class BleDataActivity extends BaseActivity{
                 break;
             case "PAI":
                 syncPaiData();
+                break;
+            case "pressure":
+                syncPressureData();
                 break;
             default:
                 break;
@@ -478,6 +486,65 @@ public class BleDataActivity extends BaseActivity{
             public void onOrderFinish() {}
         };
         MokoSupport.getInstance().sendOrder(syncPaiTask);
+    }
+
+    /**
+     * 压力同步
+     */
+    public void syncPressureData() {
+        int type = 1;
+
+        SyncPressureTask syncPressureTask = new SyncPressureTask(mService, type);
+        syncPressureTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                LogModule.i("onOrderResult--onOrderResult"+response.responseObject.toString());
+                TextView textView = findViewById(R.id.data_text);
+
+                StringBuilder contentStr = new StringBuilder();
+//                List<StepsModel> stepsModelData = MokoSupport.getInstance().mStepsData;
+                List<PressureModel> pressureModelData = (List<PressureModel>) response.responseObject;
+                for(int i = 0; i< pressureModelData.size(); i++){
+                    PressureModel pressureModelItem = pressureModelData.get(i);
+                    contentStr.append("第").append(i + 1).append("项：").append("\n ");
+                    String id = String.valueOf(pressureModelItem.id);
+                    String year = String.valueOf(pressureModelItem.year);
+                    String month = String.valueOf(pressureModelItem.month);
+                    String day = String.valueOf(pressureModelItem.day);
+                    String hours = String.valueOf(pressureModelItem.hours);
+                    String relax = String.valueOf(pressureModelItem.relax);
+                    String normal = String.valueOf(pressureModelItem.normal);
+                    String strain = String.valueOf(pressureModelItem.strain);
+                    String anxiety = String.valueOf(pressureModelItem.anxiety);
+                    String highest = String.valueOf(pressureModelItem.highest);
+                    String minimun = String.valueOf(pressureModelItem.minimun);
+                    String lately = String.valueOf(pressureModelItem.lately);
+                    String pressTime = String.valueOf(pressureModelItem.pressTime);
+                    contentStr.append("时间戳：").append(id).append("\n ");
+                    contentStr.append("时间：").append(year).append("年").append(month).append("月").append(day).append("日").append("\n ");
+                    contentStr.append("放松：").append(relax).append("\n ");
+                    contentStr.append("正常：").append(normal).append("\n ");
+                    contentStr.append("紧张：").append(strain).append("\n ");
+                    contentStr.append("焦虑：").append(anxiety).append("\n ");
+                    contentStr.append("最高：").append(highest).append("\n ");
+                    contentStr.append("最低：").append(minimun).append("\n ");
+                    contentStr.append("最近：").append(lately).append("\n ");
+                    contentStr.append("pressTime：").append(pressTime).append("\n ");
+                    contentStr.append("\n");
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        textView.setText(contentStr.toString());
+                    }
+                });
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) {}
+            @Override
+            public void onOrderFinish() {}
+        };
+        MokoSupport.getInstance().sendOrder(syncPressureTask);
     }
 
 }
