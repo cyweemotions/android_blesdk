@@ -310,21 +310,6 @@ public class MokoSupport implements MokoResponseCallback {
                 case bindAuth:
                     orderTask.delayTime = 10000;
                     break;
-                case syncSteps:
-                    orderTask.delayTime = 7000;
-                    break;
-                case syncHeartRate:
-                    orderTask.delayTime = 7000;
-                    break;
-                case syncBloodOxygen:
-                    orderTask.delayTime = 7000;
-                    break;
-                case syncSleep:
-                    orderTask.delayTime = 7000;
-                    break;
-                case syncSport:
-                    orderTask.delayTime = 7000;
-                    break;
             }
             timeoutHandler(orderTask);
         }

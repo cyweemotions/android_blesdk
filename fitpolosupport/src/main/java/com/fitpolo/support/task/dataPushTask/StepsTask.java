@@ -119,6 +119,8 @@ public class StepsTask extends OrderTask {
             String key = String.valueOf(packIndex);
             res.add(resultArray);
             // LogModule.i("获取步数数据类型packType====="+ res);
+
+            LogModule.i("获取步数数据长度=======");
             if(packType == 0 || packType == 2) { //结束 后面没有数据接收了
                 StringBuilder resultStr = new StringBuilder(); // 最后的数据
                 List<StepsModel> dataSource = new ArrayList<>();
@@ -144,6 +146,8 @@ public class StepsTask extends OrderTask {
                 callback.onOrderResult(response);
                 MokoSupport.getInstance().executeTask(callback);
                 index = 1;
+            } else {
+                MokoSupport.getInstance().timeoutHandler(this);
             }
             index++;
         }

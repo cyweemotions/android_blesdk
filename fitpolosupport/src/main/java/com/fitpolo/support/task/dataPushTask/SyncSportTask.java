@@ -177,6 +177,8 @@ public class SyncSportTask extends OrderTask {
             MokoSupport.getInstance().pollTask();
             callback.onOrderResult(response);
             MokoSupport.getInstance().executeTask(callback);
+        } else {
+            MokoSupport.getInstance().timeoutHandler(this);
         }
     }
 }
