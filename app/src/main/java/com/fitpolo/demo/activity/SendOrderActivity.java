@@ -14,15 +14,12 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
-import com.fitpolo.demo.AppConstants;
 import com.fitpolo.demo.R;
 import com.fitpolo.demo.activity.dataPushActivity.BleDataActivity;
 import com.fitpolo.demo.service.MokoService;
 import com.fitpolo.demo.utils.FileUtils;
-import com.fitpolo.demo.utils.Utils;
 import com.fitpolo.support.MokoConstants;
 import com.fitpolo.support.MokoSupport;
 import com.fitpolo.support.entity.AutoLighten;
@@ -61,37 +58,19 @@ import com.fitpolo.support.task.getTask.AddressBookDataTask;
 import com.fitpolo.support.task.getTask.SleepMonitorDataTask;
 import com.fitpolo.support.task.setTask.AddressBookTask;
 import com.fitpolo.support.task.setTask.AlarmClockTask;
-import com.fitpolo.support.task.dataPushTask.AllHeartRateTask;
-import com.fitpolo.support.task.dataPushTask.AllSleepIndexTask;
-import com.fitpolo.support.task.dataPushTask.AllStepsTask;
 import com.fitpolo.support.task.setTask.AutoLightenTask;
 import com.fitpolo.support.task.funcTask.GetBatteryTask;
 import com.fitpolo.support.task.funcTask.FindDeviceTask;
 import com.fitpolo.support.task.funcTask.FirmwareParamTask;
-import com.fitpolo.support.task.FunctionDisplayTask;
 import com.fitpolo.support.task.setTask.CallReminderTask;
 import com.fitpolo.support.task.setTask.DoNotDisturbTask;
 import com.fitpolo.support.task.setTask.HeartRateMonitorTask;
-import com.fitpolo.support.task.InnerVersionTask;
-import com.fitpolo.support.task.LastScreenTask;
-import com.fitpolo.support.task.dataPushTask.LastestHeartRateTask;
-import com.fitpolo.support.task.dataPushTask.LastestSleepIndexTask;
-import com.fitpolo.support.task.dataPushTask.LastestStepsTask;
-import com.fitpolo.support.task.NotifyPhoneTask;
-import com.fitpolo.support.task.NotifySmsTask;
-import com.fitpolo.support.task.OrderTask;
-import com.fitpolo.support.task.ReadAlarmsTask;
-import com.fitpolo.support.task.ReadSettingTask;
-import com.fitpolo.support.task.ReadSitAlertTask;
-import com.fitpolo.support.task.ShakeBandTask;
 import com.fitpolo.support.task.setTask.LanguageTask;
 import com.fitpolo.support.task.setTask.MotionTargetTask;
 import com.fitpolo.support.task.setTask.NotifyTask;
 import com.fitpolo.support.task.setTask.OnScreenDurationTask;
 import com.fitpolo.support.task.setTask.PowerSaveTask;
 import com.fitpolo.support.task.setTask.SitLongTimeAlertTask;
-import com.fitpolo.support.task.SleepHeartCountTask;
-import com.fitpolo.support.task.UnitTypeTask;
 import com.fitpolo.support.task.setTask.SleepMonitorTask;
 import com.fitpolo.support.task.setTask.SleepTask;
 import com.fitpolo.support.task.setTask.StandardAlertTask;
@@ -100,10 +79,8 @@ import com.fitpolo.support.task.setTask.TimeTask;
 import com.fitpolo.support.task.setTask.UserInfoTask;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -115,26 +92,20 @@ import butterknife.ButterKnife;
 public class SendOrderActivity extends BaseActivity {
     private static final String TAG = "SendOrderActivity";
 
-    @BindView(R.id.btn_heart_rate_interval)
-    Button btnHeartRateInterval;
-    @BindView(R.id.btn_lastest_steps)
-    Button btnLastestSteps;
-    @BindView(R.id.btn_lastest_sleeps)
-    Button btnLastestSleeps;
-    @BindView(R.id.btn_lastest_heart_rate)
-    Button btnLastestHeartRate;
-    @BindView(R.id.btn_all_heart_rate)
-    Button btnAllHeartRate;
-    @BindView(R.id.btn_read_all_alarms)
-    Button btnReadAllAlarms;
-    @BindView(R.id.btn_read_sit_alert)
-    Button btnReadSitAlert;
-    @BindView(R.id.btn_read_settings)
-    Button btnReadSettings;
-    @BindView(R.id.btn_notification)
-    Button btnNotification;
-    @BindView(R.id.btn_firmware_params)
-    Button btnFirmwareParams;
+//    @BindView(R.id.btn_heart_rate_interval)
+//    Button btnHeartRateInterval;
+//    @BindView(R.id.btn_lastest_heart_rate)
+//    Button btnLastestHeartRate;
+//    @BindView(R.id.btn_read_all_alarms)
+//    Button btnReadAllAlarms;
+//    @BindView(R.id.btn_read_sit_alert)
+//    Button btnReadSitAlert;
+//    @BindView(R.id.btn_read_settings)
+//    Button btnReadSettings;
+//    @BindView(R.id.btn_notification)
+//    Button btnNotification;
+//    @BindView(R.id.btn_firmware_params)
+//    Button btnFirmwareParams;
     private MokoService mService;
     private String deviceMacAddress;
     private boolean mIsUpgrade;
@@ -176,19 +147,19 @@ public class SendOrderActivity extends BaseActivity {
                     switch (orderEnum) {
                         case getInnerVersion:
 
-                            btnAllHeartRate.setVisibility(MokoSupport.showHeartRate ? View.VISIBLE : View.GONE);
-                            btnHeartRateInterval.setVisibility(MokoSupport.showHeartRate ? View.VISIBLE : View.GONE);
+//                            btnAllHeartRate.setVisibility(MokoSupport.showHeartRate ? View.VISIBLE : View.GONE);
+//                            btnHeartRateInterval.setVisibility(MokoSupport.showHeartRate ? View.VISIBLE : View.GONE);
 
-                            btnLastestSteps.setVisibility(MokoSupport.supportNewData ? View.VISIBLE : View.GONE);
-                            btnLastestSleeps.setVisibility(MokoSupport.supportNewData ? View.VISIBLE : View.GONE);
-                            btnLastestHeartRate.setVisibility(MokoSupport.showHeartRate && MokoSupport.supportNewData ? View.VISIBLE : View.GONE);
-
-                            btnFirmwareParams.setVisibility(MokoSupport.versionCodeLast >= 28 ? View.VISIBLE : View.GONE);
-
-                            btnReadAllAlarms.setVisibility(MokoSupport.supportNotifyAndRead ? View.VISIBLE : View.GONE);
-                            btnReadSettings.setVisibility(MokoSupport.supportNotifyAndRead ? View.VISIBLE : View.GONE);
-                            btnReadSitAlert.setVisibility(MokoSupport.supportNotifyAndRead ? View.VISIBLE : View.GONE);
-                            btnNotification.setVisibility(MokoSupport.supportNotifyAndRead ? View.VISIBLE : View.GONE);
+//                            btnLastestSteps.setVisibility(MokoSupport.supportNewData ? View.VISIBLE : View.GONE);
+//                            btnLastestSleeps.setVisibility(MokoSupport.supportNewData ? View.VISIBLE : View.GONE);
+//                            btnLastestHeartRate.setVisibility(MokoSupport.showHeartRate && MokoSupport.supportNewData ? View.VISIBLE : View.GONE);
+//
+//                            btnFirmwareParams.setVisibility(MokoSupport.versionCodeLast >= 28 ? View.VISIBLE : View.GONE);
+//
+//                            btnReadAllAlarms.setVisibility(MokoSupport.supportNotifyAndRead ? View.VISIBLE : View.GONE);
+//                            btnReadSettings.setVisibility(MokoSupport.supportNotifyAndRead ? View.VISIBLE : View.GONE);
+//                            btnReadSitAlert.setVisibility(MokoSupport.supportNotifyAndRead ? View.VISIBLE : View.GONE);
+//                            btnNotification.setVisibility(MokoSupport.supportNotifyAndRead ? View.VISIBLE : View.GONE);
 
                             LogModule.i("Support heartRate：" + MokoSupport.showHeartRate);
                             LogModule.i("Support newData：" + MokoSupport.supportNewData);
@@ -345,7 +316,7 @@ public class SendOrderActivity extends BaseActivity {
             filter.setPriority(200);
             registerReceiver(mReceiver, filter);
             // first
-            MokoSupport.getInstance().sendOrder(new InnerVersionTask(mService));
+//            MokoSupport.getInstance().sendOrder(new InnerVersionTask(mService));
         }
 
         @Override
@@ -353,114 +324,10 @@ public class SendOrderActivity extends BaseActivity {
         }
     };
 
-
-    public void getInnerVersion(View view) {
-        MokoSupport.getInstance().sendOrder(new InnerVersionTask(mService));
-    }
-
-    public void setSystemTime(View view) {
-        Toast.makeText(this, "Connect successp-[1", Toast.LENGTH_SHORT).show();
-//        MokoSupport.getInstance().sendOrder(new SystemTimeTask(mService));
-        MokoSupport.getInstance().sendOrder(new ReadSettingTask(mService));
-    }
-
-    public void setUnitType(View view) {
-        MokoSupport.getInstance().sendOrder(new UnitTypeTask(mService, 0));
-    }
-
-
-
-    public void setLastScreen(View view) {
-        MokoSupport.getInstance().sendOrder(new LastScreenTask(mService, 1));
-    }
-
-    public void setFunctionDisplay(View view) {
-        CustomScreen customScreen = new CustomScreen(true, true, true, true, true);
-        MokoSupport.getInstance().sendOrder(new FunctionDisplayTask(mService, customScreen));
-    }
-
-
-    public void getSleepHeartCount(View view) {
-        MokoSupport.getInstance().sendOrder(new SleepHeartCountTask(mService));
-    }
-
-    public void getAllSteps(View view) {
-//        if (MokoSupport.getInstance().getDailyStepCount() == 0) {
-//            Toast.makeText(this, "Get step count first", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-        MokoSupport.getInstance().sendOrder(new AllStepsTask(mService));
-    }
-
-    public void getAllSleeps(View view) {
-        if (MokoSupport.getInstance().getSleepIndexCount() == 0) {
-            Toast.makeText(this, "Get sleep count first", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        MokoSupport.getInstance().sendOrder(new AllSleepIndexTask(mService));
-    }
-
-    public void getAllHeartRate(View view) {
-        if (MokoSupport.getInstance().getHeartRateCount() == 0) {
-            Toast.makeText(this, "Get heartrate count first", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        MokoSupport.getInstance().sendOrder(new AllHeartRateTask(mService));
-    }
-
-    public void shakeBand(View view) {
-        MokoSupport.getInstance().sendDirectOrder(new ShakeBandTask(mService));
-    }
-
-    public void setPhoneNotify(View view) {
-        OrderTask shakeBandTask = new NotifyPhoneTask(mService, "1234567", true);
-        MokoSupport.getInstance().sendDirectOrder(shakeBandTask);
-    }
-
-    public void setSmsNotify(View view) {
-        OrderTask shakeBandTask = new NotifySmsTask(mService, "abcdef", false);
-        MokoSupport.getInstance().sendDirectOrder(shakeBandTask);
-    }
-
-    public void getLastestSteps(View view) {
-        Calendar lastSyncTime = Utils.strDate2Calendar("2018-06-01 00:00", AppConstants.PATTERN_YYYY_MM_DD_HH_MM);
-        OrderTask stepsTask = new LastestStepsTask(mService, lastSyncTime);
-        MokoSupport.getInstance().sendOrder(stepsTask);
-    }
-
-    public void getLastestSleeps(View view) {
-        Calendar lastSyncTime = Utils.strDate2Calendar("2018-06-01 00:00", AppConstants.PATTERN_YYYY_MM_DD_HH_MM);
-        OrderTask sleepGeneral = new LastestSleepIndexTask(mService, lastSyncTime);
-        MokoSupport.getInstance().sendOrder(sleepGeneral);
-    }
-
-    public void getLastestHeartRate(View view) {
-        Calendar lastSyncTime = Utils.strDate2Calendar("2018-06-01 00:00", AppConstants.PATTERN_YYYY_MM_DD_HH_MM);
-        OrderTask heartRateTask = new LastestHeartRateTask(mService, lastSyncTime);
-        MokoSupport.getInstance().sendOrder(heartRateTask);
-    }
-
-
     public void getFirmwareParams(View view) {
         MokoSupport.getInstance().sendOrder(new FirmwareParamTask(mService));
     }
 
-
-    public void readAllAlarms(View view) {
-        MokoSupport.getInstance().sendOrder(new ReadAlarmsTask(mService));
-    }
-
-    public void readSitAlert(View view) {
-        MokoSupport.getInstance().sendOrder(new ReadSitAlertTask(mService));
-    }
-
-    public void readSettings(View view) {
-        MokoSupport.getInstance().sendOrder(new ReadSettingTask(mService));
-    }
-
-    public void notification(View view) {
-        startActivity(new Intent(this, MessageNotificationActivity.class));
-    }
 
     /********************* 鉴权 begin *****************/
     public void queryAuthState(View view) {
@@ -741,6 +608,7 @@ public class SendOrderActivity extends BaseActivity {
 
     private static final int REQUEST_CODE_FILE = 2;
 
+    //升级固件
     public void upgradeFirmware(View view) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
