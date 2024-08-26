@@ -15,9 +15,6 @@ import java.util.Arrays;
  * 设备信息
  */
 public class DeviceInfoTask extends OrderTask {
-
-    private static final int ORDERDATA_LENGTH = 6;
-
     private byte[] orderData;
 
     public DeviceInfoTask(MokoOrderTaskCallback callback) {
@@ -40,15 +37,17 @@ public class DeviceInfoTask extends OrderTask {
 
     @Override
     public void parseValue(byte[] value) {
-        LogModule.i(order.getOrderName() + "成功");
-        LogModule.i(Arrays.toString(value));
-        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) {
-            return;
-        }
+        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) return;
+        if (MokoConstants.Function != DigitalConver.byte2Int(value[2])) return;
+        int dataLength = (value[4] & 0xFF);
+        byte[] subArray = Arrays.copyOfRange(value, 5, dataLength + 5);
 
-        int group = DigitalConver.byte2Int(value[5]);
-        if (group != 0)
-            return;
+        String hexString = DigitalConver.bytesToHex(subArray);
+        String result = DigitalConver.hex2String(hexString);
+        LogModule.i("获取设备信息");
+        LogModule.i(result);
+
+        response.responseObject =  result;
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
 
         MokoSupport.getInstance().pollTask();

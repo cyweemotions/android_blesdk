@@ -45,15 +45,15 @@ public class FindDeviceTask extends OrderTask {
     public void parseValue(byte[] value) {
         LogModule.i(order.getOrderName() + "成功");
         LogModule.i(Arrays.toString(value));
-        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) {
-            return;
-        }
+        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) return;
+        if (MokoConstants.Function != DigitalConver.byte2Int(value[2])) return;
+        int dataLength = (value[4] & 0xFF);
+        int result = (value[5] & 0xFF); //设置结果
+        byte[] subArray = Arrays.copyOfRange(value, 5, dataLength + 5);
+        LogModule.i(Arrays.toString(subArray));
 
-        int group = DigitalConver.byte2Int(value[5]);
-        if (group != 0)
-            return;
+        response.responseObject =  result == 0 ? 0 : 1;
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
-
         MokoSupport.getInstance().pollTask();
         callback.onOrderResult(response);
         MokoSupport.getInstance().executeTask(callback);

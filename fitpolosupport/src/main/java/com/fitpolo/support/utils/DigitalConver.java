@@ -184,6 +184,16 @@ public class DigitalConver {
         }
         return data;
     }
+    // 将 byte[] 转换为十六进制字符串
+    public static String bytesToHex(byte[] bytes) {
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : bytes) {
+            // 将每个字节转换为两位的十六进制字符串
+            String hex = String.format("%02x", b);
+            hexString.append(hex);
+        }
+        return hexString.toString().toUpperCase(); // 转为大写
+    }
     public static byte[] mergeBitArrays(byte[] array1, byte[] array2) {
         // 计算合并后数组的长度
         int totalLength = array1.length + array2.length;

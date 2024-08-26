@@ -61,7 +61,6 @@ import com.fitpolo.support.task.setTask.AlarmClockTask;
 import com.fitpolo.support.task.setTask.AutoLightenTask;
 import com.fitpolo.support.task.funcTask.GetBatteryTask;
 import com.fitpolo.support.task.funcTask.FindDeviceTask;
-import com.fitpolo.support.task.funcTask.FirmwareParamTask;
 import com.fitpolo.support.task.setTask.CallReminderTask;
 import com.fitpolo.support.task.setTask.DoNotDisturbTask;
 import com.fitpolo.support.task.setTask.HeartRateMonitorTask;
@@ -325,9 +324,9 @@ public class SendOrderActivity extends BaseActivity {
         }
     };
 
-    public void getFirmwareParams(View view) {
-        MokoSupport.getInstance().sendOrder(new FirmwareParamTask(mService));
-    }
+//    public void getFirmwareParams(View view) {
+//        MokoSupport.getInstance().sendOrder(new FirmwareParamTask(mService));
+//    }
 
 
     /********************* 鉴权 begin *****************/

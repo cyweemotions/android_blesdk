@@ -408,16 +408,16 @@
                     android:text="getFirmwareVersion" />
             </TableRow>
 
-            <TableRow>
-                <Button
-                    android:id="@+id/btn_firmware_params"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_span="2"
-                    android:onClick="getFirmwareParams"
-                    android:tag="获取固件参数"
-                    android:text="getFirmwareParams" />
-            </TableRow>
+<!--            <TableRow>-->
+<!--                <Button-->
+<!--                    android:id="@+id/btn_firmware_params"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_span="2"-->
+<!--                    android:onClick="getFirmwareParams"-->
+<!--                    android:tag="获取固件参数"-->
+<!--                    android:text="getFirmwareParams" />-->
+<!--            </TableRow>-->
             <TableRow>
                 <Button
                     android:id="@+id/btn_upgrade_firmware"

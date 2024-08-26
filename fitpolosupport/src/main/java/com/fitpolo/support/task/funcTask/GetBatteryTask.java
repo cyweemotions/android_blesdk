@@ -9,15 +9,13 @@ import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.OrderTask;
 import com.fitpolo.support.utils.DigitalConver;
 
+import java.util.Arrays;
+
 /**
  * 获取电量
  */
 public class GetBatteryTask extends OrderTask {
-    private static final int ORDERDATA_LENGTH = 8;
-    // 获取数据
-
     private byte[] orderData;
-
     public GetBatteryTask(MokoOrderTaskCallback callback) {
         super(OrderType.WRITE, OrderEnum.getBattery, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
         orderData = new byte[]{
@@ -40,15 +38,19 @@ public class GetBatteryTask extends OrderTask {
 
     @Override
     public void parseValue(byte[] value) {
-        LogModule.i(order.getOrderName() + "成功");
-        LogModule.i("数据返回"+DigitalConver.bytesToHexString(value));
-        orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
-        int batteryQuantity = DigitalConver.byte2Int(value[5]);
+        LogModule.i(order.getOrderName() + "成功" );
+        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) return;
+        if (MokoConstants.Function != DigitalConver.byte2Int(value[2])) return;
+        int dataLength = (value[4] & 0xFF);
+        byte[] subArray = Arrays.copyOfRange(value, 5, dataLength + 5);
+
+        int batteryQuantity = DigitalConver.byte2Int(subArray[0]);
         MokoSupport.getInstance().setBatteryQuantity(batteryQuantity);
         LogModule.i("电池电量：" + batteryQuantity);
-        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) {
-            return;
-        }
+
+        response.responseObject =  batteryQuantity;
+        orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
+
         MokoSupport.getInstance().pollTask();
         callback.onOrderResult(response);
         MokoSupport.getInstance().executeTask(callback);
