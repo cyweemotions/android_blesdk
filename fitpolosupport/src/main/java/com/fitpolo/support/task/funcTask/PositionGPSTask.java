@@ -9,7 +9,9 @@ import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.OrderTask;
 import com.fitpolo.support.utils.DigitalConver;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 定位GPS
@@ -20,26 +22,35 @@ public class PositionGPSTask extends OrderTask {
 
     private byte[] orderData;
 
-    public PositionGPSTask(MokoOrderTaskCallback callback) {
+    public PositionGPSTask(MokoOrderTaskCallback callback,int state, int lat, int lng) {
         super(OrderType.WRITE, OrderEnum.positionGPS, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
-        orderData = new byte[]{
-                (byte) MokoConstants.HEADER_READ_SEND,
-                (byte) 0x0e,
-                (byte) MokoConstants.Function,
-                (byte) order.getOrderHeader(),
-                (byte) 0x09,
-                (byte) 0x00,
-                (byte) 0x06,
-                (byte) 0xca,
-                (byte) 0x70,
-                (byte) 0xaa,
-                (byte) 0x01,
-                (byte) 0x57,
-                (byte) 0xd4,
-                (byte) 0xc8,
-                (byte) 0xFF,
-                (byte) 0xFF,
-        };
+        List<Byte> dataList = new ArrayList<>();
+        // 转换为十六进制字符串
+        String latHex = Long.toHexString((lat * 1000000L) & 0xFFFFFFFFL).toUpperCase();
+        String lngHex = Long.toHexString((lng * 1000000L) & 0xFFFFFFFFL).toUpperCase();
+
+        List<Byte> latU8 = DigitalConver.bytes2ListByte(DigitalConver.hex2bytes(latHex));
+        List<Byte> lngU8 = DigitalConver.bytes2ListByte(DigitalConver.hex2bytes(lngHex));
+        dataList.add((byte) (state & 0xFF));
+        dataList.addAll(latU8);
+        dataList.addAll(lngU8);
+        int dataLength = dataList.size();
+
+        List<Byte> byteList = new ArrayList<>();
+        byteList.add((byte) MokoConstants.HEADER_READ_SEND);
+        byteList.add((byte) (5 + dataLength));
+        byteList.add((byte) MokoConstants.Function);
+        byteList.add((byte) order.getOrderHeader());
+        byteList.add((byte) dataLength);
+        byteList.addAll(dataList);
+        byteList.add((byte) 0xFF);
+        byteList.add((byte) 0xFF);
+
+        byte[] dataBytes = new byte[byteList.size()];
+        for (int i = 0; i < byteList.size(); i++) {
+            dataBytes[i] = byteList.get(i);
+        }
+        orderData = dataBytes;
 //     [255, 14, 2, 11, 9, 0, 6, 202, 112, 170, 1, 87, 212, 200, 255, 255]
     }
 

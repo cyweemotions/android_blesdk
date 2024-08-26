@@ -79,6 +79,7 @@ import com.fitpolo.support.task.setTask.TimeTask;
 import com.fitpolo.support.task.setTask.UserInfoTask;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -376,11 +377,42 @@ public class SendOrderActivity extends BaseActivity {
     }
     public void messageNotify(View view){
         LogModule.i("开始消息通知====");
-        MokoSupport.getInstance().sendOrder(new MessageNotifyTask(mService));
+        Calendar calendar = Calendar.getInstance();
+        String title = "这是标题";
+        String content = "这是一段消息内容";
+
+        int appType = 12; //app
+//        String packageName = MokoConstants.wechatPName;
+//        if(packageName == MokoConstants.wechatPName){
+//            appType = 12;
+//        }else if(packageName == MokoConstants.facebookPName){
+//            appType = 1;
+//        }else if(packageName == MokoConstants.instagramPName){
+//            appType = 2;
+//        }else if(packageName == MokoConstants.kakaotalkPName){
+//            appType = 3;
+//        }else if(packageName == MokoConstants.LinePName){
+//            appType = 4;
+//        }else if(packageName == MokoConstants.LINKEDINPName){
+//            appType = 5;
+//        }else if(packageName == MokoConstants.MESSAGERPName){
+//            appType = 6;
+//        }else if(packageName == MokoConstants.QQPName){
+//            appType = 7;
+//        }else if(packageName == MokoConstants.TWITTERPName){
+//            appType = 8;
+//        }else if(packageName == MokoConstants.VIBERPName){
+//            appType = 9;
+//        }else if(packageName == MokoConstants.VKONTAKETPName){
+//            appType = 10;
+//        }else if(packageName == MokoConstants.mms){
+//            appType = 0;
+//        }
+        MokoSupport.getInstance().sendOrder(new MessageNotifyTask(mService, calendar, appType, title, content));
     }
     public void positionGPS(View view){
         LogModule.i("开始定位GPS====");
-        MokoSupport.getInstance().sendOrder(new PositionGPSTask(mService));
+        MokoSupport.getInstance().sendOrder(new PositionGPSTask(mService, 3, 1, 1));
     }
     public void motionControl(View view){
         LogModule.i("开始运动控制====");

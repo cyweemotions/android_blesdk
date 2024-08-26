@@ -10,30 +10,39 @@ import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.OrderTask;
 import com.fitpolo.support.utils.DigitalConver;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
- * 定位GPS
+ * 运动控制
  */
 public class MotionControlTask extends OrderTask {
-
-    private static final int ORDERDATA_LENGTH = 6;
 
     private byte[] orderData;
 
     public MotionControlTask(MokoOrderTaskCallback callback, MotionControl motionControl) {
         super(OrderType.WRITE, OrderEnum.motionControl, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
-        orderData = new byte[]{
-                (byte) MokoConstants.HEADER_READ_SEND,
-                (byte) 0x07,
-                (byte) MokoConstants.Function,
-                (byte) order.getOrderHeader(),
-                (byte) 0x02,
-                (byte) motionControl.type,
-                (byte) motionControl.action, // 05
-                (byte) 0xFF,
-                (byte) 0xFF,
-        };
+        List<Byte> dataList = new ArrayList<>();
+        dataList.add((byte) (motionControl.type & 0xFF));
+        dataList.add((byte) (motionControl.action & 0xFF));
+        int dataLength = dataList.size();
+
+        List<Byte> byteList = new ArrayList<>();
+        byteList.add((byte) MokoConstants.HEADER_READ_SEND);
+        byteList.add((byte) (5 + dataLength));
+        byteList.add((byte) MokoConstants.Function);
+        byteList.add((byte) order.getOrderHeader());
+        byteList.add((byte) dataLength);
+        byteList.addAll(dataList);
+        byteList.add((byte) 0xFF);
+        byteList.add((byte) 0xFF);
+
+        byte[] dataBytes = new byte[byteList.size()];
+        for (int i = 0; i < byteList.size(); i++) {
+            dataBytes[i] = byteList.get(i);
+        }
+        orderData = dataBytes;
 //      FF 07 02 0c 02 01 01 FF FF
     }
 

@@ -13,7 +13,7 @@ import com.fitpolo.support.utils.DigitalConver;
 import java.util.Arrays;
 
 /**
- * 同步时间
+ * 解绑设备
  */
 public class UnbindDeviceTask extends OrderTask {
 

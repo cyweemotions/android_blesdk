@@ -54,4 +54,20 @@ public class MokoConstants {
     // extra_key
     public static final String EXTRA_KEY_RESPONSE_ORDER_TASK = "EXTRA_KEY_RESPONSE_ORDER_TASK";
     public static final String EXTRA_KEY_CURRENT_DATA_TYPE = "EXTRA_KEY_CURRENT_DATA_TYPE";
+
+
+    public static String commonPName = "";
+    public static String facebookPName = "com.android.ftpeasy";
+    public static String instagramPName = "com.instagram.android";
+    public static String kakaotalkPName = "com.kakao.talk";
+    public static String LinePName = "cjp.naver.line.android";
+    public static String LINKEDINPName = "com.linkedin.android";
+    public static String MESSAGERPName = "com.facebook.orca";
+    public static String QQPName = "com.tencent.mobileqq";
+    public static String TWITTERPName = "com.twitter.android";
+    public static String VIBERPName = "com.viber.voip";
+    public static String VKONTAKETPName = "com.vkontakte.android";
+    public static String WHATSAPPPName = "com.whatsapp.w4b";
+    public static String wechatPName = "com.tencent.mm";
+    public static String mms = "com.android.mms";
 }
