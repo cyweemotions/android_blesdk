@@ -15,9 +15,6 @@ import java.util.Arrays;
  * 查询绑定信息
  */
 public class QueryInfoTask extends OrderTask {
-
-    private static final int ORDERDATA_LENGTH = 28;
-
     private byte[] orderData;
 
     public QueryInfoTask(MokoOrderTaskCallback callback) {
@@ -42,17 +39,16 @@ public class QueryInfoTask extends OrderTask {
 
     @Override
     public void parseValue(byte[] value) {
-        LogModule.i(order.getOrderName() + "成功");
-        LogModule.i(Arrays.toString(value));
-        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) {
-            return;
-        }
+        LogModule.i(order.getOrderName() + "成功" );
+        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) return;
+        if (MokoConstants.Function != DigitalConver.byte2Int(value[2])) return;
+        int dataLength = (value[4] & 0xFF);
+        byte[] subArray = Arrays.copyOfRange(value, 5, dataLength + 5);
 
-        int group = DigitalConver.byte2Int(value[5]);
-        if (group != 0)
-            return;
+        int result = DigitalConver.byte2Int(subArray[1]);
+        LogModule.i("查询绑定信息：" + result);
+
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
-
         MokoSupport.getInstance().pollTask();
         callback.onOrderResult(response);
         MokoSupport.getInstance().executeTask(callback);

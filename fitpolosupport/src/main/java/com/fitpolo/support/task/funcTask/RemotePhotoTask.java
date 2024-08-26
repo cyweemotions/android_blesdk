@@ -15,9 +15,6 @@ import java.util.Arrays;
  * 远程拍照
  */
 public class RemotePhotoTask extends OrderTask {
-
-    private static final int ORDERDATA_LENGTH = 6;
-
     private byte[] orderData;
 
     public RemotePhotoTask(MokoOrderTaskCallback callback) {
