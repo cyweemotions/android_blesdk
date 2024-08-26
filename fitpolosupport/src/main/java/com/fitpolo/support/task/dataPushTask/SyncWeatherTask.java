@@ -5,7 +5,6 @@ import com.fitpolo.support.MokoSupport;
 import com.fitpolo.support.callback.MokoOrderTaskCallback;
 import com.fitpolo.support.entity.OrderEnum;
 import com.fitpolo.support.entity.OrderType;
-import com.fitpolo.support.entity.setEntity.AddressBook;
 import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.OrderTask;
 import com.fitpolo.support.utils.DigitalConver;
@@ -13,9 +12,9 @@ import com.fitpolo.support.utils.DigitalConver;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WeatherTask extends OrderTask {
+public class SyncWeatherTask extends OrderTask {
     private byte[] orderData;
-    public WeatherTask(MokoOrderTaskCallback callback) {
+    public SyncWeatherTask(MokoOrderTaskCallback callback) {
         super(OrderType.DataPushWRITE, OrderEnum.syncWeather, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
 //        String weather = "4:ShenZhen:20240809,13,26,Clear|20240810,15,28,Clouds|20240811,17,30,Clear|20240812,17,30,Clear|";
         String weather = "4:深圳:20240809,30222,30571,802|20240810,30184,30468,500|20240811,30191,30503,500|20240812,30235,30537,500|";

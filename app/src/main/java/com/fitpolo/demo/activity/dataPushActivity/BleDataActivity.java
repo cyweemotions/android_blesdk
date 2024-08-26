@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.view.View;
 import android.widget.TextView;
@@ -29,9 +28,9 @@ import com.fitpolo.support.entity.dataEntity.SportModel;
 import com.fitpolo.support.entity.dataEntity.StepsModel;
 import com.fitpolo.support.entity.dataEntity.TemperatureModel;
 import com.fitpolo.support.log.LogModule;
-import com.fitpolo.support.task.dataPushTask.BloodOxygenTask;
-import com.fitpolo.support.task.dataPushTask.HeartRateTask;
-import com.fitpolo.support.task.dataPushTask.StepsTask;
+import com.fitpolo.support.task.dataPushTask.SyncBloodOxygenTask;
+import com.fitpolo.support.task.dataPushTask.SyncHeartRateTask;
+import com.fitpolo.support.task.dataPushTask.SyncStepsTask;
 import com.fitpolo.support.task.dataPushTask.SyncPaiTask;
 import com.fitpolo.support.task.dataPushTask.SyncPressureTask;
 import com.fitpolo.support.task.dataPushTask.SyncSleepTask;
@@ -174,8 +173,8 @@ public class BleDataActivity extends BaseActivity{
     public void syncStepsData() {
         int type = 1;
 
-        StepsTask stepsTask = new StepsTask(mService, type);
-        stepsTask.callback = new MokoOrderTaskCallback() {
+        SyncStepsTask syncStepsTask = new SyncStepsTask(mService, type);
+        syncStepsTask.callback = new MokoOrderTaskCallback() {
             @Override
             public void onOrderResult(OrderTaskResponse response) {
                 LogModule.i("onOrderResult--onOrderResult"+response.responseObject.toString());
@@ -217,7 +216,7 @@ public class BleDataActivity extends BaseActivity{
             @Override
             public void onOrderFinish() {}
         };
-        MokoSupport.getInstance().sendOrder(stepsTask);
+        MokoSupport.getInstance().sendOrder(syncStepsTask);
     }
 
     /**
@@ -226,15 +225,15 @@ public class BleDataActivity extends BaseActivity{
     public void syncHeartRateData() {
         Calendar calendar = Calendar.getInstance();
         int type = 1;
-        MokoSupport.getInstance().sendOrder(new HeartRateTask(mService, calendar, type));
-
-        new Handler().postDelayed(new Runnable() {
+        SyncHeartRateTask syncHeartRateTask = new SyncHeartRateTask(mService, calendar, type);
+        syncHeartRateTask.callback = new MokoOrderTaskCallback(){
             @Override
-            public void run() {
+            public void onOrderResult(OrderTaskResponse response) {
+                LogModule.i("onOrderResult--onOrderResult"+response);
                 TextView textView = findViewById(R.id.data_text);
 
+                List<HeartRateModel> heartRateData = (List<HeartRateModel>) response.responseObject;
                 StringBuilder contentStr = new StringBuilder();
-                List<HeartRateModel> heartRateData = MokoSupport.getInstance().mHeartRateData;
                 for(int i = 0; i<heartRateData.size(); i++){
                     HeartRateModel heartRateItem = heartRateData.get(i);
                     contentStr.append("第").append(i + 1).append("项：").append("\n");
@@ -252,10 +251,19 @@ public class BleDataActivity extends BaseActivity{
                     contentStr.append("时间：").append(datetime).append(" ");
                     contentStr.append("\n");
                 }
-
-                textView.setText(contentStr.toString());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        textView.setText(contentStr.toString());
+                    }
+                });
             }
-        }, 2000);
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) {}
+            @Override
+            public void onOrderFinish() {}
+        };
+        MokoSupport.getInstance().sendOrder(syncHeartRateTask);
     }
 
     /**
@@ -264,15 +272,16 @@ public class BleDataActivity extends BaseActivity{
     public void syncBloodOxygenData() {
         Calendar calendar = Calendar.getInstance();
         int type = 1;
-        MokoSupport.getInstance().sendOrder(new BloodOxygenTask(mService, calendar, type));
-
-        new Handler().postDelayed(new Runnable() {
+        SyncBloodOxygenTask syncBloodOxygenTask = new SyncBloodOxygenTask(mService, calendar, type);
+        syncBloodOxygenTask.callback = new MokoOrderTaskCallback(){
             @Override
-            public void run() {
+            public void onOrderResult(OrderTaskResponse response) {
+                LogModule.i("onOrderResult--onOrderResult"+response);
                 TextView textView = findViewById(R.id.data_text);
 
                 StringBuilder contentStr = new StringBuilder();
-                List<BloodOxygenModel> bloodOxygenData = MokoSupport.getInstance().mBloodOxygenData;
+                List<BloodOxygenModel> bloodOxygenData = (List<BloodOxygenModel>) response.responseObject;
+
                 for(int i = 0; i<bloodOxygenData.size(); i++){
                     BloodOxygenModel bloodOxygenItem = bloodOxygenData.get(i);
                     contentStr.append("第").append(i + 1).append("项：").append("\n");
@@ -290,10 +299,19 @@ public class BleDataActivity extends BaseActivity{
                     contentStr.append("时间：").append(datetime).append(" ");
                     contentStr.append("\n");
                 }
-
-                textView.setText(contentStr.toString());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        textView.setText(contentStr.toString());
+                    }
+                });
             }
-        }, 2000);
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) {}
+            @Override
+            public void onOrderFinish() {}
+        };
+        MokoSupport.getInstance().sendOrder(syncBloodOxygenTask);
     }
     /**
      * 睡眠同步
@@ -301,15 +319,15 @@ public class BleDataActivity extends BaseActivity{
     public void syncSleepData() {
         Calendar calendar = Calendar.getInstance();
         int type = 1;
-        MokoSupport.getInstance().sendOrder(new SyncSleepTask(mService, calendar, type));
-
-        new Handler().postDelayed(new Runnable() {
+        SyncSleepTask syncSleepTask = new SyncSleepTask(mService, calendar, type);
+        syncSleepTask.callback = new MokoOrderTaskCallback(){
             @Override
-            public void run() {
+            public void onOrderResult(OrderTaskResponse response) {
+                LogModule.i("onOrderResult--onOrderResult"+response);
                 TextView textView = findViewById(R.id.data_text);
 
                 StringBuilder contentStr = new StringBuilder();
-                List<SleepModel> sleepData = MokoSupport.getInstance().mSleepData;
+                List<SleepModel> sleepData = (List<SleepModel>) response.responseObject;
                 for(int i = 0; i<sleepData.size(); i++){
                     SleepModel sleepItem = sleepData.get(i);
                     contentStr.append("第").append(i + 1).append("项：").append("\n");
@@ -355,10 +373,19 @@ public class BleDataActivity extends BaseActivity{
                     contentStr.append("\n");
                     contentStr.append("\n");
                 }
-
-                textView.setText(contentStr.toString());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        textView.setText(contentStr.toString());
+                    }
+                });
             }
-        }, 2000);
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) {}
+            @Override
+            public void onOrderFinish() {}
+        };
+        MokoSupport.getInstance().sendOrder(syncSleepTask);
     }
     /**
      * 运动同步

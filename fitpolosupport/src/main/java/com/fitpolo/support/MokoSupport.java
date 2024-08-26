@@ -41,8 +41,6 @@ import com.fitpolo.support.handler.MokoCharacteristicHandler;
 import com.fitpolo.support.handler.MokoConnStateHandler;
 import com.fitpolo.support.handler.MokoLeScanHandler;
 import com.fitpolo.support.log.LogModule;
-import com.fitpolo.support.task.dataPushTask.AllSleepIndexTask;
-import com.fitpolo.support.task.dataPushTask.LastestSleepIndexTask;
 import com.fitpolo.support.task.OrderTask;
 import com.fitpolo.support.task.UpgradeBandTask;
 import com.fitpolo.support.utils.BaseHandler;
@@ -410,24 +408,24 @@ public class MokoSupport implements MokoResponseCallback {
         if (value != null && value.length > 0 && orderTask != null) {
             OrderEnum orderEnum = orderTask.getOrder();
             LogModule.i("orderEnum====== : " + orderEnum.toString());
-            switch (orderEnum) {
-                case getAllSleepIndex:
-                    AllSleepIndexTask sleepIndexTask = (AllSleepIndexTask) orderTask;
-                    if (mSleepIndexCount == 0 && !mDailySleeps.isEmpty()) {
-                        sleepIndexTask.parseRecordValue(value);
-                    } else {
-                        sleepIndexTask.parseValue(value);
-                    }
-                    return;
-                case getLastestSleepIndex:
-                    LastestSleepIndexTask lastestSleepIndexTask = (LastestSleepIndexTask) orderTask;
-                    if (mSleepIndexCount == 0 && mSleepsMap != null && !mSleepsMap.isEmpty()) {
-                        lastestSleepIndexTask.parseRecordValue(value);
-                    } else {
-                        lastestSleepIndexTask.parseValue(value);
-                    }
-                    return;
-            }
+//            switch (orderEnum) {
+//                case getAllSleepIndex:
+//                    AllSleepIndexTask sleepIndexTask = (AllSleepIndexTask) orderTask;
+//                    if (mSleepIndexCount == 0 && !mDailySleeps.isEmpty()) {
+//                        sleepIndexTask.parseRecordValue(value);
+//                    } else {
+//                        sleepIndexTask.parseValue(value);
+//                    }
+//                    return;
+//                case getLastestSleepIndex:
+//                    LastestSleepIndexTask lastestSleepIndexTask = (LastestSleepIndexTask) orderTask;
+//                    if (mSleepIndexCount == 0 && mSleepsMap != null && !mSleepsMap.isEmpty()) {
+//                        lastestSleepIndexTask.parseRecordValue(value);
+//                    } else {
+//                        lastestSleepIndexTask.parseValue(value);
+//                    }
+//                    return;
+//            }
             orderTask.parseValue(value);
         }else{
             LogModule.i("数据监听");

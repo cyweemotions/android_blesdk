@@ -148,6 +148,8 @@ public class SyncPressureTask extends OrderTask {
                 callback.onOrderResult(response);
                 MokoSupport.getInstance().executeTask(callback);
                 index = 1;
+            } else {
+                MokoSupport.getInstance().timeoutHandler(this);
             }
             index++;
         }

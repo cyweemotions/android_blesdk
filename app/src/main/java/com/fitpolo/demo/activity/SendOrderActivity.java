@@ -44,7 +44,7 @@ import com.fitpolo.support.handler.UpgradeHandler;
 import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.authTask.DeviceBindTask;
 import com.fitpolo.support.task.authTask.QueryAuthStateTask;
-import com.fitpolo.support.task.dataPushTask.WeatherTask;
+import com.fitpolo.support.task.dataPushTask.SyncWeatherTask;
 import com.fitpolo.support.task.funcTask.DeviceInfoTask;
 import com.fitpolo.support.task.funcTask.LanguageSupportTask;
 import com.fitpolo.support.task.funcTask.MessageNotifyTask;
@@ -559,7 +559,7 @@ public class SendOrderActivity extends BaseActivity {
     /********************* 数据交互类型 begin *****************/
 
     public void syncWeather(View view) {
-        MokoSupport.getInstance().sendOrder(new WeatherTask(mService));
+        MokoSupport.getInstance().sendOrder(new SyncWeatherTask(mService));
     }
     public void syncSteps(View view) {
         Intent orderIntent = new Intent(SendOrderActivity.this, BleDataActivity.class);

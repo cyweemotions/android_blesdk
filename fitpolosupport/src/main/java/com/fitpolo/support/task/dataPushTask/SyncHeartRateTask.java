@@ -14,16 +14,14 @@ import com.fitpolo.support.utils.DigitalConver;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class HeartRateTask extends OrderTask {
+public class SyncHeartRateTask extends OrderTask {
     private byte[] orderData;
     private int typeData; // record—— 1  current—— 0
     private int index = 1; // record=1 —— package index
     private List<byte[]> res = new ArrayList<>();
-    public HeartRateTask(MokoOrderTaskCallback callback, Calendar calendar, int type) {
+    public SyncHeartRateTask(MokoOrderTaskCallback callback, Calendar calendar, int type) {
         super(OrderType.DataPushWRITE, OrderEnum.syncHeartRate, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
         typeData = type;
         List<Byte> dataList = new ArrayList<>();
@@ -137,6 +135,7 @@ public class HeartRateTask extends OrderTask {
                     System.out.println("这是最终的数据格式" + heartRate.toString());
                 }
                 LogModule.i("获取心率数据长度======="+dataSource.size());
+                response.responseObject = dataSource;
                 MokoSupport.getInstance().setHeartRateData(dataSource);
                 orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
                 MokoSupport.getInstance().pollTask();

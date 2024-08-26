@@ -141,6 +141,7 @@ public class SyncSleepTask extends OrderTask {
                     System.out.println("这是最终的数据格式" + heartRate.toString());
                 }
                 LogModule.i("获取睡眠数据长度======="+dataSource.size());
+                response.responseObject = dataSource;
                 MokoSupport.getInstance().setSleepData(dataSource);
                 orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
                 MokoSupport.getInstance().pollTask();
