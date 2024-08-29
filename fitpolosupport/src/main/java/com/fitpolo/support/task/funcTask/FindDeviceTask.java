@@ -33,7 +33,7 @@ public class FindDeviceTask extends OrderTask {
             (byte) 0xFF,
             (byte) 0xFF
         };
-//        [255, 11, 4, 1, 6, 0, 2, 0, 0, 0, 0, 255, 255]
+//        [255, 06, 02, 04, 01, 01, 255, 255]
     }
 
     @Override

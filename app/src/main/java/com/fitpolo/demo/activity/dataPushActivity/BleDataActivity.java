@@ -10,6 +10,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.fitpolo.demo.R;
@@ -105,6 +106,8 @@ public class BleDataActivity extends BaseActivity{
         switch (type) {
             case "steps":
                 title = "步数同步";
+//                显示获取当前数据按钮
+                showButton();
                 break;
             case "heartRate":
                 title = "心率同步";
@@ -133,13 +136,17 @@ public class BleDataActivity extends BaseActivity{
         }
         titleText.setText(title);
     }
+    private void showButton() {
+        Button button= findViewById(R.id.btn_sync_current_data);
+        button.setVisibility(View.VISIBLE);
+    }
 
     public void syncDataPushData(View view) {
         textView.setText("正在获取数据。。。");
 
         switch (type) {
             case "steps":
-                syncStepsData();
+                syncStepsData(1);
                 break;
             case "heartRate":
                 syncHeartRateData();
@@ -166,12 +173,23 @@ public class BleDataActivity extends BaseActivity{
                 break;
         }
     }
+    public void syncCurrentDataPushData(View view) {
+        textView.setText("正在获取数据。。。");
+
+        switch (type) {
+            case "steps":
+                syncStepsData(0);
+                break;
+            default:
+                break;
+        }
+    }
 
     /**
      * 步数同步
      */
-    public void syncStepsData() {
-        int type = 1;
+    public void syncStepsData(int type) {
+//        int type = 1;
 
         SyncStepsTask syncStepsTask = new SyncStepsTask(mService, type);
         syncStepsTask.callback = new MokoOrderTaskCallback() {
@@ -181,28 +199,34 @@ public class BleDataActivity extends BaseActivity{
                 TextView textView = findViewById(R.id.data_text);
 
                 StringBuilder contentStr = new StringBuilder();
-//                List<StepsModel> stepsModelData = MokoSupport.getInstance().mStepsData;
-                List<StepsModel> stepsModelData = (List<StepsModel>) response.responseObject;
-                for(int i = 0; i< stepsModelData.size(); i++){
-                    StepsModel stepsModelItem = stepsModelData.get(i);
-                    contentStr.append("第").append(i + 1).append("项：").append("\n");
-                    String step = String.valueOf(stepsModelItem.step);
-                    String calorie = String.valueOf(stepsModelItem.calorie);
-                    String distance = String.valueOf(stepsModelItem.distance);
-                    String datetime = "";
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm")
-                                .withZone(ZoneId.systemDefault());
-                        Instant instant = Instant.ofEpochSecond(stepsModelItem.datetime);
-                        datetime = formatter.format(instant);
-                    } else {
-                        datetime = String.valueOf(stepsModelItem.datetime);
-                    }
-                    contentStr.append("步数：").append(step).append(" ");
-                    contentStr.append("卡路里：").append(calorie).append(" ");
-                    contentStr.append("距离：").append(distance).append(" ");
-                    contentStr.append("时间：").append(datetime).append(" ");
+                if (type == 0) {
+                    String stepData = (String) response.responseObject;
+                    contentStr.append("当前步数数据：").append(stepData).append(" ");
                     contentStr.append("\n");
+                } else {
+//                List<StepsModel> stepsModelData = MokoSupport.getInstance().mStepsData;
+                    List<StepsModel> stepsModelData = (List<StepsModel>) response.responseObject;
+                    for(int i = 0; i< stepsModelData.size(); i++){
+                        StepsModel stepsModelItem = stepsModelData.get(i);
+                        contentStr.append("第").append(i + 1).append("项：").append("\n");
+                        String step = String.valueOf(stepsModelItem.step);
+                        String calorie = String.valueOf(stepsModelItem.calorie);
+                        String distance = String.valueOf(stepsModelItem.distance);
+                        String datetime = "";
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm")
+                                    .withZone(ZoneId.systemDefault());
+                            Instant instant = Instant.ofEpochSecond(stepsModelItem.datetime);
+                            datetime = formatter.format(instant);
+                        } else {
+                            datetime = String.valueOf(stepsModelItem.datetime);
+                        }
+                        contentStr.append("步数：").append(step).append(" ");
+                        contentStr.append("卡路里：").append(calorie).append(" ");
+                        contentStr.append("距离：").append(distance).append(" ");
+                        contentStr.append("时间：").append(datetime).append(" ");
+                        contentStr.append("\n");
+                    }
                 }
                 runOnUiThread(new Runnable() {
                     @Override

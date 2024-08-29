@@ -103,6 +103,7 @@ public class SyncStepsTask extends OrderTask {
         LogModule.i("获取步数数据成功");
         LogModule.i(resultStr);
 
+        response.responseObject = resultStr;
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
         MokoSupport.getInstance().pollTask();
         callback.onOrderResult(response);

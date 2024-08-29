@@ -15,6 +15,14 @@
         android:layout_height="wrap_content"
         android:stretchColumns="*">
         <Button
+            android:id="@+id/btn_sync_current_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="syncCurrentDataPushData"
+            android:visibility="gone"
+            android:tag="获取当前数据"
+            android:text="获取当前数据" />
+        <Button
             android:id="@+id/btn_sync_data"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
