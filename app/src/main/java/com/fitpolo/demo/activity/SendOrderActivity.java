@@ -1,11 +1,13 @@
 package com.fitpolo.demo.activity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -22,7 +24,9 @@ import com.fitpolo.demo.service.MokoService;
 import com.fitpolo.demo.utils.FileUtils;
 import com.fitpolo.support.MokoConstants;
 import com.fitpolo.support.MokoSupport;
+import com.fitpolo.support.callback.MokoOrderTaskCallback;
 import com.fitpolo.support.entity.AutoLighten;
+import com.fitpolo.support.entity.dataEntity.StepsModel;
 import com.fitpolo.support.entity.setEntity.AddressBook;
 import com.fitpolo.support.entity.setEntity.AlarmClock;
 import com.fitpolo.support.entity.CustomScreen;
@@ -44,6 +48,7 @@ import com.fitpolo.support.handler.UpgradeHandler;
 import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.authTask.DeviceBindTask;
 import com.fitpolo.support.task.authTask.QueryAuthStateTask;
+import com.fitpolo.support.task.dataPushTask.SyncStepsTask;
 import com.fitpolo.support.task.dataPushTask.SyncWeatherTask;
 import com.fitpolo.support.task.funcTask.DeviceInfoTask;
 import com.fitpolo.support.task.funcTask.LanguageSupportTask;
@@ -55,6 +60,7 @@ import com.fitpolo.support.task.funcTask.QueryInfoTask;
 import com.fitpolo.support.task.funcTask.TimeAlignTask;
 import com.fitpolo.support.task.funcTask.UnbindDeviceTask;
 import com.fitpolo.support.task.getTask.AddressBookDataTask;
+import com.fitpolo.support.task.getTask.GetSitAlertSettingTask;
 import com.fitpolo.support.task.getTask.SleepMonitorDataTask;
 import com.fitpolo.support.task.setTask.AddressBookTask;
 import com.fitpolo.support.task.setTask.AlarmClockTask;
@@ -478,6 +484,37 @@ public class SendOrderActivity extends BaseActivity {
         alert.interval = 60;
         MokoSupport.getInstance().sendOrder(new SitLongTimeAlertTask(mService, alert));
     }
+    public void getSitAlertSetting(View view) {
+        GetSitAlertSettingTask getSitAlertSettingTask = new GetSitAlertSettingTask(mService);
+        getSitAlertSettingTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                StringBuilder contentStr = new StringBuilder();
+                List<Integer> getSitAlertData = (List<Integer>) response.responseObject;
+                String onOff = getSitAlertData.get(0) == 0 ? "开" : "关";
+                int timeValue = getSitAlertData.get(1);
+                String startHour =  String.format("%02d", getSitAlertData.get(2) / 60);
+                String startMinute =  String.format("%02d", getSitAlertData.get(2) % 60);
+                String endHour = String.format("%02d", getSitAlertData.get(3) / 60);
+                String endMinute = String.format("%02d", getSitAlertData.get(3) % 60);
+                contentStr.append("开关：").append(onOff).append("\n ");
+                contentStr.append("间隔：").append(timeValue).append("\n ");
+                contentStr.append("开始时间：").append(startHour).append(":").append(startMinute).append("\n ");
+                contentStr.append("结束时间：").append(endHour).append(":").append(endMinute).append("\n ");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAlertDialog(String.valueOf(contentStr));
+                    }
+                });
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(getSitAlertSettingTask);
+    }
     public void setAutoLigten(View view) {
         MokoSupport.getInstance().sendOrder(new AutoLightenTask(mService));
     }
@@ -583,7 +620,31 @@ public class SendOrderActivity extends BaseActivity {
         MokoSupport.getInstance().sendOrder(new SleepMonitorTask(mService,sleepMonitor));
     }
     public void getSleepMonitor(View view) {
-        MokoSupport.getInstance().sendOrder(new SleepMonitorDataTask(mService));
+        SleepMonitorDataTask sleepMonitorDataTask = new SleepMonitorDataTask(mService);
+        sleepMonitorDataTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                StringBuilder contentStr = new StringBuilder();
+                List<Integer> sleepMonitorData = (List<Integer>) response.responseObject;
+                String switch1 = sleepMonitorData.get(0) == 0 ? "开" : "关";
+                String switch2 = sleepMonitorData.get(1) == 0 ? "开" : "关";
+                contentStr.append("睡眠高精度监测：").append(switch1).append(" ");
+                contentStr.append("\n");
+                contentStr.append("睡眠呼吸质量监测：").append(switch2).append(" ");
+                contentStr.append("\n");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAlertDialog(String.valueOf(contentStr));
+                    }
+                });
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(sleepMonitorDataTask);
     }
     /********************* 设置类型 end *****************/
 
@@ -636,6 +697,23 @@ public class SendOrderActivity extends BaseActivity {
         startActivity(orderIntent);
     }
     /********************* 数据交互类型 end *****************/
+
+    // 显示弹窗
+    private void showAlertDialog(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(SendOrderActivity.this);
+        builder.setMessage(message)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 用户点击了“确定”按钮
+                        dialog.dismiss();
+                    }
+                })
+                .setCancelable(true); // 允许用户点击外部区域关闭对话框（可选）
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 
     private static final int REQUEST_CODE_FILE = 2;
 

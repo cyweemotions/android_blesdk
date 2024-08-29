@@ -143,8 +143,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="stopMotion"
-                    android:tag="停止运动"
-                    android:text="停止运动" />
+                    android:tag="结束运动"
+                    android:text="结束运动" />
             </TableRow>
             <TableRow>
                 <Button
@@ -186,6 +186,8 @@
                     android:onClick="setSleep"
                     android:tag="睡眠设置"
                     android:text="睡眠设置" />
+            </TableRow>
+            <TableRow>
                 <Button
                     android:id="@+id/btn_Set_Sit_Long_Time_Alert"
                     android:layout_width="match_parent"
@@ -193,6 +195,13 @@
                     android:onClick="setSitAlert"
                     android:tag="久坐提醒"
                     android:text="久坐提醒" />
+                <Button
+                    android:id="@+id/btn_Get_Sit_Long_Time_Alert"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="getSitAlertSetting"
+                    android:tag="获取久坐提醒设置"
+                    android:text="获取久坐提醒设置" />
             </TableRow>
             <TableRow>
                 <Button
@@ -396,17 +405,17 @@
                     android:text="体温同步" />
             </TableRow>
 
-            <TableRow>
+<!--            <TableRow>-->
 
-                <Button
-                    android:id="@+id/btn_firmware_version"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_span="2"
-                    android:onClick="getFirmwareVersion"
-                    android:tag="获取固件版本号"
-                    android:text="getFirmwareVersion" />
-            </TableRow>
+<!--                <Button-->
+<!--                    android:id="@+id/btn_firmware_version"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_span="2"-->
+<!--                    android:onClick="getFirmwareVersion"-->
+<!--                    android:tag="获取固件版本号"-->
+<!--                    android:text="获取固件版本号" />-->
+<!--            </TableRow>-->
 
 <!--            <TableRow>-->
 <!--                <Button-->
@@ -418,17 +427,35 @@
 <!--                    android:tag="获取固件参数"-->
 <!--                    android:text="getFirmwareParams" />-->
 <!--            </TableRow>-->
-            <TableRow>
-                <Button
-                    android:id="@+id/btn_upgrade_firmware"
+<!--            <TableRow>-->
+<!--                <Button-->
+<!--                    android:id="@+id/btn_upgrade_firmware"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_span="2"-->
+<!--                    android:onClick="upgradeFirmware"-->
+<!--                    android:tag="升级固件"-->
+<!--                    android:text="升级固件" />-->
+<!--            </TableRow>-->
+
+            <!-- 内容可以是任意视图，例如一个垂直排列的线性布局 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- 示例内容 -->
+                <TextView
+                    android:id="@+id/data_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_span="2"
-                    android:onClick="upgradeFirmware"
-                    android:tag="升级固件"
-                    android:text="upgradeFirmware" />
-            </TableRow>
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="40dp"
+                    android:text="  " />
 
+            </LinearLayout>
         </TableLayout>
     </ScrollView>
 

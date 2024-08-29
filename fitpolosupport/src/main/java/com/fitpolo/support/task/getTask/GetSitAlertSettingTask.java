@@ -5,21 +5,22 @@ import com.fitpolo.support.MokoSupport;
 import com.fitpolo.support.callback.MokoOrderTaskCallback;
 import com.fitpolo.support.entity.OrderEnum;
 import com.fitpolo.support.entity.OrderType;
+import com.fitpolo.support.entity.SitAlert;
 import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.OrderTask;
+import com.fitpolo.support.utils.ByteType;
 import com.fitpolo.support.utils.DigitalConver;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * 获取睡眠监测算法设置
- */
-public class SleepMonitorDataTask extends OrderTask {
+public class GetSitAlertSettingTask extends OrderTask {
     private byte[] orderData;
-    public SleepMonitorDataTask(MokoOrderTaskCallback callback) {
-        super(OrderType.WRITE, OrderEnum.setSleepMonitor, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
+    SitAlert sitAlert;
+
+    public GetSitAlertSettingTask(MokoOrderTaskCallback callback) {
+        super(OrderType.WRITE, OrderEnum.setSitLongTimeAlert, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
         List<Byte> byteList = new ArrayList<>();
         byteList.add((byte) MokoConstants.HEADER_READ_SEND);
         byteList.add((byte) 4);
@@ -34,10 +35,12 @@ public class SleepMonitorDataTask extends OrderTask {
         }
         orderData = dataBytes;
     }
+
     @Override
     public byte[] assemble() {
         return orderData;
     }
+
     @Override
     public void parseValue(byte[] value) {
         LogModule.i("返回的"+ order.getOrderName() + Arrays.toString(value));
@@ -47,9 +50,20 @@ public class SleepMonitorDataTask extends OrderTask {
         byte[] subArray = Arrays.copyOfRange(value, 5, dataLength + 5);
 
         List<Integer> result = new ArrayList<>();
-        result.add(subArray[0] & 0xFF);
-        result.add(subArray[1] & 0xFF);
-        LogModule.i("返回的"+ order.getOrderName() + "数据" + result);
+        int sitAlertSwitch = Integer.parseInt(Integer.toHexString(subArray[0]), 16);
+        int timeValue = Integer.parseInt(Integer.toHexString(subArray[1]), 16);
+        byte[] start = new byte[]{subArray[2], subArray[3]};
+        byte[] end = new byte[]{subArray[4], subArray[5]};
+        int startTime = Integer.parseInt(DigitalConver.bytesToHex(start), 16);
+        int endTime = Integer.parseInt(DigitalConver.bytesToHex(end), 16);
+        LogModule.i("开关" + sitAlertSwitch);
+        LogModule.i("间隔" + timeValue);
+        LogModule.i("开始时间" + startTime);
+        LogModule.i("结束时间" + endTime);
+        result.add(sitAlertSwitch);
+        result.add(timeValue);
+        result.add(startTime);
+        result.add(endTime);
         response.responseObject =  result;
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
 
@@ -57,5 +71,4 @@ public class SleepMonitorDataTask extends OrderTask {
         callback.onOrderResult(response);
         MokoSupport.getInstance().executeTask(callback);
     }
-
 }

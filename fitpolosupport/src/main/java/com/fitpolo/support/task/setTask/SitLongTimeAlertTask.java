@@ -1,7 +1,5 @@
 package com.fitpolo.support.task.setTask;
 
-import android.text.TextUtils;
-
 import com.fitpolo.support.MokoConstants;
 import com.fitpolo.support.MokoSupport;
 import com.fitpolo.support.callback.MokoOrderTaskCallback;
@@ -20,10 +18,6 @@ import java.util.List;
  * 设置久坐提醒
  */
 public class SitLongTimeAlertTask extends OrderTask {
-    private static final int ORDERDATA_LENGTH = 17;
-    // 久坐提醒
-    private static final int HEADER_SET_SIT_LONG_TIME_ALERT = 0x2A;
-
     private byte[] orderData;
     SitAlert sitAlert;
 
