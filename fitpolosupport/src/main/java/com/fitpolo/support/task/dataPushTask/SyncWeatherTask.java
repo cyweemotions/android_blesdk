@@ -9,7 +9,10 @@ import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.OrderTask;
 import com.fitpolo.support.utils.DigitalConver;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 public class SyncWeatherTask extends OrderTask {
@@ -17,7 +20,17 @@ public class SyncWeatherTask extends OrderTask {
     public SyncWeatherTask(MokoOrderTaskCallback callback) {
         super(OrderType.DataPushWRITE, OrderEnum.syncWeather, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
 //        String weather = "4:ShenZhen:20240809,13,26,Clear|20240810,15,28,Clouds|20240811,17,30,Clear|20240812,17,30,Clear|";
-        String weather = "4:深圳:20240809,30222,30571,802|20240810,30184,30468,500|20240811,30191,30503,500|20240812,30235,30537,500|";
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String oneDay = sdf.format(calendar.getTime());
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        String twoDay = sdf.format(calendar.getTime());
+        calendar.add(Calendar.DAY_OF_MONTH, 2);
+        String threeDay = sdf.format(calendar.getTime());
+        calendar.add(Calendar.DAY_OF_MONTH, 3);
+        String fourDay = sdf.format(calendar.getTime());
+
+        String weather = "4:深圳:"+oneDay+",30222,30571,802|"+twoDay+",30184,30468,500|"+threeDay+",30191,30503,500|"+fourDay+",30235,30537,500|";
 
         String weatherBytesStr = DigitalConver.string2Hex(weather);
         byte[] weatherBytes = DigitalConver.hex2bytes(weatherBytesStr);
@@ -46,15 +59,14 @@ public class SyncWeatherTask extends OrderTask {
     }
     @Override
     public void parseValue(byte[] value) {
-        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) {
-            return;
-        }
-        if(DigitalConver.byte2Int(value[4]) == 0x01) {
-            LogModule.i(order.getOrderName() + "成功");
-            orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
-        } else {
-            LogModule.i(order.getOrderName() + "失败");
-        }
+        LogModule.i("返回的"+ order.getOrderName() + Arrays.toString(value));
+        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) return;
+        if (MokoConstants.DataNotify != DigitalConver.byte2Int(value[2])) return;
+        int dataLength = (value[4] & 0xFF);
+        byte[] subArray = Arrays.copyOfRange(value, 5, dataLength + 5);
+//        response.responseObject =  result;
+        orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
+
         MokoSupport.getInstance().pollTask();
         callback.onOrderResult(response);
         MokoSupport.getInstance().executeTask(callback);
