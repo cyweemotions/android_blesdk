@@ -357,7 +357,28 @@ public class SendOrderActivity extends BaseActivity {
         MokoSupport.getInstance().sendOrder(new TimeAlignTask(mService));
     }
     public void getBattery(View view) {
-        MokoSupport.getInstance().sendOrder(new GetBatteryTask(mService));
+        LogModule.i("开始电量获取====");
+        GetBatteryTask getBatteryTask = new GetBatteryTask(mService);
+        getBatteryTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                StringBuilder contentStr = new StringBuilder();
+                int result = (int) response.responseObject;
+                LogModule.i("电量====" + result);
+                contentStr.append("电量：").append(result).append("\n ");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAlertDialog(String.valueOf(contentStr));
+                    }
+                });
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(getBatteryTask);
     }
     public void findDevice(View view){
         LogModule.i("开始查找设备====");
