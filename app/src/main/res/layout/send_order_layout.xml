@@ -118,8 +118,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="motionControl"
-                    android:tag="运动控制"
-                    android:text="运动控制" />
+                    android:tag="开始运动"
+                    android:text="开始运动" />
                 <Button
                     android:id="@+id/btn_pause_motion"
                     android:layout_width="match_parent"
@@ -171,14 +171,21 @@
                     android:tag="目标设置"
                     android:text="目标设置" />
                 <Button
+                    android:id="@+id/btn_get_target"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="getTarget"
+                    android:tag="获取目标"
+                    android:text="获取目标" />
+            </TableRow>
+            <TableRow>
+                <Button
                     android:id="@+id/btn_time_set"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="setTimeFormat"
                     android:tag="时间设置"
                     android:text="时间设置" />
-            </TableRow>
-            <TableRow>
                 <Button
                     android:id="@+id/btn_set_Sleep"
                     android:layout_width="match_parent"

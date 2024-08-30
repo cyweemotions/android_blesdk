@@ -53,17 +53,14 @@ public class MotionControlTask extends OrderTask {
 
     @Override
     public void parseValue(byte[] value) {
-        LogModule.i(order.getOrderName() + "成功");
-        LogModule.i(Arrays.toString(value));
-        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) {
-            return;
-        }
+        LogModule.i(order.getOrderName() + "成功" );
+        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) return;
+        if (MokoConstants.Function != DigitalConver.byte2Int(value[2])) return;
+        int result = (value[5] & 0xFF);
+        LogModule.i("运动控制：" + result);
 
-        int group = DigitalConver.byte2Int(value[5]);
-        if (group != 0)
-            return;
+        response.responseObject = result == 0 ? 0 : 1; // 0-成功 1-失败
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
-
         MokoSupport.getInstance().pollTask();
         callback.onOrderResult(response);
         MokoSupport.getInstance().executeTask(callback);

@@ -62,6 +62,7 @@ import com.fitpolo.support.task.funcTask.UnbindDeviceTask;
 import com.fitpolo.support.task.getTask.AddressBookDataTask;
 import com.fitpolo.support.task.getTask.GetDoNotDisturbTask;
 import com.fitpolo.support.task.getTask.GetSitAlertSettingTask;
+import com.fitpolo.support.task.getTask.GetTargetTask;
 import com.fitpolo.support.task.getTask.SleepMonitorDataTask;
 import com.fitpolo.support.task.setTask.AddressBookTask;
 import com.fitpolo.support.task.setTask.AlarmClockTask;
@@ -338,7 +339,28 @@ public class SendOrderActivity extends BaseActivity {
 
     /********************* 鉴权 begin *****************/
     public void queryAuthState(View view) {
-        MokoSupport.getInstance().sendOrder(new QueryAuthStateTask(mService));
+        QueryAuthStateTask queryAuthStateTask = new QueryAuthStateTask(mService);
+        queryAuthStateTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                StringBuilder contentStr = new StringBuilder();
+                int result = (int) response.responseObject;
+                LogModule.i("绑定状态====" + result);
+                String state = result == 1 ? "已经被绑定" : "未绑定";
+                contentStr.append("绑定状态：").append(state).append("\n ");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAlertDialog(String.valueOf(contentStr));
+                    }
+                });
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(queryAuthStateTask);
     }
     public void bindAuth(View view) {
         List<Byte> dataList = new ArrayList<>();
@@ -442,7 +464,7 @@ public class SendOrderActivity extends BaseActivity {
     public void remotePhoto(View view){
         LogModule.i("开始远程拍照====");
         showAlertDialog("暂无");
-        MokoSupport.getInstance().sendOrder(new RemotePhotoTask(mService));
+//        MokoSupport.getInstance().sendOrder(new RemotePhotoTask(mService));
     }
     public void messageNotify(View view){
         LogModule.i("开始消息通知====");
@@ -481,7 +503,8 @@ public class SendOrderActivity extends BaseActivity {
     }
     public void positionGPS(View view){
         LogModule.i("开始定位GPS====");
-        MokoSupport.getInstance().sendOrder(new PositionGPSTask(mService, 3, 1, 1));
+        showAlertDialog("暂无");
+//        MokoSupport.getInstance().sendOrder(new PositionGPSTask(mService, 3, 1, 1));
     }
     public void motionControl(View view){
         LogModule.i("开始运动控制====");
@@ -531,6 +554,35 @@ public class SendOrderActivity extends BaseActivity {
     }
     public void setTarget(View view) {
         MokoSupport.getInstance().sendOrder(new TargetTask(mService));
+    }
+    public void getTarget(View view) {
+        GetTargetTask getTargetTask = new GetTargetTask(mService);
+        getTargetTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                StringBuilder contentStr = new StringBuilder();
+                List<Integer> getSitAlertData = (List<Integer>) response.responseObject;
+                String stepValue = String.valueOf((getSitAlertData.get(0) * 1000));
+                String distanceValue = String.valueOf((getSitAlertData.get(1)));
+                String calorieValue = String.valueOf((getSitAlertData.get(2) * 50));
+                String sportValue = String.valueOf((getSitAlertData.get(3) * 15));
+                contentStr.append("步数：").append(stepValue).append("步\n");
+                contentStr.append("距离：").append(distanceValue).append("公里\n");
+                contentStr.append("卡路里：").append(calorieValue).append("千卡\n");
+                contentStr.append("运动时长：").append(sportValue).append("分钟\n");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAlertDialog(String.valueOf(contentStr));
+                    }
+                });
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(getTargetTask);
     }
     public void setTimeFormat(View view) {
         MokoSupport.getInstance().sendOrder(new TimeTask(mService));

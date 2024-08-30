@@ -40,15 +40,17 @@ public class LanguageSupportTask extends OrderTask {
 
     @Override
     public void parseValue(byte[] value) {
-        LogModule.i(order.getOrderName() + "成功");
-        LogModule.i(Arrays.toString(value));
-        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) {
-            return;
-        }
+        LogModule.i(order.getOrderName() + "成功" );
+        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) return;
+        if (MokoConstants.Function != DigitalConver.byte2Int(value[2])) return;
+        int dataLength = (value[4] & 0xFF);
+        byte[] subArray = Arrays.copyOfRange(value, 5, dataLength + 5);
 
-        int group = DigitalConver.byte2Int(value[5]);
-        if (group != 0)
-            return;
+//        int batteryQuantity = DigitalConver.byte2Int(subArray[0]);
+//        MokoSupport.getInstance().setBatteryQuantity(batteryQuantity);
+        LogModule.i("语言支持：" + Arrays.toString(subArray));
+
+        response.responseObject =  subArray;
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
 
         MokoSupport.getInstance().pollTask();
