@@ -60,6 +60,7 @@ import com.fitpolo.support.task.funcTask.QueryInfoTask;
 import com.fitpolo.support.task.funcTask.TimeAlignTask;
 import com.fitpolo.support.task.funcTask.UnbindDeviceTask;
 import com.fitpolo.support.task.getTask.AddressBookDataTask;
+import com.fitpolo.support.task.getTask.GetDoNotDisturbTask;
 import com.fitpolo.support.task.getTask.GetSitAlertSettingTask;
 import com.fitpolo.support.task.getTask.SleepMonitorDataTask;
 import com.fitpolo.support.task.setTask.AddressBookTask;
@@ -599,6 +600,38 @@ public class SendOrderActivity extends BaseActivity {
         doNotDisturb.startTime = 22*60+10;
         doNotDisturb.endTime = 8*60+20;
         MokoSupport.getInstance().sendOrder(new DoNotDisturbTask(mService, doNotDisturb));
+    }
+    public void getDoNotDisturb(View view) {
+        GetDoNotDisturbTask getDoNotDisturbTask = new GetDoNotDisturbTask(mService);
+//        MokoSupport.getInstance().sendOrder(new GetDoNotDisturbTask(mService));
+        getDoNotDisturbTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                StringBuilder contentStr = new StringBuilder();
+                List<Integer> getSitAlertData = (List<Integer>) response.responseObject;
+                String onOff1 = getSitAlertData.get(0) == 0 ? "开" : "关";
+                String onOff2 = getSitAlertData.get(1) == 0 ? "开" : "关";
+                String startHour =  String.format("%02d", getSitAlertData.get(2) / 60);
+                String startMinute =  String.format("%02d", getSitAlertData.get(2) % 60);
+                String endHour = String.format("%02d", getSitAlertData.get(3) / 60);
+                String endMinute = String.format("%02d", getSitAlertData.get(3) % 60);
+                contentStr.append("全天开启：").append(onOff1).append("\n ");
+                contentStr.append("定时开启：").append(onOff2).append("\n ");
+                contentStr.append("定时开启-开始时间：").append(startHour).append(":").append(startMinute).append("\n ");
+                contentStr.append("定时开启-结束时间：").append(endHour).append(":").append(endMinute).append("\n ");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAlertDialog(String.valueOf(contentStr));
+                    }
+                });
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(getDoNotDisturbTask);
     }
     public void setPowerSaveMode(View view) {
         MokoSupport.getInstance().sendOrder(new PowerSaveTask(mService, 1));

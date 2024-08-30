@@ -52,11 +52,12 @@ public class QueryAuthStateTask extends OrderTask {
         }
         int dataLength = (value[4] & 0xFF) + 5;
         byte[] subArray = Arrays.copyOfRange(value, 5, dataLength);
-        if((subArray[1] & 0xFF) == 1) {
-            LogModule.i("设备已被绑定,请在手表端选择“恢复出厂”后重试");
-        } else {
-            LogModule.i("未绑定");
+        if((subArray[1] & 0xFF) == 1) { // 1
+            LogModule.i("设备已被绑定,请在手表端选择“恢复出厂”后重试"+(subArray[1] & 0xFF) );
+        } else { // 0
+            LogModule.i("未绑定"+(subArray[1] & 0xFF) );
         }
+        response.responseObject = (subArray[1] & 0xFF);
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
         MokoSupport.getInstance().pollTask();
         callback.onOrderResult(response);

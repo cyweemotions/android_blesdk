@@ -193,8 +193,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="setSitAlert"
-                    android:tag="久坐提醒"
-                    android:text="久坐提醒" />
+                    android:tag="久坐提醒设置"
+                    android:text="久坐提醒设置" />
                 <Button
                     android:id="@+id/btn_Get_Sit_Long_Time_Alert"
                     android:layout_width="match_parent"
@@ -291,6 +291,15 @@
                     android:onClick="setDoNotDisturb"
                     android:tag="勿扰模式"
                     android:text="勿扰模式" />
+                <Button
+                    android:id="@+id/btn_get_do_not_disturb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="getDoNotDisturb"
+                    android:tag="获取勿扰设置"
+                    android:text="获取勿扰设置" />
+            </TableRow>
+            <TableRow>
                 <Button
                     android:id="@+id/btn_set_power_save"
                     android:layout_width="match_parent"
