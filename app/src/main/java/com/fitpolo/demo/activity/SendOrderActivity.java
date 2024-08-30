@@ -367,7 +367,28 @@ public class SendOrderActivity extends BaseActivity {
     }
     public void unbindDevice(View view){
         LogModule.i("开始解绑设备====");
-        MokoSupport.getInstance().sendOrder(new UnbindDeviceTask(mService));
+        UnbindDeviceTask unbindDeviceTask = new UnbindDeviceTask(mService);
+        unbindDeviceTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                StringBuilder contentStr = new StringBuilder();
+                int result = (int) response.responseObject;
+                LogModule.i("开始解绑设备11====" + result);
+                String onOff = result == 0 ? "成功" : "失败";
+                contentStr.append("解绑设备").append("\n ");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAlertDialog(String.valueOf(contentStr));
+                    }
+                });
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(unbindDeviceTask);
     }
     public void languageSupport(View view){
         LogModule.i("开始语言支持====");
@@ -375,10 +396,31 @@ public class SendOrderActivity extends BaseActivity {
     }
     public void deviceInfo(View view){
         LogModule.i("开始设备信息====");
-        MokoSupport.getInstance().sendOrder(new DeviceInfoTask(mService));
+        DeviceInfoTask deviceInfoTask = new DeviceInfoTask(mService);
+        deviceInfoTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                StringBuilder contentStr = new StringBuilder();
+                String result = (String) response.responseObject;
+                LogModule.i("设备信息====" + result);
+                contentStr.append("解绑设备").append(result).append("\n ");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAlertDialog(String.valueOf(contentStr));
+                    }
+                });
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(deviceInfoTask);
     }
     public void remotePhoto(View view){
         LogModule.i("开始远程拍照====");
+        showAlertDialog("暂无");
         MokoSupport.getInstance().sendOrder(new RemotePhotoTask(mService));
     }
     public void messageNotify(View view){
@@ -603,7 +645,6 @@ public class SendOrderActivity extends BaseActivity {
     }
     public void getDoNotDisturb(View view) {
         GetDoNotDisturbTask getDoNotDisturbTask = new GetDoNotDisturbTask(mService);
-//        MokoSupport.getInstance().sendOrder(new GetDoNotDisturbTask(mService));
         getDoNotDisturbTask.callback = new MokoOrderTaskCallback() {
             @Override
             public void onOrderResult(OrderTaskResponse response) {

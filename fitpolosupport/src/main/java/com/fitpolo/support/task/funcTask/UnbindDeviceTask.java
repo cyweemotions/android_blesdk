@@ -10,15 +10,14 @@ import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.OrderTask;
 import com.fitpolo.support.utils.DigitalConver;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 解绑设备
  */
 public class UnbindDeviceTask extends OrderTask {
-
-    private static final int ORDERDATA_LENGTH = 8;
-
     private byte[] orderData;
 
     public UnbindDeviceTask (MokoOrderTaskCallback callback) {
@@ -43,15 +42,12 @@ public class UnbindDeviceTask extends OrderTask {
 
     @Override
     public void parseValue(byte[] value) {
-        LogModule.i(order.getOrderName() + "成功");
-        LogModule.i(Arrays.toString(value));
-        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) {
-            return;
-        }
+        LogModule.i("返回的"+ order.getOrderName() + Arrays.toString(value));
+        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) return;
+        if (MokoConstants.Function != DigitalConver.byte2Int(value[2])) return;
+        int result = (value[5] & 0xFF);
 
-        int group = DigitalConver.byte2Int(value[5]);
-        if (group != 0)
-            return;
+        response.responseObject =  result;
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
 
         MokoSupport.getInstance().pollTask();

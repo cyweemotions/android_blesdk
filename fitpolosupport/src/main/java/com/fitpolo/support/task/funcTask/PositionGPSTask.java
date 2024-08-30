@@ -61,15 +61,12 @@ public class PositionGPSTask extends OrderTask {
 
     @Override
     public void parseValue(byte[] value) {
-        LogModule.i(order.getOrderName() + "成功");
-        LogModule.i(Arrays.toString(value));
-        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) {
-            return;
-        }
-
-        int group = DigitalConver.byte2Int(value[5]);
-        if (group != 0)
-            return;
+        LogModule.i("返回的"+ order.getOrderName() + Arrays.toString(value));
+        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) return;
+        if (MokoConstants.Function != DigitalConver.byte2Int(value[2])) return;
+//        int result = (value[5] & 0xFF);
+//
+//        response.responseObject =  result;
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
 
         MokoSupport.getInstance().pollTask();
