@@ -67,6 +67,7 @@ public class AddressBookDataTask extends OrderTask {
                     map.put("phone", albumPhone);
                     addressBookDataList.add(map);
                 }
+                response.responseObject = addressBookDataList;
                 LogModule.i("返回的通讯录数据" + addressBookDataList.toString());
                 orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
                 LogModule.i(order.getOrderName() + "成功");

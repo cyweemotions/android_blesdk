@@ -87,7 +87,9 @@ import com.fitpolo.support.task.setTask.UserInfoTask;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 
@@ -644,15 +646,16 @@ public class SendOrderActivity extends BaseActivity {
         MokoSupport.getInstance().sendOrder(new HeartRateMonitorTask(mService, heartRateMonitor));
     }
     public void setAlarmClock(View view) {
-        AlarmClock alarmClock = new AlarmClock();
-        alarmClock.action = 0;
-        alarmClock.index = 1;
-        alarmClock.toggle = 0;
-        alarmClock.mode = 2;
-        alarmClock.time = 23 * 60;
-        alarmClock.repeat = 0;
-        alarmClock.activeDay = 0;
-        MokoSupport.getInstance().sendOrder(new AlarmClockTask(mService, alarmClock));
+        showAlertDialog("暂无");
+//        AlarmClock alarmClock = new AlarmClock();
+//        alarmClock.action = 0;
+//        alarmClock.index = 1;
+//        alarmClock.toggle = 0;
+//        alarmClock.mode = 2;
+//        alarmClock.time = 23 * 60;
+//        alarmClock.repeat = 0;
+//        alarmClock.activeDay = 0;
+//        MokoSupport.getInstance().sendOrder(new AlarmClockTask(mService, alarmClock));
     }
     public void setCallReminder(View view) {
         MokoSupport.getInstance().sendOrder(new CallReminderTask(mService, 1));
@@ -752,13 +755,37 @@ public class SendOrderActivity extends BaseActivity {
     }
     public void setAddressBook(View view) {
         AddressBook addressBook = new AddressBook();
-        addressBook.action = 1;
+        addressBook.action = 0;
         addressBook.name = "小刚";
         addressBook.phoneNumber = "152666655550987";
         MokoSupport.getInstance().sendOrder(new AddressBookTask(mService, addressBook));
     }
     public void getAddressBook(View view) {
-        MokoSupport.getInstance().sendOrder(new AddressBookDataTask(mService));
+        AddressBookDataTask addressBookDataTask = new AddressBookDataTask(mService);
+        addressBookDataTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                StringBuilder contentStr = new StringBuilder();
+                List<HashMap> sleepMonitorData = (List<HashMap>) response.responseObject;
+                for (HashMap<String, Object> map : sleepMonitorData) {
+                    for (Map.Entry<String, Object> entry : map.entrySet()) {
+                        contentStr.append(entry.getKey()).append(":").append(entry.getValue()).append("  ");
+                    }
+                    contentStr.append(" \n");
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAlertDialog(String.valueOf(contentStr));
+                    }
+                });
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(addressBookDataTask);
     }
     public void setSleepMonitor(View view) {
         SleepMonitor sleepMonitor = new SleepMonitor();
