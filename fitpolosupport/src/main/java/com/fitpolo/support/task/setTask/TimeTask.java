@@ -14,7 +14,7 @@ import com.fitpolo.support.utils.DigitalConver;
  */
 public class TimeTask extends OrderTask {
     private byte[] orderData;
-    public TimeTask(MokoOrderTaskCallback callback) {
+    public TimeTask(MokoOrderTaskCallback callback, int timeFormat, int dateFormat, int timeZone) {
         super(OrderType.WRITE, OrderEnum.setTimeFormat, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
         orderData = new byte[]{
                 (byte) MokoConstants.HEADER_READ_SEND,
@@ -22,9 +22,9 @@ public class TimeTask extends OrderTask {
                 (byte) MokoConstants.Setting,
                 (byte) order.getOrderHeader(),
                 (byte) 0x03,
-                (byte) 0x01,
-                (byte) 0x02,
-                (byte) 0x08,
+                (byte) timeFormat,
+                (byte) dateFormat,
+                (byte) timeZone,
                 (byte) 0xFF,
                 (byte) 0xFF,
         };

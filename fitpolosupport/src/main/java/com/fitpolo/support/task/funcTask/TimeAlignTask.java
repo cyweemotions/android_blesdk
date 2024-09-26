@@ -71,9 +71,9 @@ public class TimeAlignTask extends OrderTask {
         if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) return;
         if (MokoConstants.Function != DigitalConver.byte2Int(value[2])) return;
         int result = (value[5] & 0xFF);
-        LogModule.i("查询绑定信息：" + result);
+        LogModule.i("时间校准：" + result);
 
-        response.responseObject = result == 0 ? 0 : 1; // 0-成功 1-失败
+        response.responseObject = result == 0 ? 1 : 0; // 1-成功 0-失败
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
         MokoSupport.getInstance().pollTask();
         callback.onOrderResult(response);

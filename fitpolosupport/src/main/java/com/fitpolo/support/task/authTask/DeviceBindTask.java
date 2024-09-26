@@ -18,21 +18,23 @@ import java.util.List;
  */
 public class DeviceBindTask extends OrderTask {
     private byte[] orderData;
-    public DeviceBindTask (MokoOrderTaskCallback callback, int sendType, int type, List<Byte> data) {
+    public DeviceBindTask (MokoOrderTaskCallback callback) {
         super(OrderType.WRITE, OrderEnum.bindAuth, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
         List<Byte> dataList = new ArrayList<>();
-        for (Byte b : data) {
-            dataList.add(b);
-        }
+        dataList.add((byte) 1);
+        dataList.add((byte) 0);
+        dataList.add((byte) 0);
+        dataList.add((byte) 0);
+        dataList.add((byte) 1);
         int dataLength = dataList.size();
 
         List<Byte> byteList = new ArrayList<>();
         byteList.add((byte) MokoConstants.HEADER_READ_SEND);
         byteList.add((byte) (6 + dataLength));
         byteList.add((byte) MokoConstants.DeviceAuth);
-        byteList.add((byte) sendType);
+        byteList.add((byte) 1);
         byteList.add((byte) (1 + dataLength));
-        byteList.add((byte) type);
+        byteList.add((byte) 0);
         byteList.addAll(dataList);
         byteList.add((byte) 0xFF);
         byteList.add((byte) 0xFF);
@@ -75,10 +77,11 @@ public class DeviceBindTask extends OrderTask {
 
         int resType = resultData[0];
         int result = resultData[1];
+        response.responseObject = result;
         if(resType == 0 && result == 1) {
             LogModule.i("请在设备端点击确认");
         } else if(resType == 0 && result == 2) {
-            LogModule.i("设备已被绑定,请在手表端选择“恢复出厂”后重试");
+//            LogModule.i("设备已被绑定,请在手表端选择“恢复出厂”后重试");
         } else if(resType == 0 && result == 3) {
             LogModule.i("设备绑定中。。。");
             orderStatus = OrderTask.ORDER_STATUS_SUCCESS;

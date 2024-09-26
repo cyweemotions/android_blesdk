@@ -334,10 +334,6 @@ public class SendOrderActivity extends BaseActivity {
         }
     };
 
-//    public void getFirmwareParams(View view) {
-//        MokoSupport.getInstance().sendOrder(new FirmwareParamTask(mService));
-//    }
-
 
     /********************* 鉴权 begin *****************/
     public void queryAuthState(View view) {
@@ -365,13 +361,29 @@ public class SendOrderActivity extends BaseActivity {
         MokoSupport.getInstance().sendOrder(queryAuthStateTask);
     }
     public void bindAuth(View view) {
-        List<Byte> dataList = new ArrayList<>();
-        dataList.add((byte) 1);
-        dataList.add((byte) 0);
-        dataList.add((byte) 0);
-        dataList.add((byte) 0);
-        dataList.add((byte) 1);
-        MokoSupport.getInstance().sendOrder(new DeviceBindTask(mService, 1, 0, dataList));
+        DeviceBindTask deviceBindTask = new DeviceBindTask(mService);
+        deviceBindTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                StringBuilder contentStr = new StringBuilder();
+                int result = (int) response.responseObject;
+                LogModule.i("绑定结果====" + result);
+                if(result == 3) {
+                    contentStr.append("绑定结果：").append("成功").append("\n ");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showAlertDialog(String.valueOf(contentStr));
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(deviceBindTask);
     }
     /********************* 鉴权 end *****************/
 
@@ -555,7 +567,19 @@ public class SendOrderActivity extends BaseActivity {
         MokoSupport.getInstance().sendOrder(new UserInfoTask(mService, userInfo));
     }
     public void setTarget(View view) {
-        MokoSupport.getInstance().sendOrder(new TargetTask(mService));
+        TargetTask targetTask = new TargetTask(mService, 4, 2,4, 4);
+        targetTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                int result = (int) response.responseObject;
+                LogModule.i("setTarget====" + result);
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(targetTask);
     }
     public void getTarget(View view) {
         GetTargetTask getTargetTask = new GetTargetTask(mService);
@@ -587,7 +611,19 @@ public class SendOrderActivity extends BaseActivity {
         MokoSupport.getInstance().sendOrder(getTargetTask);
     }
     public void setTimeFormat(View view) {
-        MokoSupport.getInstance().sendOrder(new TimeTask(mService));
+        TimeTask timeTask = new TimeTask(mService, 1 , 2, 8);
+        timeTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                int result = (int) response.responseObject;
+                LogModule.i("timeTask====" + result);
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(timeTask);
     }
     public void setSleep(View view) {
         int startTime = 8;

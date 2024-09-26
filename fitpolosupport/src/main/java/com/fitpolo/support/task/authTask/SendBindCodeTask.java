@@ -65,29 +65,15 @@ public class SendBindCodeTask extends OrderTask {
         LogModule.i("鉴权返回数据正确resResult===="+resResult);
         LogModule.i("鉴权返回数据正确reason======="+reason);
         if((resType == 0) && (resResult == 2) && (reason == 2)) {
-            LogModule.i("设备绑定成功");
+            LogModule.i("设备绑定鉴权成功");
             orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
+            response.responseObject = 1;
         } else {
-            LogModule.i("设备绑定失败");
+            LogModule.i("设备绑定鉴权失败");
+            response.responseObject = 0;
         }
         MokoSupport.getInstance().pollTask();
         callback.onOrderResult(response);
         MokoSupport.getInstance().executeTask(callback);
-//        if((resType == 0) && (resResult == 0) && (reason == 1)) {
-//            orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
-//            MokoSupport.getInstance().pollTask();
-//            callback.onOrderResult(response);
-//            MokoSupport.getInstance().executeTask(callback);
-//            List<Byte> dataList = new ArrayList<>();
-//            dataList.add((byte) 0x01);
-//            dataList.add((byte) 0x0A);
-//            dataList.add((byte) 0x0F);
-//            dataList.add((byte) 0x01);
-//            dataList.add((byte) 0x0C);
-//            SendAuthCodeTask sendAuthCodeTask = new SendAuthCodeTask(callback, 1,1, dataList);
-//            MokoSupport.getInstance().sendOrder(sendAuthCodeTask);
-//        } else {
-//            LogModule.i("未绑定");
-//        }
     }
 }
