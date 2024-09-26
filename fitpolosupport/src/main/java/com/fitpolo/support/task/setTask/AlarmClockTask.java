@@ -65,15 +65,14 @@ public class AlarmClockTask extends OrderTask {
 
     @Override
     public void parseValue(byte[] value) {
-        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) {
-            return;
-        }
-        if(DigitalConver.byte2Int(value[4]) == 0x01) {
-            LogModule.i(order.getOrderName() + "成功");
-            orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
-        } else {
-            LogModule.i(order.getOrderName() + "失败");
-        }
+        LogModule.i(order.getOrderName() + "成功" );
+        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) return;
+        if (MokoConstants.Setting != DigitalConver.byte2Int(value[2])) return;
+        int result = (value[5] & 0xFF);
+        LogModule.i(order.getOrderName()+ "成功：" + result);
+
+        response.responseObject = result == 0 ? 0 : 1; // 0-成功 1-失败
+        orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
         MokoSupport.getInstance().pollTask();
         callback.onOrderResult(response);
         MokoSupport.getInstance().executeTask(callback);

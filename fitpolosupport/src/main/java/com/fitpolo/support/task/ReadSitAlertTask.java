@@ -44,7 +44,7 @@ public class ReadSitAlertTask extends OrderTask {
             return;
         }
         SitAlert sitAlert = new SitAlert();
-        sitAlert.alertSwitch = DigitalConver.byte2Int(value[3]);
+        sitAlert.toggle = DigitalConver.byte2Int(value[3]);
         int startHour = DigitalConver.byte2Int(value[4]);
         int startMin = DigitalConver.byte2Int(value[5]);
         Calendar calendar = Calendar.getInstance();

@@ -19,12 +19,15 @@ public class MotionTargetTask extends OrderTask {
         super(OrderType.WRITE, OrderEnum.setMotionTarget, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
         if(motionTarget.distance < 0 || motionTarget.distance > 99) {
             LogModule.e("距离值错误");
+            return;
         }
         if(motionTarget.sportTime < 0 || motionTarget.sportTime > 23) {
             LogModule.e("时间值错误");
+            return;
         }
         if(motionTarget.calorie < 0 || motionTarget.calorie > 9) {
             LogModule.e("卡路里值错误");
+            return;
         }
 
         List<Byte> dataList = new ArrayList<>();
@@ -64,15 +67,14 @@ public class MotionTargetTask extends OrderTask {
 
     @Override
     public void parseValue(byte[] value) {
-        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) {
-            return;
-        }
-        if(DigitalConver.byte2Int(value[4]) == 0x01) {
-            LogModule.i(order.getOrderName() + "成功");
-            orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
-        } else {
-            LogModule.i(order.getOrderName() + "失败");
-        }
+        LogModule.i(order.getOrderName() + "成功" );
+        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) return;
+        if (MokoConstants.Setting != DigitalConver.byte2Int(value[2])) return;
+        int result = (value[5] & 0xFF);
+        LogModule.i(order.getOrderName()+ "成功：" + result);
+
+        response.responseObject = result == 0 ? 0 : 1; // 0-成功 1-失败
+        orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
         MokoSupport.getInstance().pollTask();
         callback.onOrderResult(response);
         MokoSupport.getInstance().executeTask(callback);

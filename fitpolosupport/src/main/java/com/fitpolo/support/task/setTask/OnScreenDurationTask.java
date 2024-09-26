@@ -21,28 +21,7 @@ public class OnScreenDurationTask extends OrderTask {
         super(OrderType.WRITE, OrderEnum.setOnScreenDuration, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
 
         List<Byte> dataList = new ArrayList<>();
-        byte durationByte;
-        switch(duration) {
-            case 5:
-                durationByte = 0x00;
-                break;
-            case 10:
-                durationByte = 0x01;
-                break;
-            case 15:
-                durationByte = 0x02;
-                break;
-            case 30:
-                durationByte = 0x03;
-                break;
-            case 60:
-                durationByte = 0x04;
-                break;
-            default:
-                durationByte = 0x01;
-                break;
-        }
-        dataList.add(durationByte);// 亮屏时长
+        dataList.add((byte) duration);// 亮屏时长
         int dataLength = dataList.size();
 
         List<Byte> byteList = new ArrayList<>();
@@ -67,15 +46,14 @@ public class OnScreenDurationTask extends OrderTask {
     }
     @Override
     public void parseValue(byte[] value) {
-        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) {
-            return;
-        }
-        if(DigitalConver.byte2Int(value[4]) == 0x01) {
-            LogModule.i(order.getOrderName() + "成功");
-            orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
-        } else {
-            LogModule.i(order.getOrderName() + "失败");
-        }
+        LogModule.i(order.getOrderName() + "成功" );
+        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) return;
+        if (MokoConstants.Setting != DigitalConver.byte2Int(value[2])) return;
+        int result = (value[5] & 0xFF);
+        LogModule.i(order.getOrderName()+ "成功：" + result);
+
+        response.responseObject = result == 0 ? 0 : 1; // 0-成功 1-失败
+        orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
         MokoSupport.getInstance().pollTask();
         callback.onOrderResult(response);
         MokoSupport.getInstance().executeTask(callback);

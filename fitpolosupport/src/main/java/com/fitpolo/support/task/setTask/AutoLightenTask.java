@@ -21,10 +21,10 @@ public class AutoLightenTask extends OrderTask {
 
     private byte[] orderData;
 
-    public AutoLightenTask(MokoOrderTaskCallback callback) {
+    public AutoLightenTask(MokoOrderTaskCallback callback, int toggle) {
         super(OrderType.WRITE, OrderEnum.setAutoLigten, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
         List<Byte> byteList = new ArrayList<>();
-        byteList.add((byte) 0x00);// 0 开 1 关
+        byteList.add((byte) toggle);// 0 开 1 关
         byte[] dataBytes = new byte[byteList.size()];
         for (int i = 0; i < byteList.size(); i++) {
             dataBytes[i] = byteList.get(i);
@@ -51,15 +51,14 @@ public class AutoLightenTask extends OrderTask {
 
     @Override
     public void parseValue(byte[] value) {
-        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) {
-            return;
-        }
-        if(DigitalConver.byte2Int(value[4]) == 0x01) {
-            LogModule.i(order.getOrderName() + "成功");
-            orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
-        } else {
-            LogModule.i(order.getOrderName() + "失败");
-        }
+        LogModule.i(order.getOrderName() + "成功" );
+        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) return;
+        if (MokoConstants.Setting != DigitalConver.byte2Int(value[2])) return;
+        int result = (value[5] & 0xFF);
+        LogModule.i(order.getOrderName()+ "成功：" + result);
+
+        response.responseObject = result == 0 ? 0 : 1; // 0-成功 1-失败
+        orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
         MokoSupport.getInstance().pollTask();
         callback.onOrderResult(response);
         MokoSupport.getInstance().executeTask(callback);

@@ -15,12 +15,12 @@ import java.util.List;
 
 public class SleepTask extends OrderTask {
     private byte[] orderData;
-    public SleepTask(MokoOrderTaskCallback callback, int startTime, int endTime) {
+    public SleepTask(MokoOrderTaskCallback callback,int toggle, int startTime, int endTime) {
         super(OrderType.WRITE, OrderEnum.setSleep, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
-        List<Byte> startHexList = DigitalConver.convert(startTime * 60, ByteType.WORD);
-        List<Byte> endHexList = DigitalConver.convert(endTime * 60, ByteType.WORD);
+        List<Byte> startHexList = DigitalConver.convert(startTime, ByteType.WORD);
+        List<Byte> endHexList = DigitalConver.convert(endTime, ByteType.WORD);
         List<Byte> byteList = new ArrayList<>();
-        byteList.add((byte) 0x00);//睡眠监控开关：默认是开的，不能关闭
+        byteList.add((byte) toggle);//睡眠监控开关：默认是开的，不能关闭
         byteList.addAll(startHexList);
         byteList.addAll(endHexList);
         byte[] dataBytes = new byte[byteList.size()];
@@ -40,7 +40,6 @@ public class SleepTask extends OrderTask {
             (byte) 0xFF,
         };
         orderData = DigitalConver.mergeBitArrays(array2, array3);
-        //[255, 0a, 00, 04, 05, 00, 01, 224, 05, 100, 255, 255]
     }
 
     @Override
@@ -50,15 +49,14 @@ public class SleepTask extends OrderTask {
 
     @Override
     public void parseValue(byte[] value) {
-        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) {
-            return;
-        }
-        if(DigitalConver.byte2Int(value[4]) == 0x01) {
-            LogModule.i(order.getOrderName() + "成功");
-            orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
-        } else {
-            LogModule.i(order.getOrderName() + "失败");
-        }
+        LogModule.i(order.getOrderName() + "成功" );
+        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) return;
+        if (MokoConstants.Setting != DigitalConver.byte2Int(value[2])) return;
+        int result = (value[5] & 0xFF);
+        LogModule.i(order.getOrderName()+ "成功：" + result);
+
+        response.responseObject = result == 0 ? 0 : 1; // 0-成功 1-失败
+        orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
         MokoSupport.getInstance().pollTask();
         callback.onOrderResult(response);
         MokoSupport.getInstance().executeTask(callback);

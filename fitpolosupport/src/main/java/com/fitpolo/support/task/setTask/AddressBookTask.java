@@ -70,9 +70,11 @@ public class AddressBookTask extends OrderTask {
         LogModule.i("返回的"+ order.getOrderName() + Arrays.toString(value));
         if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) return;
         if (MokoConstants.Setting != DigitalConver.byte2Int(value[2])) return;
-        int dataLength = (value[4] & 0xFF);
-        byte[] subArray = Arrays.copyOfRange(value, 5, dataLength + 5);
 
+        int result = (value[5] & 0xFF);
+        LogModule.i(order.getOrderName()+ "成功：" + result);
+
+        response.responseObject = result == 0 ? 0 : 1; // 0-成功 1-失败
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
 
         MokoSupport.getInstance().pollTask();

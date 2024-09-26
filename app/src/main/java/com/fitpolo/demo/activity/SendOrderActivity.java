@@ -517,8 +517,8 @@ public class SendOrderActivity extends BaseActivity {
     }
     public void positionGPS(View view){
         LogModule.i("开始定位GPS====");
-        showAlertDialog("暂无");
-//        MokoSupport.getInstance().sendOrder(new PositionGPSTask(mService, 3, 1, 1));
+//        showAlertDialog("暂无");
+        MokoSupport.getInstance().sendOrder(new PositionGPSTask(mService, 3, 1, 1));
     }
     public void motionControl(View view){
         LogModule.i("开始运动控制====");
@@ -626,15 +626,16 @@ public class SendOrderActivity extends BaseActivity {
         MokoSupport.getInstance().sendOrder(timeTask);
     }
     public void setSleep(View view) {
-        int startTime = 8;
-        int endTime = 23;
-        MokoSupport.getInstance().sendOrder(new SleepTask(mService, startTime, endTime));
+        int toggle = 0;
+        int startTime = 23*60+30;
+        int endTime = 8*60;
+        MokoSupport.getInstance().sendOrder(new SleepTask(mService, toggle, startTime, endTime));
     }
     public void setSitAlert(View view) {
         SitAlert alert = new SitAlert();
-        alert.alertSwitch = 0;
-        alert.startTime = 8;
-        alert.endTime = 21;
+        alert.toggle = 0;
+        alert.startTime = 8*60;
+        alert.endTime = 21*60;
         alert.interval = 60;
         MokoSupport.getInstance().sendOrder(new SitLongTimeAlertTask(mService, alert));
     }
@@ -670,7 +671,7 @@ public class SendOrderActivity extends BaseActivity {
         MokoSupport.getInstance().sendOrder(getSitAlertSettingTask);
     }
     public void setAutoLigten(View view) {
-        MokoSupport.getInstance().sendOrder(new AutoLightenTask(mService));
+        MokoSupport.getInstance().sendOrder(new AutoLightenTask(mService, 0));
     }
     public void setHeartRateMonitor(View view) {
         HeartRateMonitor heartRateMonitor = new HeartRateMonitor();
@@ -700,14 +701,10 @@ public class SendOrderActivity extends BaseActivity {
         MotionTarget motionTarget = new MotionTarget();
         motionTarget.setType = 0;
         motionTarget.sportType = 0;
-        if(motionTarget.setType == 0) {
-            motionTarget.distance = 1;
-            motionTarget.sportTime = 2;
-            motionTarget.calorie = 3;
-            motionTarget.targetType = 2;
-        } else {
-            motionTarget.autoPauseSwitch = 0;
-        }
+        motionTarget.distance = 1;
+        motionTarget.sportTime = 2;
+        motionTarget.calorie = 3;
+        motionTarget.targetType = 2;
         MokoSupport.getInstance().sendOrder(new MotionTargetTask(mService, motionTarget));
     }
     public void setAutoPause(View view) {
@@ -721,7 +718,7 @@ public class SendOrderActivity extends BaseActivity {
         MokoSupport.getInstance().sendOrder(new StandardAlertTask(mService, 0));
     }
     public void setLanguage(View view) {
-        MokoSupport.getInstance().sendOrder(new LanguageTask(mService, 1));
+        MokoSupport.getInstance().sendOrder(new LanguageTask(mService, 0));
     }
     public void setNotify(View view) {
         NotifyType notifyType = new NotifyType();
@@ -745,7 +742,7 @@ public class SendOrderActivity extends BaseActivity {
         MokoSupport.getInstance().sendOrder(new NotifyTask(mService, notifyType));
     }
     public void setOnScreenDuration(View view) {
-        MokoSupport.getInstance().sendOrder(new OnScreenDurationTask(mService, 15));
+        MokoSupport.getInstance().sendOrder(new OnScreenDurationTask(mService, 1));
     }
     public void setDoNotDisturb(View view) {
         DoNotDisturb doNotDisturb = new DoNotDisturb();

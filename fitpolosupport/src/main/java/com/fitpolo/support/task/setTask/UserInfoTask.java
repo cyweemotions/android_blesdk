@@ -58,7 +58,7 @@ public class UserInfoTask extends OrderTask {
         int result = (value[5] & 0xFF);
         LogModule.i("设置用户信息：" + result);
 
-        response.responseObject = result == 0 ? 1 : 0; // 1-成功 0-失败
+        response.responseObject = result == 0 ? 0 : 1; // 0-成功 1-失败
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
         MokoSupport.getInstance().pollTask();
         callback.onOrderResult(response);

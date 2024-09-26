@@ -25,16 +25,16 @@ public class SitLongTimeAlertTask extends OrderTask {
         super(OrderType.WRITE, OrderEnum.setSitLongTimeAlert, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
         List<Byte> byteList = new ArrayList<>();
 
-        byte onOff = sitAlert.interval == 0 ? (byte)0x00 : (byte)0x01;//开关 00 01
+        byte onOff = sitAlert.toggle == 0 ? (byte)0x00 : (byte)0x01;//开关 00 01
         byteList.add(onOff);
 
         byte[] timeU8 = DigitalConver.hex2bytes(Integer.toHexString(sitAlert.interval));
         for (byte b : timeU8) { byteList.add(b); } // 久坐提醒时间间隔，单位分钟
 
-        List<Byte> startU8 = DigitalConver.convert(sitAlert.startTime*60,ByteType.WORD);
+        List<Byte> startU8 = DigitalConver.convert(sitAlert.startTime,ByteType.WORD);
         byteList.addAll(startU8); // 开始时间
 
-        List<Byte> endU8 = DigitalConver.convert(sitAlert.endTime*60,ByteType.WORD);
+        List<Byte> endU8 = DigitalConver.convert(sitAlert.endTime,ByteType.WORD);
         byteList.addAll(endU8); // 结束时间
         // 0x01 --  周日
         // 0x02 --  周一
@@ -72,15 +72,14 @@ public class SitLongTimeAlertTask extends OrderTask {
 
     @Override
     public void parseValue(byte[] value) {
-        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) {
-            return;
-        }
-        if(DigitalConver.byte2Int(value[4]) == 0x01) {
-            LogModule.i(order.getOrderName() + "成功");
-            orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
-        } else {
-            LogModule.i(order.getOrderName() + "失败");
-        }
+        LogModule.i(order.getOrderName() + "成功" );
+        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) return;
+        if (MokoConstants.Setting != DigitalConver.byte2Int(value[2])) return;
+        int result = (value[5] & 0xFF);
+        LogModule.i(order.getOrderName()+ "成功：" + result);
+
+        response.responseObject = result == 0 ? 0 : 1; // 0-成功 1-失败
+        orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
         MokoSupport.getInstance().pollTask();
         callback.onOrderResult(response);
         MokoSupport.getInstance().executeTask(callback);
