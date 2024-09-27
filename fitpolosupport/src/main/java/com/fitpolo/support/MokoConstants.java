@@ -38,8 +38,11 @@ public class MokoConstants {
      public static final String century = "20";
 
      public static final String SS = "[1]"; //运动开始
-     public static final String SE = "[5]"; //运动结束
      public static final String SP = "[2]"; //运动进行
+     public static final String PAUSE = "[3]"; //运动暂停
+     public static final String RESUME = "[4]"; //运动重启
+    public static final String SE = "[5]"; //运动结束
+    public static final String NODATA= "[6]"; //运动无数据结束
     // 发现状态
     public static final String ACTION_DISCOVER_SUCCESS = "com.moko.fitpolodemo.ACTION_DISCOVER_SUCCESS";
     public static final String ACTION_DISCOVER_TIMEOUT = "com.moko.fitpolodemo.ACTION_DISCOVER_TIMEOUT";

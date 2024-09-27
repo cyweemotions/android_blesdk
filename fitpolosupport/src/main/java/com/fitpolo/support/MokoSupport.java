@@ -1,5 +1,7 @@
 package com.fitpolo.support;
 
+import static com.fitpolo.support.utils.ComplexDataParse.parseInMotionData;
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -15,6 +17,7 @@ import android.text.TextUtils;
 
 import com.fitpolo.support.callback.MokoConnStateCallback;
 import com.fitpolo.support.callback.MokoOrderTaskCallback;
+import com.fitpolo.support.callback.MokoReceiver;
 import com.fitpolo.support.callback.MokoResponseCallback;
 import com.fitpolo.support.callback.MokoScanDeviceCallback;
 import com.fitpolo.support.entity.AutoLighten;
@@ -43,6 +46,7 @@ import com.fitpolo.support.handler.MokoLeScanHandler;
 import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.OrderTask;
 import com.fitpolo.support.task.UpgradeBandTask;
+import com.fitpolo.support.task.funcTask.MotionDataTask;
 import com.fitpolo.support.utils.BaseHandler;
 import com.fitpolo.support.utils.BleConnectionCompat;
 import com.fitpolo.support.utils.DigitalConver;
@@ -82,6 +86,7 @@ public class MokoSupport implements MokoResponseCallback {
     private BlockingQueue<OrderTask> mQueue;
 
     private Context mContext;
+    public MokoReceiver mMokoReceiver;
     private MokoConnStateCallback mMokoConnStateCallback;
     private HashMap<OrderType, MokoCharacteristic> mCharacteristicMap;
     public static final UUID DESCRIPTOR_UUID_NOTIFY = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
@@ -408,24 +413,6 @@ public class MokoSupport implements MokoResponseCallback {
         if (value != null && value.length > 0 && orderTask != null) {
             OrderEnum orderEnum = orderTask.getOrder();
             LogModule.i("orderEnum====== : " + orderEnum.toString());
-//            switch (orderEnum) {
-//                case getAllSleepIndex:
-//                    AllSleepIndexTask sleepIndexTask = (AllSleepIndexTask) orderTask;
-//                    if (mSleepIndexCount == 0 && !mDailySleeps.isEmpty()) {
-//                        sleepIndexTask.parseRecordValue(value);
-//                    } else {
-//                        sleepIndexTask.parseValue(value);
-//                    }
-//                    return;
-//                case getLastestSleepIndex:
-//                    LastestSleepIndexTask lastestSleepIndexTask = (LastestSleepIndexTask) orderTask;
-//                    if (mSleepIndexCount == 0 && mSleepsMap != null && !mSleepsMap.isEmpty()) {
-//                        lastestSleepIndexTask.parseRecordValue(value);
-//                    } else {
-//                        lastestSleepIndexTask.parseValue(value);
-//                    }
-//                    return;
-//            }
             orderTask.parseValue(value);
         }else{
             LogModule.i("数据监听");
@@ -434,7 +421,10 @@ public class MokoSupport implements MokoResponseCallback {
             String characteristicUuid = characteristic.getUuid().toString();
             if (characteristicUuid.equals(OrderType.DataPushNOTIFY.getUuid())) {
                 ///运动
-                System.out.println(Arrays.toString(value));
+                System.out.println("开始获取运动中数据");
+                ArrayList<String> reponse =  parseInMotionData(value);
+                mMokoReceiver.onResult(reponse);
+
             }else if(characteristicUuid.equals(OrderType.NOTIFY.getUuid())){
                 //查找手机
                 System.out.println(Arrays.toString(value));

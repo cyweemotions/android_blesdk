@@ -25,6 +25,7 @@ import com.fitpolo.demo.utils.FileUtils;
 import com.fitpolo.support.MokoConstants;
 import com.fitpolo.support.MokoSupport;
 import com.fitpolo.support.callback.MokoOrderTaskCallback;
+import com.fitpolo.support.callback.MokoReceiver;
 import com.fitpolo.support.entity.AutoLighten;
 import com.fitpolo.support.entity.dataEntity.StepsModel;
 import com.fitpolo.support.entity.setEntity.AddressBook;
@@ -54,6 +55,7 @@ import com.fitpolo.support.task.funcTask.DeviceInfoTask;
 import com.fitpolo.support.task.funcTask.LanguageSupportTask;
 import com.fitpolo.support.task.funcTask.MessageNotifyTask;
 import com.fitpolo.support.task.funcTask.MotionControlTask;
+import com.fitpolo.support.task.funcTask.MotionDataTask;
 import com.fitpolo.support.task.funcTask.PositionGPSTask;
 import com.fitpolo.support.task.funcTask.RemotePhotoTask;
 import com.fitpolo.support.task.funcTask.QueryInfoTask;
@@ -525,6 +527,13 @@ public class SendOrderActivity extends BaseActivity {
         MotionControl motionControl = new MotionControl();
         motionControl.type = 1;
         motionControl.action = 1;
+        MokoSupport.getInstance().mMokoReceiver = new MokoReceiver() {
+            @Override
+            public void onResult(ArrayList<String> response) {
+                LogModule.i("获取运动中数据====");
+                LogModule.i(response.toString());
+            }
+        };
         MokoSupport.getInstance().sendOrder(new MotionControlTask(mService, motionControl));
     }
     public void pauseMotion(View view){
