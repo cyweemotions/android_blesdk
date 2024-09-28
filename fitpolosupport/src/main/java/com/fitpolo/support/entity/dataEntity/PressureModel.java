@@ -14,16 +14,15 @@ public class PressureModel {
     public int year;
     public int month;
     public int day;
-    public int hours;
     public int relax; //放松
     public int normal; //正常
     public int strain; //紧张
     public int anxiety; //焦虑
     public int highest; // 最高
-    public int minimun; // 最低
+    public int minimum; // 最低
     public int lately; //最近
-    public String pressTime;
-    public String rawData;
+//    public String pressTime;
+//    public String rawData;
 
     @Override
     public String toString() {
@@ -32,15 +31,13 @@ public class PressureModel {
                 ", year =" + year +
                 ", month =" + month +
                 ", day =" + day +
-                ", hours =" + hours +
                 ", relax =" + relax +
                 ", normal =" + normal +
                 ", strain =" + strain +
                 ", anxiety =" + anxiety +
                 ", highest =" + highest +
-                ", minimun =" + minimun +
+                ", minimum =" + minimum +
                 ", lately =" + lately +
-                ", pressTime =" + pressTime +
                 '}';
     }
 
@@ -66,19 +63,19 @@ public class PressureModel {
         int strain = (int) source.get(2);
         int anxiety = (int) source.get(3);
         int highest = (int) source.get(4);
-        int minimun = (int) source.get(5);
+        int minimum = (int) source.get(5);
         int lately = (int) source.get(6);
         List<Byte> times = source.subList(7,31);
-        List<String> timeList = new ArrayList<>();
-        for (byte str : times) {
-            timeList.add(String.valueOf((int) str));
-        }
+//        List<String> timeList = new ArrayList<>();
+//        for (byte str : times) {
+//            timeList.add(String.valueOf((int) str));
+//        }
         List<String> sourceList = new ArrayList<>();
         for (byte str : source) {
             sourceList.add(String.valueOf((int) str));
         }
-        String pressTime = DigitalConver.join(",", timeList);
-        String rawData = pressTime + "," + DigitalConver.join(",", sourceList);
+//        String pressTime = DigitalConver.join(",", timeList);
+//        String rawData = pressTime + "," + DigitalConver.join(",", sourceList);
 
         model.id = timeStamp;
         model.year = year;
@@ -89,10 +86,10 @@ public class PressureModel {
         model.strain = strain;
         model.anxiety = anxiety;
         model.highest = highest;
-        model.minimun = minimun;
+        model.minimum = minimum;
         model.lately = lately;
-        model.pressTime = pressTime;
-        model.rawData = rawData;
+//        model.pressTime = pressTime;
+//        model.rawData = rawData;
         return model;
     }
 }

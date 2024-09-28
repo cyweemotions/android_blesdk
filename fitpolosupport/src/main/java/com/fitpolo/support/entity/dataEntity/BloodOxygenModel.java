@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 public class BloodOxygenModel {
-    public int bloodOxygen;// 心率
+    public int bloodOxygen;// 血氧
     public long datetime;// 时间
     public BloodOxygenModel(int bloodOxygen, int datetime) {
         this.bloodOxygen = bloodOxygen;

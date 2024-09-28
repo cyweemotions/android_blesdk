@@ -888,7 +888,8 @@ public class SendOrderActivity extends BaseActivity {
     /********************* 数据交互类型 begin *****************/
 
     public void syncWeather(View view) {
-        MokoSupport.getInstance().sendOrder(new SyncWeatherTask(mService));
+        String weather = "4:深圳:20240809,30222,30571,802|20240810,30184,30468,500|20240811,30191,30503,500|20240812,30235,30537,500|";
+        MokoSupport.getInstance().sendOrder(new SyncWeatherTask(mService, weather));
     }
     public void syncSteps(View view) {
         Intent orderIntent = new Intent(SendOrderActivity.this, BleDataActivity.class);

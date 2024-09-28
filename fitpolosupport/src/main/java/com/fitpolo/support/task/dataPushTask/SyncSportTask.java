@@ -23,23 +23,20 @@ public class SyncSportTask extends OrderTask {
     private int location = 0;
     private List<String> sportHistoryDatas = new ArrayList<>();
     private List<byte[]> res = new ArrayList<>();
-    public SyncSportTask(MokoOrderTaskCallback callback, Calendar calendar, int fileIndex, int type) {
+    public SyncSportTask(MokoOrderTaskCallback callback, int fileIndex, int year, int month, int day) {
         super(OrderType.DataPushWRITE, OrderEnum.syncSport, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
         location = fileIndex;
-        typeData = type;
+        typeData = 1;
         List<Byte> dataList = new ArrayList<>();
-        byte isRecordByte = type == 1 ? (byte) 0x01 : (byte) 0x00;
+        byte isRecordByte = (byte) 0x01;
         dataList.add(isRecordByte);
 //        Calendar calendar = Calendar.getInstance();
         //年
-        int year = calendar.get(Calendar.YEAR);
         List<Byte> yearData = DigitalConver.convert(year, ByteType.WORD);
         dataList.addAll(yearData);
         //月
-        int month = calendar.get(Calendar.MONTH) + 1;
         dataList.add((byte) (month & 0xFF));
         //日
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
         dataList.add((byte) (day & 0xFF));
         dataList.add((byte) 0x00);
         int dataLength = dataList.size();

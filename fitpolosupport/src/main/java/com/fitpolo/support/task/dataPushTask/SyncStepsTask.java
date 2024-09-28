@@ -10,33 +10,34 @@ import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.OrderTask;
 import com.fitpolo.support.utils.ByteType;
 import com.fitpolo.support.utils.DigitalConver;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 public class SyncStepsTask extends OrderTask {
     private byte[] orderData;
     private int typeData; // record—— 1  current—— 0
     private int index = 1; // record=1 —— package index
     private List<byte[]> res = new ArrayList<>();
-    public SyncStepsTask(MokoOrderTaskCallback callback, int type) {
+    public SyncStepsTask(MokoOrderTaskCallback callback, int year, int month, int day, int type) {
         super(OrderType.DataPushWRITE, OrderEnum.syncSteps, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
         typeData = type;
         List<Byte> dataList = new ArrayList<>();
         byte isRecordByte = type == 1 ? (byte) 0x01 : (byte) 0x00;
         dataList.add(isRecordByte);
-        Calendar calendar = Calendar.getInstance();
+//        Calendar calendar = Calendar.getInstance();
         //年
-        int year = calendar.get(Calendar.YEAR);
         List<Byte> yearData = DigitalConver.convert(year, ByteType.WORD);
         dataList.addAll(yearData);
         //月
-        int month = calendar.get(Calendar.MONTH) + 1;
         dataList.add((byte) (month & 0xFF));
         //日
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
         dataList.add((byte) (day & 0xFF));
         dataList.add((byte) 0x00);
         dataList.add((byte) 0x00);
@@ -103,7 +104,11 @@ public class SyncStepsTask extends OrderTask {
         LogModule.i("获取步数数据成功");
         LogModule.i(resultStr);
 
-        response.responseObject = resultStr;
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> resultData = gson.fromJson(resultStr, mapType);
+
+        response.responseObject = resultData;
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
         MokoSupport.getInstance().pollTask();
         callback.onOrderResult(response);
@@ -117,14 +122,15 @@ public class SyncStepsTask extends OrderTask {
         if(packIndex == index) {
             String key = String.valueOf(packIndex);
             res.add(resultArray);
-            // LogModule.i("获取步数数据类型packType====="+ res);
+             LogModule.i("获取步数数据类型packType====="+ res.size());
 
-            LogModule.i("获取步数数据长度=======");
             if(packType == 0 || packType == 2) { //结束 后面没有数据接收了
                 StringBuilder resultStr = new StringBuilder(); // 最后的数据
                 List<StepsModel> dataSource = new ArrayList<>();
                 for (int i=0; i<res.size(); i++) {
                     byte[] value = res.get(i);
+                    System.out.println(Arrays.toString(value));
+                    if(value.length == 0)return;
                     String resultHexStr = DigitalConver.bytesToHexString(value);
                     String heartStr = DigitalConver.hex2String(resultHexStr);
                     resultStr.append(heartStr);

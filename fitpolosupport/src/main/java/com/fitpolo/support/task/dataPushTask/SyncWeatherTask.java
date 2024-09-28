@@ -17,20 +17,23 @@ import java.util.List;
 
 public class SyncWeatherTask extends OrderTask {
     private byte[] orderData;
-    public SyncWeatherTask(MokoOrderTaskCallback callback) {
+    public SyncWeatherTask(MokoOrderTaskCallback callback, String weather) {
         super(OrderType.DataPushWRITE, OrderEnum.syncWeather, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
-//        String weather = "4:ShenZhen:20240809,13,26,Clear|20240810,15,28,Clouds|20240811,17,30,Clear|20240812,17,30,Clear|";
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        String oneDay = sdf.format(calendar.getTime());
-        calendar.add(Calendar.DAY_OF_MONTH, 1);
-        String twoDay = sdf.format(calendar.getTime());
-        calendar.add(Calendar.DAY_OF_MONTH, 2);
-        String threeDay = sdf.format(calendar.getTime());
-        calendar.add(Calendar.DAY_OF_MONTH, 3);
-        String fourDay = sdf.format(calendar.getTime());
+////        String weather = "4:ShenZhen:20240809,13,26,Clear|20240810,15,28,Clouds|20240811,17,30,Clear|20240812,17,30,Clear|";
 
-        String weather = "4:深圳:"+oneDay+",30222,30571,802|"+twoDay+",30184,30468,500|"+threeDay+",30191,30503,500|"+fourDay+",30235,30537,500|";
+
+//        Calendar calendar = Calendar.getInstance();
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+//        String oneDay = sdf.format(calendar.getTime());
+//        calendar.add(Calendar.DAY_OF_MONTH, 1);
+//        String twoDay = sdf.format(calendar.getTime());
+//        calendar.add(Calendar.DAY_OF_MONTH, 2);
+//        String threeDay = sdf.format(calendar.getTime());
+//        calendar.add(Calendar.DAY_OF_MONTH, 3);
+//        String fourDay = sdf.format(calendar.getTime());
+
+//        String weather = "4:深圳:"+oneDay+",26222,33571,802|"+twoDay+",30184,30468,500|"+threeDay+",30191,30503,500|"+fourDay+",30235,30537,500|";
+//        String weather = "4:深圳:20240809,30222,30571,802|20240810,30184,30468,500|20240811,30191,30503,500|20240812,30235,30537,500|";
 
         String weatherBytesStr = DigitalConver.string2Hex(weather);
         byte[] weatherBytes = DigitalConver.hex2bytes(weatherBytesStr);
@@ -62,9 +65,10 @@ public class SyncWeatherTask extends OrderTask {
         LogModule.i("返回的"+ order.getOrderName() + Arrays.toString(value));
         if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) return;
         if (MokoConstants.DataNotify != DigitalConver.byte2Int(value[2])) return;
-        int dataLength = (value[4] & 0xFF);
-        byte[] subArray = Arrays.copyOfRange(value, 5, dataLength + 5);
-//        response.responseObject =  result;
+        int result = (value[5] & 0xFF);
+        LogModule.i(order.getOrderName()+ "成功：" + result);
+
+        response.responseObject = result == 0 ? 0 : 1; // 0-成功 1-失败
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
 
         MokoSupport.getInstance().pollTask();

@@ -28,7 +28,7 @@ public class SportModel {
     public float vo2max; //最大摄氧量
     public int training_time; //训练时间
     public int sportType; //运动类型
-    public int second;//second
+    public int second;//运动时间(s)
     public List<Integer> step_freqs = new ArrayList<>();//步频数组
     public List<Integer> speeds = new ArrayList<>(); //速度数组
     public List<Integer> hr_values = new ArrayList<>();//心率数组

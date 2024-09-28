@@ -23,22 +23,19 @@ public class SyncPaiTask extends OrderTask {
     private int index = 1; // record=1 —— package index
     private List<Byte> res = new ArrayList<>();
     int itemLength = 36;
-    public SyncPaiTask(MokoOrderTaskCallback callback, int type) {
+    public SyncPaiTask(MokoOrderTaskCallback callback, int year, int month, int day) {
         super(OrderType.DataPushWRITE, OrderEnum.syncPAI, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
-        typeData = type;
+        typeData = 1;
         List<Byte> dataList = new ArrayList<>();
-        byte isRecordByte = type == 1 ? (byte) 0x01 : (byte) 0x00;
+        byte isRecordByte = (byte) 0x01;
         dataList.add(isRecordByte);
         Calendar calendar = Calendar.getInstance();
         //年
-        int year = calendar.get(Calendar.YEAR);
         List<Byte> yearData = DigitalConver.convert(year, ByteType.WORD);
         dataList.addAll(yearData);
         //月
-        int month = calendar.get(Calendar.MONTH) + 1;
         dataList.add((byte) (month & 0xFF));
         //日
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
         dataList.add((byte) (day & 0xFF));
         dataList.add((byte) 0x00);
         dataList.add((byte) 0x00);

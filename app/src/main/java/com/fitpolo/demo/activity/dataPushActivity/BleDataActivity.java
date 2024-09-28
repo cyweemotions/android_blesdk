@@ -43,6 +43,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -191,7 +192,13 @@ public class BleDataActivity extends BaseActivity{
     public void syncStepsData(int type) {
 //        int type = 1;
 
-        SyncStepsTask syncStepsTask = new SyncStepsTask(mService, type);
+        LogModule.i("步数同步type==="+type);
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        SyncStepsTask syncStepsTask = new SyncStepsTask(mService, year, month, day, type);
         syncStepsTask.callback = new MokoOrderTaskCallback() {
             @Override
             public void onOrderResult(OrderTaskResponse response) {
@@ -200,7 +207,7 @@ public class BleDataActivity extends BaseActivity{
 
                 StringBuilder contentStr = new StringBuilder();
                 if (type == 0) {
-                    String stepData = (String) response.responseObject;
+                    Map<String, Object> stepData = (Map<String, Object>) response.responseObject;
                     contentStr.append("当前步数数据：").append(stepData).append(" ");
                     contentStr.append("\n");
                 } else {
@@ -248,8 +255,10 @@ public class BleDataActivity extends BaseActivity{
      */
     public void syncHeartRateData() {
         Calendar calendar = Calendar.getInstance();
-        int type = 1;
-        SyncHeartRateTask syncHeartRateTask = new SyncHeartRateTask(mService, calendar, type);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        SyncHeartRateTask syncHeartRateTask = new SyncHeartRateTask(mService, year, month, day);
         syncHeartRateTask.callback = new MokoOrderTaskCallback(){
             @Override
             public void onOrderResult(OrderTaskResponse response) {
@@ -295,8 +304,10 @@ public class BleDataActivity extends BaseActivity{
      */
     public void syncBloodOxygenData() {
         Calendar calendar = Calendar.getInstance();
-        int type = 1;
-        SyncBloodOxygenTask syncBloodOxygenTask = new SyncBloodOxygenTask(mService, calendar, type);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        SyncBloodOxygenTask syncBloodOxygenTask = new SyncBloodOxygenTask(mService,  year, month, day);
         syncBloodOxygenTask.callback = new MokoOrderTaskCallback(){
             @Override
             public void onOrderResult(OrderTaskResponse response) {
@@ -342,8 +353,10 @@ public class BleDataActivity extends BaseActivity{
      */
     public void syncSleepData() {
         Calendar calendar = Calendar.getInstance();
-        int type = 1;
-        SyncSleepTask syncSleepTask = new SyncSleepTask(mService, calendar, type);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        SyncSleepTask syncSleepTask = new SyncSleepTask(mService, year, month, day);
         syncSleepTask.callback = new MokoOrderTaskCallback(){
             @Override
             public void onOrderResult(OrderTaskResponse response) {
@@ -416,9 +429,11 @@ public class BleDataActivity extends BaseActivity{
      */
     public void syncSportData() {
         Calendar calendar = Calendar.getInstance();
-        int type = 1;
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
         int fileIndex = 0;
-        SyncSportTask syncSportTask = new SyncSportTask(mService, calendar, fileIndex, type);
+        SyncSportTask syncSportTask = new SyncSportTask(mService, fileIndex, year, month, day);
         syncSportTask.callback = new MokoOrderTaskCallback() {
             @Override
             public void onOrderResult(OrderTaskResponse response) {
@@ -433,7 +448,7 @@ public class BleDataActivity extends BaseActivity{
                     SportModel sportItem = sportData.get(i);
                     contentStr.append("第").append(i + 1).append("项：").append("\n");
                     contentStr.append("运动类型：").append(sportItem.sportType).append("\n ");
-                    contentStr.append("second：").append(sportItem.second).append("\n ");
+                    contentStr.append("运动时间(s)：").append(sportItem.second).append("\n ");
                     contentStr.append("开始时间：").append(sportItem.start).append("\n ");
                     contentStr.append("结束时间：").append(sportItem.date).append("\n ");
                     contentStr.append("步数：").append(sportItem.total_steps).append("\n ");
@@ -493,9 +508,12 @@ public class BleDataActivity extends BaseActivity{
      * PAI同步
      */
     public void syncPaiData() {
-        int type = 1;
 
-        SyncPaiTask syncPaiTask = new SyncPaiTask(mService, type);
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        SyncPaiTask syncPaiTask = new SyncPaiTask(mService, year, month, day);
         syncPaiTask.callback = new MokoOrderTaskCallback() {
             @Override
             public void onOrderResult(OrderTaskResponse response) {
@@ -551,9 +569,12 @@ public class BleDataActivity extends BaseActivity{
      * 压力同步
      */
     public void syncPressureData() {
-        int type = 1;
 
-        SyncPressureTask syncPressureTask = new SyncPressureTask(mService, type);
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        SyncPressureTask syncPressureTask = new SyncPressureTask(mService, year, month, day);
         syncPressureTask.callback = new MokoOrderTaskCallback() {
             @Override
             public void onOrderResult(OrderTaskResponse response) {
@@ -570,15 +591,14 @@ public class BleDataActivity extends BaseActivity{
                     String year = String.valueOf(pressureModelItem.year);
                     String month = String.valueOf(pressureModelItem.month);
                     String day = String.valueOf(pressureModelItem.day);
-                    String hours = String.valueOf(pressureModelItem.hours);
                     String relax = String.valueOf(pressureModelItem.relax);
                     String normal = String.valueOf(pressureModelItem.normal);
                     String strain = String.valueOf(pressureModelItem.strain);
                     String anxiety = String.valueOf(pressureModelItem.anxiety);
                     String highest = String.valueOf(pressureModelItem.highest);
-                    String minimun = String.valueOf(pressureModelItem.minimun);
+                    String minimum = String.valueOf(pressureModelItem.minimum);
                     String lately = String.valueOf(pressureModelItem.lately);
-                    String pressTime = String.valueOf(pressureModelItem.pressTime);
+//                    String pressTime = String.valueOf(pressureModelItem.pressTime);
                     contentStr.append("时间戳：").append(id).append("\n ");
                     contentStr.append("时间：").append(year).append("年").append(month).append("月").append(day).append("日").append("\n ");
                     contentStr.append("放松：").append(relax).append("\n ");
@@ -586,9 +606,8 @@ public class BleDataActivity extends BaseActivity{
                     contentStr.append("紧张：").append(strain).append("\n ");
                     contentStr.append("焦虑：").append(anxiety).append("\n ");
                     contentStr.append("最高：").append(highest).append("\n ");
-                    contentStr.append("最低：").append(minimun).append("\n ");
+                    contentStr.append("最低：").append(minimum).append("\n ");
                     contentStr.append("最近：").append(lately).append("\n ");
-                    contentStr.append("pressTime：").append(pressTime).append("\n ");
                     contentStr.append("\n");
                 }
                 runOnUiThread(new Runnable() {
@@ -610,9 +629,12 @@ public class BleDataActivity extends BaseActivity{
      * 体温同步
      */
     public void syncTemperatureData() {
-        int type = 1;
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        SyncTemperatureTask syncTemperatureTask = new SyncTemperatureTask(mService, type);
+        SyncTemperatureTask syncTemperatureTask = new SyncTemperatureTask(mService, year, month, day);
         syncTemperatureTask.callback = new MokoOrderTaskCallback() {
             @Override
             public void onOrderResult(OrderTaskResponse response) {
