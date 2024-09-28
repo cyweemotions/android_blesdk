@@ -7,41 +7,40 @@ import com.fitpolo.support.MokoSupport;
 import com.fitpolo.support.callback.MokoOrderTaskCallback;
 import com.fitpolo.support.entity.OrderEnum;
 import com.fitpolo.support.entity.OrderType;
+import com.fitpolo.support.entity.funcEntity.MessageModel;
 import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.OrderTask;
 import com.fitpolo.support.utils.ByteType;
 import com.fitpolo.support.utils.DigitalConver;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 消息通知
  */
 public class MessageNotifyTask extends OrderTask {
     private byte[] orderData;
-    public MessageNotifyTask(MokoOrderTaskCallback callback, Calendar calendar,int notifyAppType, String title, String content) {
+    public MessageNotifyTask(MokoOrderTaskCallback callback, MessageModel messageModel) {
         super(OrderType.WRITE, OrderEnum.messageNotify, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
         List<Byte> dataList = new ArrayList<>();
-        dataList.add((byte) (notifyAppType & 0xFF));
+        dataList.add((byte) (messageModel.appType & 0xFF));
         int mtu = 220;
-        int year = calendar.get(Calendar.YEAR) % 2000;
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
-        int second = calendar.get(Calendar.SECOND);
-        dataList.add((byte) (year & 0xFF));
-        dataList.add((byte) (month & 0xFF));
-        dataList.add((byte) (day & 0xFF));
-        dataList.add((byte) (hour & 0xFF));
-        dataList.add((byte) (minute & 0xFF));
-        dataList.add((byte) (second & 0xFF));
+        dataList.add((byte) (messageModel.year & 0xFF));
+        dataList.add((byte) (messageModel.month & 0xFF));
+        dataList.add((byte) (messageModel.day & 0xFF));
+        dataList.add((byte) (messageModel.hour & 0xFF));
+        dataList.add((byte) (messageModel.minute & 0xFF));
+        dataList.add((byte) (messageModel.second & 0xFF));
         // 标题
-        byte[] titleBytes = title.getBytes();
+        byte[] titleBytes = messageModel.title.getBytes();
         List<Byte> titleByteList;
         if(titleBytes.length > 20) {
             titleByteList = DigitalConver.bytes2ListByte(Arrays.copyOfRange(titleBytes, 0,20));
@@ -51,7 +50,7 @@ public class MessageNotifyTask extends OrderTask {
         dataList.add((byte) titleByteList.size());
         dataList.addAll(titleByteList);
         // 内容
-        byte[] contentBytes = content.getBytes();
+        byte[] contentBytes = messageModel.content.getBytes();
         List<Byte> contentByteList;
         int notifyLength = mtu - 30;
         if(contentBytes.length >= notifyLength) {
@@ -89,15 +88,13 @@ public class MessageNotifyTask extends OrderTask {
 
     @Override
     public void parseValue(byte[] value) {
-        LogModule.i(order.getOrderName() + "成功");
-        LogModule.i(Arrays.toString(value));
-        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) {
-            return;
-        }
+        LogModule.i("返回的"+ order.getOrderName() + Arrays.toString(value));
+        if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) return;
+        if (MokoConstants.Function != DigitalConver.byte2Int(value[2])) return;
+        int result = (value[5] & 0xFF);
+        LogModule.i("返回的"+ result);
 
-        int group = DigitalConver.byte2Int(value[5]);
-        if (group != 0)
-            return;
+        response.responseObject =  result;
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
 
         MokoSupport.getInstance().pollTask();

@@ -1,7 +1,7 @@
 package com.fitpolo.support.entity;
 
 public class FindDevice {
-    public int action;// 体重
+    public int action;//
 
     @Override
     public String toString() {

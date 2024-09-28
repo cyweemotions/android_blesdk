@@ -9,7 +9,9 @@ import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.OrderTask;
 import com.fitpolo.support.utils.DigitalConver;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 查询绑定信息
@@ -45,7 +47,11 @@ public class QueryInfoTask extends OrderTask {
         int dataLength = (value[4] & 0xFF);
         byte[] subArray = Arrays.copyOfRange(value, 5, dataLength + 5);
 
-        int result = DigitalConver.byte2Int(subArray[1]);
+        List<Integer> result = new ArrayList<>();
+        int result1 = DigitalConver.byte2Int(subArray[0]);
+        int result2 = DigitalConver.byte2Int(subArray[1]);
+        result.add(result1);
+        result.add(result2);
         LogModule.i("查询绑定信息：" + result);
 
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;

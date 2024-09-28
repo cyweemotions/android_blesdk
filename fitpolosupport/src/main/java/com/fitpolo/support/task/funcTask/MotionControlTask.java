@@ -23,7 +23,7 @@ public class MotionControlTask extends OrderTask {
 
     public MotionControlTask(MokoOrderTaskCallback callback, MotionControl motionControl) {
         super(OrderType.WRITE, OrderEnum.motionControl, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
-        int[] numbers = {0,1,2,3,5};
+        int[] numbers = {0,1,2,5};
         boolean contains = false;
         for (int number : numbers) {
             if (number == motionControl.type) {

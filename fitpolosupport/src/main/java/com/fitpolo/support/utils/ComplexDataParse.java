@@ -216,8 +216,6 @@ public class ComplexDataParse {
         System.out.println("运动中数据：------------"+sportType);
         System.out.println(resultStr);
 
-        Pattern pattern = Pattern.compile("^\\d+");
-
         if(resultStr.startsWith(MokoConstants.SS)) {//运动开始
             resultStr = resultStr.replace(MokoConstants.SS, "");
             String[] fruits = resultStr.split(",");
@@ -276,7 +274,6 @@ public class ComplexDataParse {
             if (Objects.equals(sportType, "5")) { //骑行
                 sportData.add(fruits[4]); //距离
                 sportData.add(fruits[5]); //卡路里
-                sportData.add(fruits[14]); ////最低心率
                 sportData.add(fruits[15]); //心率区间——热身 例：2, 1, 9, 0, 0, 17%
                 sportData.add(fruits[16]); //心率区间——燃脂 8%
                 sportData.add(fruits[17]); //心率区间——有氧 75%
@@ -286,27 +283,15 @@ public class ComplexDataParse {
                 sportData.add(fruits[21]); //最大心率
                 sportData.add(fruits[22]); //最低心率
                 sportData.add(fruits[24]); //时长——分钟
-                sportData.add(fruits[33]); //
                 sportData.add(fruits[34]); //平均配速
-                sportData.add(fruits[35]); //
-                sportData.add(fruits[36]); //
-                sportData.add(fruits[37]); //
-                sportData.add(fruits[48]); //
-                sportData.add(fruits[49]); //
-                sportData.add(fruits[50]); //
-                sportData.add(fruits[51]); //
-                String lastValue = fruits[52].replaceAll("[^\\d]", "");
-                sportData.add(lastValue); //
+//                String lastValue = fruits[52].replaceAll("[^\\d]", "");
+//                sportData.add(lastValue); //
             } else {
-                sportData.add(fruits[3]); //
                 sportData.add(fruits[4]); //距离
                 sportData.add(fruits[5]); //卡路里
-                sportData.add(fruits[6]); //
                 sportData.add(fruits[7]); //平均步频
                 sportData.add(fruits[8]); //最大步频
-                sportData.add(fruits[9]); //
                 sportData.add(fruits[10]); //平均步长
-                sportData.add(fruits[11]); //
                 sportData.add(fruits[12]); //平均配速
                 sportData.add(fruits[13]); //最大配速
                 sportData.add(fruits[14]); //最低心率
@@ -320,12 +305,8 @@ public class ComplexDataParse {
                 sportData.add(fruits[22]); //最小心率
                 sportData.add(fruits[23]); //最大摄氧量
                 sportData.add(fruits[24]); //时长——分钟
-                sportData.add(fruits[48]); //
-                sportData.add(fruits[49]); //
-                sportData.add(fruits[50]); //
-                sportData.add(fruits[51]); //
-                String lastValue = fruits[52].replaceAll("[^\\d]", "");
-                sportData.add(lastValue); //
+//                String lastValue = fruits[52].replaceAll("[^\\d]", "");
+//                sportData.add(lastValue); //
             }
         } else {//运动无数据结束
             resultStr = resultStr.replace(MokoConstants.NODATA, "");

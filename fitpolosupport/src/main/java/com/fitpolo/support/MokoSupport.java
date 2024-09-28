@@ -46,7 +46,6 @@ import com.fitpolo.support.handler.MokoLeScanHandler;
 import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.OrderTask;
 import com.fitpolo.support.task.UpgradeBandTask;
-import com.fitpolo.support.task.funcTask.MotionDataTask;
 import com.fitpolo.support.utils.BaseHandler;
 import com.fitpolo.support.utils.BleConnectionCompat;
 import com.fitpolo.support.utils.DigitalConver;

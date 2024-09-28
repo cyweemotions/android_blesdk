@@ -8,8 +8,12 @@ import com.fitpolo.support.entity.OrderType;
 import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.OrderTask;
 import com.fitpolo.support.utils.DigitalConver;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * 设备信息
@@ -46,8 +50,16 @@ public class DeviceInfoTask extends OrderTask {
         String result = DigitalConver.hex2String(hexString);
         LogModule.i("获取设备信息");
         LogModule.i(result);
+// 创建 Gson 实例
+        Gson gson = new Gson();
 
-        response.responseObject =  result;
+        // 定义 Map 类型
+        Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+
+        // 将 JSON 字符串转换为 Map
+        Map<String, Object> map = gson.fromJson(result, mapType);
+
+        response.responseObject = map;
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
 
         MokoSupport.getInstance().pollTask();

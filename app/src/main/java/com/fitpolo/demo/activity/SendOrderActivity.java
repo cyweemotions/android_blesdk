@@ -28,6 +28,7 @@ import com.fitpolo.support.callback.MokoOrderTaskCallback;
 import com.fitpolo.support.callback.MokoReceiver;
 import com.fitpolo.support.entity.AutoLighten;
 import com.fitpolo.support.entity.dataEntity.StepsModel;
+import com.fitpolo.support.entity.funcEntity.MessageModel;
 import com.fitpolo.support.entity.setEntity.AddressBook;
 import com.fitpolo.support.entity.setEntity.AlarmClock;
 import com.fitpolo.support.entity.CustomScreen;
@@ -55,7 +56,6 @@ import com.fitpolo.support.task.funcTask.DeviceInfoTask;
 import com.fitpolo.support.task.funcTask.LanguageSupportTask;
 import com.fitpolo.support.task.funcTask.MessageNotifyTask;
 import com.fitpolo.support.task.funcTask.MotionControlTask;
-import com.fitpolo.support.task.funcTask.MotionDataTask;
 import com.fitpolo.support.task.funcTask.PositionGPSTask;
 import com.fitpolo.support.task.funcTask.RemotePhotoTask;
 import com.fitpolo.support.task.funcTask.QueryInfoTask;
@@ -420,9 +420,8 @@ public class SendOrderActivity extends BaseActivity {
     }
     public void findDevice(View view){
         LogModule.i("开始查找设备====");
-        FindDevice findDevice = new FindDevice();
-        findDevice.action = 1;
-        MokoSupport.getInstance().sendOrder(new FindDeviceTask(mService, findDevice));
+        int action = 1; // 1-开始  0-停止
+        MokoSupport.getInstance().sendOrder(new FindDeviceTask(mService, action));
     }
     public void unbindDevice(View view){
         LogModule.i("开始解绑设备====");
@@ -451,7 +450,20 @@ public class SendOrderActivity extends BaseActivity {
     }
     public void languageSupport(View view){
         LogModule.i("开始语言支持====");
-        MokoSupport.getInstance().sendOrder(new LanguageSupportTask(mService));
+
+        LanguageSupportTask languageSupportTask = new LanguageSupportTask(mService);
+        languageSupportTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                List<Integer> result = (List<Integer>) response.responseObject;
+                LogModule.i("开始语言支持22====" + result);
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(languageSupportTask);
     }
     public void deviceInfo(View view){
         LogModule.i("开始设备信息====");
@@ -460,9 +472,10 @@ public class SendOrderActivity extends BaseActivity {
             @Override
             public void onOrderResult(OrderTaskResponse response) {
                 StringBuilder contentStr = new StringBuilder();
-                String result = (String) response.responseObject;
+                Map<String, Object> result = (Map<String, Object>) response.responseObject;
                 LogModule.i("设备信息====" + result);
-                contentStr.append("解绑设备").append(result).append("\n ");
+                LogModule.i("设备信息====" + result.get("FW"));
+                contentStr.append("设备信息").append(result).append("\n ");
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -484,9 +497,17 @@ public class SendOrderActivity extends BaseActivity {
     }
     public void messageNotify(View view){
         LogModule.i("开始消息通知====");
+        MessageModel messageModel = new MessageModel();
         Calendar calendar = Calendar.getInstance();
-        String title = "这是标题";
-        String content = "这是一段消息内容";
+        messageModel.year = calendar.get(Calendar.YEAR) % 2000;
+        messageModel.month = calendar.get(Calendar.MONTH) + 1;
+        messageModel.day = calendar.get(Calendar.DAY_OF_MONTH);
+        messageModel.hour = calendar.get(Calendar.HOUR_OF_DAY);
+        messageModel.minute = calendar.get(Calendar.MINUTE);
+        messageModel.second = calendar.get(Calendar.SECOND);
+        messageModel.title = "这是标题";
+        messageModel.content = "这是一段消息内容";
+        messageModel.appType = 12;
 
         int appType = 12; //app
 //        String packageName = MokoConstants.wechatPName;
@@ -515,7 +536,7 @@ public class SendOrderActivity extends BaseActivity {
 //        }else if(packageName == MokoConstants.mms){
 //            appType = 0;
 //        }
-        MokoSupport.getInstance().sendOrder(new MessageNotifyTask(mService, calendar, appType, title, content));
+        MokoSupport.getInstance().sendOrder(new MessageNotifyTask(mService, messageModel));
     }
     public void positionGPS(View view){
         LogModule.i("开始定位GPS====");
