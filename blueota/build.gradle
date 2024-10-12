@@ -1,0 +1,40 @@
+apply plugin: 'com.android.library'
+
+android {
+    signingConfigs {
+        release {
+            storeFile file('/Users/linweichen/Documents/androidproject/ActBluetoothOTA/ActsBlueOTA.jks')
+            storePassword 'Actions_CSRD_ESS'
+            keyAlias 'actsblueota'
+            keyPassword 'Actions_CSRD_ESS'
+        }
+    }
+    compileSdkVersion 34
+    buildToolsVersion '28.0.3'
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 34
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            versionNameSuffix '.release'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha3'
+    implementation 'com.tencent.mars:mars-xlog:1.2.6'
+}

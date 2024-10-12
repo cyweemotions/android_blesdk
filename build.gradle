@@ -4,6 +4,8 @@ buildscript {
     repositories {
         jcenter()
         google()
+        mavenCentral()
+        maven { url 'https://maven.aliyun.com/repository/google' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.6.3'
@@ -17,6 +19,8 @@ allprojects {
     repositories {
         jcenter()
         google()
+        mavenCentral()
+        maven { url 'https://maven.aliyun.com/repository/google' }
     }
 }
 

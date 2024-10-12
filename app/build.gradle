@@ -54,5 +54,6 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation project(path: ':fitpolosupport')
+    implementation project(path: ':blueota')
 //    implementation 'com.jakewharton.timber:timber:5.0.1'
 }
