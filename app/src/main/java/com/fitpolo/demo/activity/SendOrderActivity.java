@@ -3,6 +3,8 @@ package com.fitpolo.demo.activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -14,11 +16,15 @@ import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
 import com.actions.bluetooth.ota.OTAManager;
+import com.actions.bluetooth.ota.RemoteStatus;
+import com.actions.ibluz.factory.BluzDeviceFactory;
+import com.actions.ibluz.factory.IBluzDevice;
 import com.fitpolo.demo.R;
 import com.fitpolo.demo.activity.dataPushActivity.BleDataActivity;
 import com.fitpolo.demo.service.MokoService;
@@ -88,6 +94,11 @@ import com.fitpolo.support.task.setTask.TargetTask;
 import com.fitpolo.support.task.setTask.TimeTask;
 import com.fitpolo.support.task.setTask.UserInfoTask;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -102,26 +113,16 @@ import butterknife.ButterKnife;
  * @Description
  */
 
-public class SendOrderActivity extends BaseActivity {
+public class SendOrderActivity extends BaseActivity implements OTAManager.OTAListener{
     private static final String TAG = "SendOrderActivity";
 
-//    @BindView(R.id.btn_heart_rate_interval)
-//    Button btnHeartRateInterval;
-//    @BindView(R.id.btn_lastest_heart_rate)
-//    Button btnLastestHeartRate;
-//    @BindView(R.id.btn_read_all_alarms)
-//    Button btnReadAllAlarms;
-//    @BindView(R.id.btn_read_sit_alert)
-//    Button btnReadSitAlert;
-//    @BindView(R.id.btn_read_settings)
-//    Button btnReadSettings;
-//    @BindView(R.id.btn_notification)
-//    Button btnNotification;
-//    @BindView(R.id.btn_firmware_params)
-//    Button btnFirmwareParams;
+    public IBluzDevice mBluzConnector;
+    public OTAManager mOTAManager;
+    public BluetoothDevice mDevice;
     private MokoService mService;
     private String deviceMacAddress;
     private boolean mIsUpgrade;
+    public String otaFilePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,20 +160,6 @@ public class SendOrderActivity extends BaseActivity {
                     OrderEnum orderEnum = response.order;
                     switch (orderEnum) {
                         case getInnerVersion:
-
-//                            btnAllHeartRate.setVisibility(MokoSupport.showHeartRate ? View.VISIBLE : View.GONE);
-//                            btnHeartRateInterval.setVisibility(MokoSupport.showHeartRate ? View.VISIBLE : View.GONE);
-
-//                            btnLastestSteps.setVisibility(MokoSupport.supportNewData ? View.VISIBLE : View.GONE);
-//                            btnLastestSleeps.setVisibility(MokoSupport.supportNewData ? View.VISIBLE : View.GONE);
-//                            btnLastestHeartRate.setVisibility(MokoSupport.showHeartRate && MokoSupport.supportNewData ? View.VISIBLE : View.GONE);
-//
-//                            btnFirmwareParams.setVisibility(MokoSupport.versionCodeLast >= 28 ? View.VISIBLE : View.GONE);
-//
-//                            btnReadAllAlarms.setVisibility(MokoSupport.supportNotifyAndRead ? View.VISIBLE : View.GONE);
-//                            btnReadSettings.setVisibility(MokoSupport.supportNotifyAndRead ? View.VISIBLE : View.GONE);
-//                            btnReadSitAlert.setVisibility(MokoSupport.supportNotifyAndRead ? View.VISIBLE : View.GONE);
-//                            btnNotification.setVisibility(MokoSupport.supportNotifyAndRead ? View.VISIBLE : View.GONE);
 
                             LogModule.i("Support heartRate：" + MokoSupport.showHeartRate);
                             LogModule.i("Support newData：" + MokoSupport.supportNewData);
@@ -938,14 +925,86 @@ public class SendOrderActivity extends BaseActivity {
 
     public void otaUpload(View view) {
         //1.先获取本地文件
-
+        otaFilePath = initAssets("ota_full-2.0.0.bin");
         //2.设置本地文件
-        //3.获取版本
-//        String mOTAVersion = mOTAManager.getOTAVersion();
+        //3.获取对象
+        mBluzConnector = BluzDeviceFactory.getDevice(this, BluzDeviceFactory.ConnectionType.BLE);
+        mBluzConnector.setAutoConnectDataChanel(false);
+        mBluzConnector.setOnConnectionListener(mOnConnectionListener);
+        mBluzConnector.connect(MokoSupport.getInstance().mdevice);
         //4.OTA升级准备
         //5.开始升级
-//        OTAManager
+        //OTAManager
     }
+    /**
+     * 从assets下的txt文件中读取数据
+     */
+    public String initAssets(String fileName) {
+        String str = null;
+        try {
+            InputStream inputStream = getAssets().open(fileName);
+            str = getString(inputStream);
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        return str;
+    }
+    public static String getString(InputStream inputStream) {
+        InputStreamReader inputStreamReader = null;
+        try {
+            inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        BufferedReader reader = new BufferedReader(inputStreamReader);
+        StringBuffer sb = new StringBuffer("");
+        String line;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+                sb.append("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
+    }
+    /********************* OTA连接器 *****************/
+    private IBluzDevice.OnConnectionListener mOnConnectionListener = new IBluzDevice.OnConnectionListener() {
+
+        @Override
+        public void onConnected(BluetoothDevice device) {
+            mDevice = device;
+            Log.d(TAG, "连接设备 成功 onConnected ble: " + device.getAddress());
+            if(mBluzConnector == null){
+                Log.d(TAG, "mBluzConnector.getIO(): 为空");
+            }
+            mOTAManager = new OTAManager(getApplicationContext(), mBluzConnector.getIO());
+            mOTAManager.setListener(this);
+            BluetoothDevice connected = mBluzConnector.getConnectedDevice();
+            Log.d(TAG, "mBluzConnector getConnectedDevice ble: " + device.getAddress());
+            Boolean success = mOTAManager.setOTAFile(otaFilePath);
+            if(success){
+                Log.d(TAG, "OTA文件读取成功");
+            }
+            String mOTAVersion = mOTAManager.getOTAVersion();
+            Log.d(TAG, "OTA文件版本:"+ mOTAVersion);
+            mOTAManager.prepare();
+            try {
+                Thread.sleep(1000);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            mOTAManager.upgrade();
+        }
+
+        @Override
+        public void onDisconnected(BluetoothDevice device) {
+
+        }
+    };
+
+
     /********************* 数据交互类型 end *****************/
 
     // 显示弹窗
@@ -1054,5 +1113,35 @@ public class SendOrderActivity extends BaseActivity {
             return false;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onStatus(int state) {
+
+    }
+
+    @Override
+    public void onAudioDataReceived(int psn, int len, byte[] data) {
+
+    }
+
+    @Override
+    public void onRemoteStatusReceived(RemoteStatus status) {
+
+    }
+
+    @Override
+    public void onProgress(int progress, int total) {
+
+    }
+
+    @Override
+    public void onError(int errcode, String errmsg) {
+
+    }
+
+    @Override
+    public void onWriteBytes(int count) {
+
     }
 }

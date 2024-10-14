@@ -107,6 +107,12 @@ public class MokoSupport implements MokoResponseCallback {
     ///////////////////////////////////////////////////////////////////////////
 
     private static volatile MokoSupport INSTANCE;
+    private String mDeviceAddress;
+    public  BluetoothDevice mdevice;
+    private boolean isOpenReConnect;
+    private boolean isReConnectLimited;
+    private int reConnectCount;
+    private boolean isReConnecting;
 
     private MokoSupport() {
         mQueue = new LinkedBlockingQueue<>();
@@ -202,15 +208,15 @@ public class MokoSupport implements MokoResponseCallback {
         gattCallback.setMokoResponseCallback(MokoSupport.this);
         gattCallback.setMessageHandler(mHandler);
         mDeviceAddress = address;
-        final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+        mdevice = mBluetoothAdapter.getRemoteDevice(address);
         reConnectCount = 2;
-        if (device != null) {
+        if (mdevice != null) {
             isReConnecting = true;
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     LogModule.i("开始尝试连接");
-                    mBluetoothGatt = (new BleConnectionCompat(context)).connectGatt(device, false, gattCallback);
+                    mBluetoothGatt = (new BleConnectionCompat(context)).connectGatt(mdevice, false, gattCallback);
                 }
             });
         } else {
@@ -251,12 +257,6 @@ public class MokoSupport implements MokoResponseCallback {
             }
         }
     }
-
-    private String mDeviceAddress;
-    private boolean isOpenReConnect;
-    private boolean isReConnectLimited;
-    private int reConnectCount;
-    private boolean isReConnecting;
 
     /**
      * @param callback

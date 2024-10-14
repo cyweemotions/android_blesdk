@@ -1,17 +1,15 @@
 package com.actions.bluetooth.ota;
 
+import com.actions.ibluz.factory.IBluzDevice;
 import com.tencent.mars.xlog.Log;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.view.animation.TranslateAnimation;
 
 import com.actions.ibluz.factory.IBluzIO;
 import com.actions.ibluz.util.Utils;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -91,7 +89,7 @@ public class OTAManager {
         mRunning = false;
     }
 
-    public void setListener(OTAListener listener) {
+    public void setListener(IBluzDevice.OnConnectionListener listener) {
         mListener = listener;
     }
 
