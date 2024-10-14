@@ -419,6 +419,13 @@
                     android:onClick="syncTemperature"
                     android:tag="体温同步"
                     android:text="体温同步" />
+                <Button
+                    android:id="@+id/btn_ota_upload"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="otaUpload"
+                    android:tag="OTA同步"
+                    android:text="OTA同步" />
             </TableRow>
 
 <!--            <TableRow>-->

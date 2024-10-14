@@ -18,6 +18,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.actions.bluetooth.ota.OTAManager;
 import com.fitpolo.demo.R;
 import com.fitpolo.demo.activity.dataPushActivity.BleDataActivity;
 import com.fitpolo.demo.service.MokoService;
@@ -933,6 +934,17 @@ public class SendOrderActivity extends BaseActivity {
         Intent orderIntent = new Intent(SendOrderActivity.this, BleDataActivity.class);
         orderIntent.putExtra("orderType", "temperature");
         startActivity(orderIntent);
+    }
+
+    public void otaUpload(View view) {
+        //1.先获取本地文件
+
+        //2.设置本地文件
+        //3.获取版本
+//        String mOTAVersion = mOTAManager.getOTAVersion();
+        //4.OTA升级准备
+        //5.开始升级
+//        OTAManager
     }
     /********************* 数据交互类型 end *****************/
 
