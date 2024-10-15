@@ -129,6 +129,7 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
     private String deviceMacAddress;
     private boolean mIsUpgrade;
     public String otaFilePath;
+    public AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -942,6 +943,17 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
         //4.OTA升级准备
         //5.开始升级
         //OTAManager
+        AlertDialog.Builder builder = new AlertDialog.Builder(SendOrderActivity.this);
+        builder.setMessage("")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 用户点击了“确定”按钮
+                        dialog.dismiss();
+                    }
+                })
+                .setCancelable(true); // 允许用户点击外部区域关闭对话框（可选）
+        alertDialog = builder.create();
     }
 
     public String initAssets(String fileName) {
@@ -1122,7 +1134,7 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
             public void run() {
                 if(state == OTAManager.STATE_TRANSFERRED){
                     ///发送完成
-                    Toast.makeText(SendOrderActivity.this, "OTA 升级完成", Toast.LENGTH_LONG).show();
+                    alertDialog.dismiss();
                 }
             }
         });
@@ -1156,18 +1168,13 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
         int current = (int) (value*100);
         final String message = progress + "/" + total;
         Log.d(TAG, "message: " + current);
+
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 ///显示进度
-                Toast toast = Toast.makeText(SendOrderActivity.this,"正在OTA升级中:"+message, Toast.LENGTH_LONG);
-                View toastView = toast.getView();
-                toastView.setBackgroundColor(Color.BLACK); // 设置Toast的背景颜色
-                TextView messageTextView = (TextView) toastView.findViewById(android.R.id.message);
-                messageTextView.setTextColor(Color.WHITE); // 设置Toast文本的颜色
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
-
+                alertDialog.setMessage("正在OTA升级中:"+message);
+                alertDialog.show();
             }
         });
     }
