@@ -13,12 +13,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.res.AssetManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actions.bluetooth.ota.OTAManager;
@@ -95,6 +99,8 @@ import com.fitpolo.support.task.setTask.TimeTask;
 import com.fitpolo.support.task.setTask.UserInfoTask;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -926,6 +932,7 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
     public void otaUpload(View view) {
         //1.先获取本地文件
         otaFilePath = initAssets("ota_full-2.0.0.bin");
+        Log.e("OTA文件路劲是:",otaFilePath);
         //2.设置本地文件
         //3.获取对象
         mBluzConnector = BluzDeviceFactory.getDevice(this, BluzDeviceFactory.ConnectionType.BLE);
@@ -936,38 +943,30 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
         //5.开始升级
         //OTAManager
     }
-    /**
-     * 从assets下的txt文件中读取数据
-     */
+
     public String initAssets(String fileName) {
-        String str = null;
+            // 将assets目录下的文件拷贝到应用的私有目录
         try {
             InputStream inputStream = getAssets().open(fileName);
-            str = getString(inputStream);
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return str;
-    }
-    public static String getString(InputStream inputStream) {
-        InputStreamReader inputStreamReader = null;
-        try {
-            inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        BufferedReader reader = new BufferedReader(inputStreamReader);
-        StringBuffer sb = new StringBuffer("");
-        String line;
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-                sb.append("\n");
+            FileOutputStream outputStream = openFileOutput(fileName, Context.MODE_PRIVATE);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
             }
+
+            inputStream.close();
+            outputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return sb.toString();
+
+        // 获取私有目录下文件的路径
+        File file = new File(getFilesDir(), fileName);
+        String filePath = file.getAbsolutePath();
+        Log.d("FilePath", filePath);
+        return filePath;
     }
     /********************* OTA连接器 *****************/
     private IBluzDevice.OnConnectionListener mOnConnectionListener = new IBluzDevice.OnConnectionListener() {
@@ -980,7 +979,7 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
                 Log.d(TAG, "mBluzConnector.getIO(): 为空");
             }
             mOTAManager = new OTAManager(getApplicationContext(), mBluzConnector.getIO());
-            mOTAManager.setListener(this);
+            mOTAManager.setListener(SendOrderActivity.this);
             BluetoothDevice connected = mBluzConnector.getConnectedDevice();
             Log.d(TAG, "mBluzConnector getConnectedDevice ble: " + device.getAddress());
             Boolean success = mOTAManager.setOTAFile(otaFilePath);
@@ -1117,7 +1116,23 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
 
     @Override
     public void onStatus(int state) {
-
+        Log.d(TAG, "OTA state: " + state);
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(state == OTAManager.STATE_TRANSFERRED){
+                    ///发送完成
+                    Toast.makeText(SendOrderActivity.this, "OTA 升级完成", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        if(state == OTAManager.STATE_TRANSFERRED){
+            Log.d(TAG, "state 5 OTA finish: ");
+            mOTAManager.cancel();
+            mOTAManager.release();
+            mBluzConnector.disconnect(mDevice);
+            Log.d(TAG, "mOTAManager release");
+        }
     }
 
     @Override
@@ -1132,12 +1147,34 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
 
     @Override
     public void onProgress(int progress, int total) {
+        Log.d(TAG, "onProgress: " + progress);
+        Log.d(TAG, "total: " + total);
+        if(total - progress <= 3584){
+            Log.d(TAG, "OTA finish: ");
+        }
+        float value = (float)progress/total;
+        int current = (int) (value*100);
+        final String message = progress + "/" + total;
+        Log.d(TAG, "message: " + current);
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ///显示进度
+                Toast toast = Toast.makeText(SendOrderActivity.this,"正在OTA升级中:"+message, Toast.LENGTH_LONG);
+                View toastView = toast.getView();
+                toastView.setBackgroundColor(Color.BLACK); // 设置Toast的背景颜色
+                TextView messageTextView = (TextView) toastView.findViewById(android.R.id.message);
+                messageTextView.setTextColor(Color.WHITE); // 设置Toast文本的颜色
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
 
+            }
+        });
     }
 
     @Override
     public void onError(int errcode, String errmsg) {
-
+        Log.v(TAG, "OTAManager Error: " + errcode + " " + errmsg);
     }
 
     @Override

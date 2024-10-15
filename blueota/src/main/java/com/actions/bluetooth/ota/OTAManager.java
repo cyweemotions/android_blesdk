@@ -89,11 +89,12 @@ public class OTAManager {
         mRunning = false;
     }
 
-    public void setListener(IBluzDevice.OnConnectionListener listener) {
+    public void setListener(OTAListener listener) {
         mListener = listener;
     }
 
     public boolean setOTAFile(String path) {
+        Log.d(TAG, "setOTAFile length: " + path);
         if (path == null || path.length() <= 0)
             return false;
 
@@ -103,8 +104,7 @@ public class OTAManager {
             return false;
 
         mOTAFileLength = file.length();
-        Log.v(TAG, "setOTAFile length: " + mOTAFileLength);
-
+        Log.d(TAG, "setOTAFile length: " + mOTAFileLength);
         try {
         //    mOTAInputStream = new FileInputStream(file);
             mOTARandomAccessFile = new RandomAccessFile(path, "r");
