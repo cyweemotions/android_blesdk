@@ -76,6 +76,7 @@ import com.fitpolo.support.task.getTask.AddressBookDataTask;
 import com.fitpolo.support.task.getTask.GetDoNotDisturbTask;
 import com.fitpolo.support.task.getTask.GetSitAlertSettingTask;
 import com.fitpolo.support.task.getTask.GetTargetTask;
+import com.fitpolo.support.task.getTask.GetUserInfoTask;
 import com.fitpolo.support.task.getTask.SleepMonitorDataTask;
 import com.fitpolo.support.task.setTask.AddressBookTask;
 import com.fitpolo.support.task.setTask.AlarmClockTask;
@@ -590,6 +591,29 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
         userInfo.hand = 0;
         userInfo.MHR = 200;
         MokoSupport.getInstance().sendOrder(new UserInfoTask(mService, userInfo));
+    }
+    public void getUserInfo(View view) {
+        GetUserInfoTask getUserInfoTask = new GetUserInfoTask(mService);
+        getUserInfoTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                StringBuilder contentStr = new StringBuilder();
+                UserInfo userInfo = (UserInfo) response.responseObject;
+                LogModule.i("用户信息====" + userInfo.toString());
+                contentStr.append("用户信息").append(userInfo.toString()).append("\n ");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAlertDialog(String.valueOf(contentStr));
+                    }
+                });
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(getUserInfoTask);
     }
     public void setTarget(View view) {
         TargetTask targetTask = new TargetTask(mService, 4, 2,4, 4);
