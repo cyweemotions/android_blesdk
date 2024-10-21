@@ -86,7 +86,7 @@ public class DeviceBindTask extends OrderTask {
             LogModule.i("设备绑定中。。。");
             orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
             MokoSupport.getInstance().pollTask();
-            callback.onOrderResult(response);
+//            callback.onOrderResult(response);
             MokoSupport.getInstance().executeTask(callback);
             List<Byte> dataList = new ArrayList<>();
             dataList.add((byte) 2);
