@@ -97,9 +97,10 @@ public enum OrderEnum implements Serializable {
     READ_ALARMS("读取闹钟", 0x01),
     READ_SIT_ALERT("读取久坐提醒", 0x02),
     READ_SETTING("读取设置参数", 0x04),
+
+    /********************* xoframe交互类型 *********************/
+    SYNC_DAIL("同步表盘",0x00),
     ;
-
-
     private String orderName;
     private int orderHeader;
 

@@ -437,38 +437,18 @@
                     android:text="OTA同步" />
             </TableRow>
 
-<!--            <TableRow>-->
+            <TableRow>
 
-<!--                <Button-->
-<!--                    android:id="@+id/btn_firmware_version"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_span="2"-->
-<!--                    android:onClick="getFirmwareVersion"-->
-<!--                    android:tag="获取固件版本号"-->
-<!--                    android:text="获取固件版本号" />-->
-<!--            </TableRow>-->
+                <Button
+                    android:id="@+id/btn_dail_update"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_span="2"
+                    android:onClick="dailUpdate"
+                    android:tag="表盘升级"
+                    android:text="表盘升级" />
+            </TableRow>
 
-<!--            <TableRow>-->
-<!--                <Button-->
-<!--                    android:id="@+id/btn_firmware_params"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_span="2"-->
-<!--                    android:onClick="getFirmwareParams"-->
-<!--                    android:tag="获取固件参数"-->
-<!--                    android:text="getFirmwareParams" />-->
-<!--            </TableRow>-->
-<!--            <TableRow>-->
-<!--                <Button-->
-<!--                    android:id="@+id/btn_upgrade_firmware"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_span="2"-->
-<!--                    android:onClick="upgradeFirmware"-->
-<!--                    android:tag="升级固件"-->
-<!--                    android:text="升级固件" />-->
-<!--            </TableRow>-->
 
             <!-- 内容可以是任意视图，例如一个垂直排列的线性布局 -->
             <LinearLayout

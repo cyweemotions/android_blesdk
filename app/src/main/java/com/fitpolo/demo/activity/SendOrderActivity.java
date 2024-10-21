@@ -35,6 +35,7 @@ import com.fitpolo.demo.service.MokoService;
 import com.fitpolo.demo.utils.FileUtils;
 import com.fitpolo.support.MokoConstants;
 import com.fitpolo.support.MokoSupport;
+import com.fitpolo.support.callback.MKDailCallBack;
 import com.fitpolo.support.callback.MokoOrderTaskCallback;
 import com.fitpolo.support.callback.MokoReceiver;
 import com.fitpolo.support.entity.AutoLighten;
@@ -57,6 +58,7 @@ import com.fitpolo.support.entity.setEntity.HeartRateMonitor;
 import com.fitpolo.support.entity.setEntity.MotionTarget;
 import com.fitpolo.support.entity.setEntity.NotifyType;
 import com.fitpolo.support.entity.setEntity.SleepMonitor;
+import com.fitpolo.support.handler.DailUpdateHandler;
 import com.fitpolo.support.handler.UpgradeHandler;
 import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.authTask.DeviceBindTask;
@@ -98,6 +100,7 @@ import com.fitpolo.support.task.setTask.StandardAlertTask;
 import com.fitpolo.support.task.setTask.TargetTask;
 import com.fitpolo.support.task.setTask.TimeTask;
 import com.fitpolo.support.task.setTask.UserInfoTask;
+import com.fitpolo.support.utils.DigitalConver;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -107,6 +110,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -120,7 +124,7 @@ import butterknife.ButterKnife;
  * @Description
  */
 
-public class SendOrderActivity extends BaseActivity implements OTAManager.OTAListener{
+public class SendOrderActivity extends BaseActivity implements OTAManager.OTAListener, MKDailCallBack {
     private static final String TAG = "SendOrderActivity";
 
     public IBluzDevice mBluzConnector;
@@ -1039,6 +1043,23 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
         }
     };
 
+    /*
+    * 表盘文件同步
+    * */
+    public void dailUpdate(View view){
+         String json = initAssets("dial.json");
+         String res = initAssets("dial.res");
+         String sty = initAssets("dial.sty");
+         List<String> fileList = new ArrayList<>();
+         fileList.add(json);
+         fileList.add(res);
+         fileList.add(sty);
+         Log.d(TAG, "dailUpdate: "+fileList.toString());
+
+         DailUpdateHandler dailu = new DailUpdateHandler(this);
+         dailu.startDailFileTransMit(fileList,100);
+    }
+
 
     /********************* 数据交互类型 end *****************/
 
@@ -1210,6 +1231,11 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
 
     @Override
     public void onWriteBytes(int count) {
+
+    }
+
+    @Override
+    public void onResult(ArrayList<String> response) {
 
     }
 }

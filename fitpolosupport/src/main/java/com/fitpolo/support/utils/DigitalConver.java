@@ -1,19 +1,12 @@
 package com.fitpolo.support.utils;
 
-import com.fitpolo.support.log.LogModule;
-import com.google.gson.Gson;
-
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 
 /**
@@ -301,5 +294,31 @@ public class DigitalConver {
         }
         return pressTime.toString();
     }
+
+    public static void reverse(int[] array) {
+        int length = array.length;
+        for (int i = 0; i < length / 2; i++) {
+            int temp = array[i];
+            array[i] = array[length - i - 1];
+            array[length - i - 1] = temp;
+        }
+    }
+
+    public static void reverseArrayManually(byte[] array) {
+        int length = array.length;
+        for (int i = 0; i < length / 2; i++) {
+            byte temp = array[i];
+            array[i] = array[length - i - 1];
+            array[length - i - 1] = temp;
+        }
+    }
+    public static byte[] listToArray(List<Byte> byteList) {
+        byte[] byteArray = new byte[byteList.size()];
+        for (int i = 0; i < byteList.size(); i++) {
+            byteArray[i] = byteList.get(i);
+        }
+        return byteArray;
+    }
+
 
 }

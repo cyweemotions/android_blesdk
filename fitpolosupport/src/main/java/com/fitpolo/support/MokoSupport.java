@@ -721,7 +721,7 @@ public class MokoSupport implements MokoResponseCallback {
         mBluetoothGatt.writeDescriptor(descriptor);
     }
 
-    public interface IUpgradeDataListener {
+    public interface  IUpgradeDataListener {
         void onDataSendSuccess(byte[] values);
     }
 
