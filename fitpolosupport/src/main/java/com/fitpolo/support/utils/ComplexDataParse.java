@@ -287,6 +287,7 @@ public class ComplexDataParse {
 //                String lastValue = fruits[52].replaceAll("[^\\d]", "");
 //                sportData.add(lastValue); //
             } else {
+                sportData.add(fruits[3]); //步数
                 sportData.add(fruits[4]); //距离
                 sportData.add(fruits[5]); //卡路里
                 sportData.add(fruits[7]); //平均步频
