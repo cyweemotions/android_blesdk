@@ -22,10 +22,17 @@ public class SyncPressureTask extends OrderTask {
     private byte[] orderData;
     private int typeData; // record—— 1  current—— 0
     private int index = 1; // record=1 —— package index
+    private int mYear = 0;
+    private int mMonth = 0;
+    private int mDay = 0;
     private List<byte[]> res = new ArrayList<>();
     public SyncPressureTask(MokoOrderTaskCallback callback, int year, int month, int day) {
         super(OrderType.DataPushWRITE, OrderEnum.syncPressure, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
         typeData = 1;
+        mYear = year;
+        mMonth = month;
+        mDay = day;
+
         List<Byte> dataList = new ArrayList<>();
         byte isRecordByte = (byte) 0x01;
         dataList.add(isRecordByte);
@@ -101,7 +108,7 @@ public class SyncPressureTask extends OrderTask {
         List<Byte> resultByteList = DigitalConver.bytes2ListByte(resultArray);
         List<PressureModel> dataSource = new ArrayList<>();
 
-        dataSource.add(PressureModel.ListConvertPress(resultByteList));
+        dataSource.add(PressureModel.ListConvertPress(resultByteList, mYear, mMonth, mDay));
         response.responseObject = dataSource;
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
         MokoSupport.getInstance().pollTask();
@@ -115,12 +122,16 @@ public class SyncPressureTask extends OrderTask {
         byte[] resultArray = Arrays.copyOfRange(list, 8, list.length);
         if(packIndex == index) {
             res.add(resultArray);
+            System.out.println("这是最终压力");
+            System.out.println(res.toString());
             if(packType == 0 || packType == 2) { //结束 后面没有数据接收了
                 StringBuilder resultStr = new StringBuilder(); // 最后的数据
                 List<PressureModel> dataSource = new ArrayList<>();
                 for (int i=0; i<res.size(); i++) {
                     byte[] value = res.get(i);
+//                    System.out.println("这是最终压力数据resultHexStr=" + resultHexStr);
                     String resultHexStr = DigitalConver.bytesToHexString(value);
+                    System.out.println("这是最终压力数据resultHexStr=" + resultHexStr);
                     String heartStr = DigitalConver.hex2String(resultHexStr);
                     resultStr.append(heartStr);
                 }
@@ -132,7 +143,7 @@ public class SyncPressureTask extends OrderTask {
                     for (String str : contentStr.split(",")) {
                         contentIntList.add((byte) Integer.parseInt(str));
                     }
-                    dataSource.add(PressureModel.ListConvertPress(contentIntList));
+                    dataSource.add(PressureModel.ListConvertPress(contentIntList, mYear, mMonth, mDay));
                 }
                 for (PressureModel pressure : dataSource) {
                     System.out.println("这是最终压力数据" + pressure.toString());

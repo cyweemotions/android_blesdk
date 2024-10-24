@@ -55,6 +55,7 @@ public class QueryInfoTask extends OrderTask {
         LogModule.i("查询绑定信息：" + result);
 
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
+        response.responseObject =  result;
         MokoSupport.getInstance().pollTask();
         callback.onOrderResult(response);
         MokoSupport.getInstance().executeTask(callback);

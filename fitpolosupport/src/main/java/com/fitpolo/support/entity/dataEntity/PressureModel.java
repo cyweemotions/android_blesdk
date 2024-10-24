@@ -48,16 +48,24 @@ public class PressureModel {
         int number = buffer.getInt();
         return number;
     }
-    public static PressureModel ListConvertPress (List<Byte> source){
+    public static PressureModel ListConvertPress (List<Byte> source, int year, int month, int day){
         if(source.isEmpty() || source.size() < 30){
             return null;
         }
         PressureModel model = new PressureModel();
+//        Calendar calendar = Calendar.getInstance();
+//        long timeStamp = System.currentTimeMillis()/1000;// 创建 Calendar 实例
+
         Calendar calendar = Calendar.getInstance();
-        long timeStamp = System.currentTimeMillis()/1000;
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        // 设置具体的年月日
+        calendar.set(year, month-1, day, 0, 0, 0); // 月份从0开始
+        calendar.set(Calendar.MILLISECOND, 0);
+        // 获取时间戳（以秒为单位）
+        long timestamp = calendar.getTimeInMillis() / 1000; // 转换为秒
+
+//        int year = calendar.get(Calendar.YEAR);
+//        int month = calendar.get(Calendar.MONTH) + 1;
+//        int day = calendar.get(Calendar.DAY_OF_MONTH);
         int relax = (int) source.get(0);
         int normal = (int) source.get(1);
         int strain = (int) source.get(2);
@@ -77,7 +85,7 @@ public class PressureModel {
 //        String pressTime = DigitalConver.join(",", timeList);
 //        String rawData = pressTime + "," + DigitalConver.join(",", sourceList);
 
-        model.id = timeStamp;
+        model.id = timestamp;
         model.year = year;
         model.month = month;
         model.day = day;
