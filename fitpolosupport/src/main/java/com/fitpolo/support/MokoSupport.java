@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.ParcelUuid;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.fitpolo.support.callback.MokoConnStateCallback;
 import com.fitpolo.support.callback.MokoOrderTaskCallback;
@@ -22,6 +23,7 @@ import com.fitpolo.support.callback.MokoResponseCallback;
 import com.fitpolo.support.callback.MokoScanDeviceCallback;
 import com.fitpolo.support.entity.AutoLighten;
 import com.fitpolo.support.entity.HeartRate;
+import com.fitpolo.support.entity.StreamType;
 import com.fitpolo.support.entity.dataEntity.BloodOxygenModel;
 import com.fitpolo.support.entity.dataEntity.PaiModel;
 import com.fitpolo.support.entity.dataEntity.PressureModel;
@@ -82,7 +84,7 @@ public class MokoSupport implements MokoResponseCallback {
 
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothGatt mBluetoothGatt;
-    private BlockingQueue<OrderTask> mQueue;
+    public BlockingQueue<OrderTask> mQueue;
 
     private Context mContext;
     public MokoReceiver mMokoReceiver;
@@ -102,6 +104,7 @@ public class MokoSupport implements MokoResponseCallback {
     public static FirmwareEnum firmwareEnum;
     public static String versionCodeShow;
     public static String versionCode;
+    public static int mtu;
     ///////////////////////////////////////////////////////////////////////////
     // type
     ///////////////////////////////////////////////////////////////////////////
@@ -286,7 +289,7 @@ public class MokoSupport implements MokoResponseCallback {
             disConnectBle();
             return;
         }
-        LogModule.i("mCharacteristicMap : "+ mCharacteristicMap.toString());
+        LogModule.i("mCharacteristicMap Map : "+ mCharacteristicMap.toString());
         final MokoCharacteristic mokoCharacteristic = mCharacteristicMap.get(orderTask.orderType);
         LogModule.i("mCharacteristicMap : "+ mokoCharacteristic.characteristic.getUuid().toString());
         if (mokoCharacteristic == null) {
@@ -295,6 +298,7 @@ public class MokoSupport implements MokoResponseCallback {
         }
         if (orderTask.response.responseType == OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE) {
             sendWriteNoResponseOrder(orderTask, mokoCharacteristic);
+            Log.d("TAG", "executeTask: 走了几次");
             // 如果是获取新数据命令，先判断个数超时，再判断数据超时
             switch (orderTask.order) {
                 case getAllSteps:
@@ -406,7 +410,7 @@ public class MokoSupport implements MokoResponseCallback {
     @Override
     public void onCharacteristicChanged(BluetoothGattCharacteristic characteristic, byte[] value) {
         LogModule.i("onCharacteristicChanged====== : ");
-        // 非延时应答
+        // 非延时应答 a5a302000c00020005000000020000000e0090a3
         OrderTask orderTask = mQueue.peek();
         LogModule.i("orderTask====== : " + (orderTask == null));
         if (value != null && value.length > 0 && orderTask != null) {
@@ -427,6 +431,11 @@ public class MokoSupport implements MokoResponseCallback {
             }else if(characteristicUuid.equals(OrderType.NOTIFY.getUuid())){
                 //查找手机
                 System.out.println(Arrays.toString(value));
+            } else if(characteristicUuid.equals(OrderType.XONFRAMENOTIFY.getUuid())){
+                //返回MTU
+                calcuMtu(value);
+                onCharacteristicWrite(value);
+                System.out.println(Arrays.toString(value));
             } else {
                 //流控
                 System.out.println(Arrays.toString(value));
@@ -434,12 +443,35 @@ public class MokoSupport implements MokoResponseCallback {
         }
     }
 
+    public  void calcuMtu(byte[] value){
+        if(value.length >= 8){
+            byte[] subArray = Arrays.copyOfRange(value, 2, 3);
+            DigitalConver.reverseArrayManually(subArray);
+            int type = DigitalConver.byteArr2Int(subArray);
+            if(type == StreamType.xon_frame_type_mtu.typeValue){
+                ///长度
+                byte[] lengthArray = Arrays.copyOfRange(value, 4, 5);
+                DigitalConver.reverseArrayManually(lengthArray);
+                int length = DigitalConver.byteArr2Int(lengthArray);
+                byte[] datas = Arrays.copyOfRange(value, 6, 6+length);
+                DigitalConver.reverseArrayManually(datas);
+                int calmtu = DigitalConver.byteArr2Int(datas);
+                mtu = calmtu;
+                Log.d("xon_frame_type_mtu", "xon_frame_type_mtu: "+mtu);
+            }
+
+        }
+
+    }
+
     @Override
     public void onCharacteristicWrite(byte[] value) {
-        if ((value[0] & 0xff) == UpgradeBandTask.HEADER_UPGRADE_BAND && mIUpgradeDataListener != null) {
+        if (mIUpgradeDataListener != null) {
             mIUpgradeDataListener.onDataSendSuccess(value);
         }
     }
+
+
 
     @Override
     public void onCharacteristicRead(byte[] value) {
@@ -671,10 +703,9 @@ public class MokoSupport implements MokoResponseCallback {
 
     // 发送可写无应答命令
     private void sendWriteNoResponseOrder(OrderTask orderTask, final MokoCharacteristic mokoCharacteristic) {
-        LogModule.i("app to device WRITE no response : " + orderTask.orderType.getName());
         LogModule.i(DigitalConver.bytesToHexString(orderTask.assemble()));
         mokoCharacteristic.characteristic.setValue(orderTask.assemble());
-        LogModule.i("app to device WRITE no response : " + mokoCharacteristic.characteristic.getUuid().toString());
+        LogModule.i("app to device sendWriteNoResponseOrder WRITE no response : " + orderTask.orderType.getName() +"-"+ mokoCharacteristic.characteristic.getUuid().toString());
         mokoCharacteristic.characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
         mHandler.post(new Runnable() {
             @Override
@@ -703,7 +734,7 @@ public class MokoSupport implements MokoResponseCallback {
             LogModule.i("sendDirectOrder: mokoCharacteristic is null");
             return;
         }
-        LogModule.i("app to device WRITE no response : " + orderTask.orderType.getName());
+        LogModule.i("app to device sendDirectOrder WRITE no response : " + orderTask.orderType.getName());
         LogModule.i(DigitalConver.bytesToHexString(orderTask.assemble()));
         mokoCharacteristic.characteristic.setValue(orderTask.assemble());
         mokoCharacteristic.characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
@@ -735,7 +766,7 @@ public class MokoSupport implements MokoResponseCallback {
             LogModule.i("executeTask : mokoCharacteristic is null");
             return;
         }
-        LogModule.i("app to device WRITE no response : " + orderTask.orderType.getName());
+        LogModule.i("app to device  sendUpgradeOrder WRITE no response : " + orderTask.orderType.getName());
         LogModule.i(DigitalConver.bytesToHexString(orderTask.assemble()));
         mokoCharacteristic.characteristic.setValue(orderTask.assemble());
         mokoCharacteristic.characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);

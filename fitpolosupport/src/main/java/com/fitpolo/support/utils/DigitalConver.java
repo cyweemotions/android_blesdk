@@ -319,6 +319,12 @@ public class DigitalConver {
         }
         return byteArray;
     }
-
+    public static byte[] intTo2Byte(int value) {
+        byte[] bytes = new byte[2];
+        // 对value的低16位进行位掩码操作，获取低两字节
+        bytes[0] = (byte) (value >> 8); // 高位字节
+        bytes[1] = (byte) (value & 0xFF); // 低位字节
+        return bytes;
+    }
 
 }

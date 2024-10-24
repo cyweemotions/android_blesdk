@@ -24,6 +24,7 @@ public abstract class OrderTask {
     public OrderTaskResponse response;
     public long delayTime = DEFAULT_DELAY_TIME;
     public int orderStatus;
+    public long sequence;
 
     public OrderTaskResponse getResponse() {
         return response;

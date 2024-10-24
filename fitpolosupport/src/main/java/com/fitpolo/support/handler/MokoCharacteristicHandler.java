@@ -79,6 +79,31 @@ public class MokoCharacteristicHandler {
                 @Override
                 public void run() {
                     // 这里是你想要延迟1秒后执行的代码
+                    if(service.getUuid().toString().startsWith(SERVICE_UUID_XON_FRAME)){
+                        for (BluetoothGattCharacteristic characteristic : characteristics) {
+                            String characteristicUuid = characteristic.getUuid().toString();
+                            if (TextUtils.isEmpty(characteristicUuid)) {
+                                continue;
+                            }
+                            if (characteristicUuid.equals(OrderType.XONFRAMENOTIFY.getUuid())) {
+                                boolean success = gatt.setCharacteristicNotification(characteristic, true);
+                                LogModule.i("XON_FRAME setCharacteristicNotification"+ success);
+                                MokoSupport.getInstance().setNotifyDesc(characteristic);
+                                mokoCharacteristicMap.put(OrderType.XONFRAMENOTIFY, new MokoCharacteristic(characteristic, OrderType.XONFRAMENOTIFY));
+                                continue;
+                            }
+                            if (characteristicUuid.equals(OrderType.XONFRAMEWRITE.getUuid())) {
+                                mokoCharacteristicMap.put(OrderType.XONFRAMEWRITE, new MokoCharacteristic(characteristic, OrderType.XONFRAMEWRITE));
+                                continue;
+                            }
+                        }
+                    }
+                }
+            }, 500);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // 这里是你想要延迟1秒后执行的代码
                     if(service.getUuid().toString().startsWith(SERVICE_UUID_DATA_PUSH)){
                         for (BluetoothGattCharacteristic characteristic : characteristics) {
                             String characteristicUuid = characteristic.getUuid().toString();
@@ -101,31 +126,7 @@ public class MokoCharacteristicHandler {
                     }
                 }
             }, 1000);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    // 这里是你想要延迟1秒后执行的代码
-                    if(service.getUuid().toString().startsWith(SERVICE_UUID_XON_FRAME)){
-                        for (BluetoothGattCharacteristic characteristic : characteristics) {
-                            String characteristicUuid = characteristic.getUuid().toString();
-                            if (TextUtils.isEmpty(characteristicUuid)) {
-                                continue;
-                            }
-                            if (characteristicUuid.equals(OrderType.XONFRAMENOTIFY.getUuid())) {
-                                boolean success = gatt.setCharacteristicNotification(characteristic, true);
-                                LogModule.i("XON_FRAME setCharacteristicNotification"+ success);
-                                MokoSupport.getInstance().setNotifyDesc(characteristic);
-                                mokoCharacteristicMap.put(OrderType.XONFRAMENOTIFY, new MokoCharacteristic(characteristic, OrderType.XONFRAMENOTIFY));
-                                continue;
-                            }
-                            if (characteristicUuid.equals(OrderType.XONFRAMEWRITE.getUuid())) {
-                                mokoCharacteristicMap.put(OrderType.XONFRAMEWRITE, new MokoCharacteristic(characteristic, OrderType.XONFRAMEWRITE));
-                                continue;
-                            }
-                        }
-                    }
-                }
-            }, 1500);
+
 
         }
         return mokoCharacteristicMap;
