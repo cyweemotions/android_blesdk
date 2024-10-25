@@ -1055,9 +1055,31 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
          fileList.add(res);
          fileList.add(sty);
          Log.d(TAG, "dailUpdate: "+fileList.toString());
-
-         DailUpdateHandler dailu = new DailUpdateHandler(this);
-         dailu.startDailFileTransMit(fileList,100);
+         ///计算三个文件总和
+        int total = 0;
+        try {
+            InputStream jsonStream = getAssets().open("dial.json");
+            InputStream resStream = getAssets().open("dial.res");
+            InputStream styleStream = getAssets().open("dial.sty");
+            total = jsonStream.available() + resStream.available() +styleStream.available();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Log.d(TAG, "dailUpdate: "+total);
+        DailUpdateHandler dailu = new DailUpdateHandler(this);
+        dailu.startDailFileTransMit(fileList,total);
+        ///创建弹窗
+        AlertDialog.Builder builder = new AlertDialog.Builder(SendOrderActivity.this);
+        builder.setMessage("")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 用户点击了“确定”按钮
+                        dialog.dismiss();
+                    }
+                })
+                .setCancelable(true); // 允许用户点击外部区域关闭对话框（可选）
+        alertDialog = builder.create();
     }
 
 
@@ -1235,7 +1257,14 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
     }
 
     @Override
-    public void onResult(ArrayList<String> response) {
-
+    public void onResult(float progress) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ///显示进度
+                alertDialog.setMessage("正在表盘更新中:"+progress);
+                alertDialog.show();
+            }
+        });
     }
 }

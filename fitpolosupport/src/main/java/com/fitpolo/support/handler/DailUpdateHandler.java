@@ -248,7 +248,6 @@ public class DailUpdateHandler implements MokoOrderTaskCallback, MokoSupport.IUp
                 ///判断是否是最后一包
 //                int value = (int) response.responseObject;
 //                if(value == StreamResType.xon_frame_ack_type_ok.typeValue){
-                    currentFileSize = currentFileSize + first.size();
 //                }else{
                     Log.d("TAG", "sendFileMutilFirst onOrderResult : "+res);
 //                }
@@ -264,6 +263,7 @@ public class DailUpdateHandler implements MokoOrderTaskCallback, MokoSupport.IUp
 
             }
         };
+        currentFileSize = currentFileSize + first.size();
         MokoSupport.getInstance().sendOrder(dailTaskFirst);
         ///不需要回调
         int sendLength = MokoSupport.mtu - 12;
@@ -309,8 +309,10 @@ public class DailUpdateHandler implements MokoOrderTaskCallback, MokoSupport.IUp
                        if(first == 1){
                            ///请求成功
                            currentOffset = currentOffset+2;
-                           double progress = currentFileSize / allFileSize;
+                           float precent = (float)currentFileSize/allFileSize;
                            Log.d("TAG", "sendFileMutil onOrderResult success: "+currentOffset+"-"+totalPackages);
+                           Log.d("TAG", "onOrderResult: progress " +"-"+precent);
+                           callBack.onResult(precent);
                            if(currentOffset > totalPackages){
                                ///发送crc
                                sendCrc();

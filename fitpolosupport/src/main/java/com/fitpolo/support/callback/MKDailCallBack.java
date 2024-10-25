@@ -4,5 +4,5 @@ import java.util.ArrayList;
 
 public interface MKDailCallBack {
 
-    void onResult(ArrayList<String> response);
+    void onResult(float progress);
 }
