@@ -71,7 +71,8 @@ public class MotionControlTask extends OrderTask {
         int result = (value[5] & 0xFF);
         LogModule.i("运动控制：" + result);
 
-        response.responseObject = result == 0 ? 0 : 1; // 0-成功 1-失败
+        response.responseObject = result;
+
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
         MokoSupport.getInstance().pollTask();
         callback.onOrderResult(response);
