@@ -134,7 +134,7 @@ public class DailUpdateHandler implements MokoOrderTaskCallback, MokoSupport.IUp
 
             @Override
             public void onOrderTimeout(OrderTaskResponse response) {
-
+                callBack.onTimeOut();
             }
 
             @Override
@@ -169,7 +169,7 @@ public class DailUpdateHandler implements MokoOrderTaskCallback, MokoSupport.IUp
 
             @Override
             public void onOrderTimeout(OrderTaskResponse response) {
-
+                callBack.onTimeOut();
             }
 
             @Override
@@ -221,7 +221,7 @@ public class DailUpdateHandler implements MokoOrderTaskCallback, MokoSupport.IUp
 
             @Override
             public void onOrderTimeout(OrderTaskResponse response) {
-
+                callBack.onTimeOut();
             }
 
             @Override
@@ -243,19 +243,12 @@ public class DailUpdateHandler implements MokoOrderTaskCallback, MokoSupport.IUp
         dailTaskFirst.callback = new MokoOrderTaskCallback() {
             @Override
             public void onOrderResult(OrderTaskResponse response) {
-                byte[] value = (byte[]) response.responseObject;
-                List<Byte> res = DigitalConver.bytes2ListByte(value);
-                ///判断是否是最后一包
-//                int value = (int) response.responseObject;
-//                if(value == StreamResType.xon_frame_ack_type_ok.typeValue){
-//                }else{
-                    Log.d("TAG", "sendFileMutilFirst onOrderResult : "+res);
-//                }
+                Log.d("TAG", "sendFileMutilFirst onOrderResult : ");
             }
 
             @Override
             public void onOrderTimeout(OrderTaskResponse response) {
-
+                callBack.onTimeOut();
             }
 
             @Override
@@ -329,7 +322,7 @@ public class DailUpdateHandler implements MokoOrderTaskCallback, MokoSupport.IUp
 
             @Override
             public void onOrderTimeout(OrderTaskResponse response) {
-
+                callBack.onTimeOut();
             }
 
             @Override
@@ -380,7 +373,7 @@ public class DailUpdateHandler implements MokoOrderTaskCallback, MokoSupport.IUp
 
             @Override
             public void onOrderTimeout(OrderTaskResponse response) {
-
+                callBack.onTimeOut();
             }
 
             @Override
@@ -410,7 +403,7 @@ public class DailUpdateHandler implements MokoOrderTaskCallback, MokoSupport.IUp
 
     @Override
     public void onOrderTimeout(OrderTaskResponse response) {
-
+        callBack.onTimeOut();
     }
 
     @Override

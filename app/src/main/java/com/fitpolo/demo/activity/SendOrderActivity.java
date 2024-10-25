@@ -1267,4 +1267,10 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
             }
         });
     }
+
+    @Override
+    public void onTimeOut() {
+        alertDialog.setMessage("表盘更新超时");
+        alertDialog.show();
+    }
 }
