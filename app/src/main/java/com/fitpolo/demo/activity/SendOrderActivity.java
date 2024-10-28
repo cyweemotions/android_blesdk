@@ -755,7 +755,7 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
     public void setMotionTarget(View view) {
         MotionTarget motionTarget = new MotionTarget();
         motionTarget.setType = 0;
-        motionTarget.sportType = 1;
+        motionTarget.sportType = 2;
         motionTarget.distance = 1;
         motionTarget.sportTime = 4;
         motionTarget.calorie = 3;
@@ -765,7 +765,7 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
     public void setAutoPause(View view) {
         MotionTarget motionTarget = new MotionTarget();
         motionTarget.setType = 1;
-        motionTarget.sportType = 1;
+        motionTarget.sportType = 2;
         motionTarget.autoPauseSwitch = 0;
         MokoSupport.getInstance().sendOrder(new MotionTargetTask(mService, motionTarget));
     }
@@ -809,13 +809,12 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
         MokoSupport.getInstance().sendOrder(getMotionTarget);
     }
     public void getAutoPause(View view) {
-        GetAutoPause getAutoPause = new GetAutoPause(mService, 1);
+        GetAutoPause getAutoPause = new GetAutoPause(mService, 2);
         getAutoPause.callback = new MokoOrderTaskCallback() {
             @Override
             public void onOrderResult(OrderTaskResponse response) {
                 StringBuilder contentStr = new StringBuilder();
-                List<Integer> getMotionTargetData = (List<Integer>) response.responseObject;
-                int toggle = getMotionTargetData.get(0);
+                int toggle = (int) response.responseObject;
                 contentStr.append("自动暂停开关：").append(toggle).append("\n ");
                 runOnUiThread(new Runnable() {
                     @Override

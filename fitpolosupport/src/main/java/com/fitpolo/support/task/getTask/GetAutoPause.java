@@ -53,11 +53,9 @@ public class GetAutoPause extends OrderTask {
         int dataLength = (value[4] & 0xFF);
         byte[] subArray = Arrays.copyOfRange(value, 5, dataLength + 5);
 
-        List<Integer> result = new ArrayList<>();
         int toggle = Integer.parseInt(Integer.toHexString(subArray[2]), 16);
         LogModule.i("开关" + toggle);
-        result.add(toggle);
-        response.responseObject =  result;
+        response.responseObject =  toggle;
         orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
 
         MokoSupport.getInstance().pollTask();
