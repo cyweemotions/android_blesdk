@@ -269,6 +269,22 @@
             </TableRow>
             <TableRow>
                 <Button
+                    android:id="@+id/btn_get_motion_target"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="getMotionTarget"
+                    android:tag="运动目标获取"
+                    android:text="运动目标获取" />
+                <Button
+                    android:id="@+id/btn_get_motion_target2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="getAutoPause"
+                    android:tag="运动自动暂停获取"
+                    android:text="运动自动暂停获取" />
+            </TableRow>
+            <TableRow>
+                <Button
                     android:id="@+id/btn_set_standard_alert"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -75,7 +75,9 @@ import com.fitpolo.support.task.funcTask.QueryInfoTask;
 import com.fitpolo.support.task.funcTask.TimeAlignTask;
 import com.fitpolo.support.task.funcTask.UnbindDeviceTask;
 import com.fitpolo.support.task.getTask.AddressBookDataTask;
+import com.fitpolo.support.task.getTask.GetAutoPause;
 import com.fitpolo.support.task.getTask.GetDoNotDisturbTask;
+import com.fitpolo.support.task.getTask.GetMotionTarget;
 import com.fitpolo.support.task.getTask.GetSitAlertSettingTask;
 import com.fitpolo.support.task.getTask.GetTargetTask;
 import com.fitpolo.support.task.getTask.GetUserInfoTask;
@@ -753,19 +755,81 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
     public void setMotionTarget(View view) {
         MotionTarget motionTarget = new MotionTarget();
         motionTarget.setType = 0;
-        motionTarget.sportType = 0;
+        motionTarget.sportType = 1;
         motionTarget.distance = 1;
-        motionTarget.sportTime = 2;
+        motionTarget.sportTime = 4;
         motionTarget.calorie = 3;
-        motionTarget.targetType = 2;
+        motionTarget.targetType = 3;
         MokoSupport.getInstance().sendOrder(new MotionTargetTask(mService, motionTarget));
     }
     public void setAutoPause(View view) {
         MotionTarget motionTarget = new MotionTarget();
         motionTarget.setType = 1;
-        motionTarget.sportType = 0;
+        motionTarget.sportType = 1;
         motionTarget.autoPauseSwitch = 0;
         MokoSupport.getInstance().sendOrder(new MotionTargetTask(mService, motionTarget));
+    }
+    public void getMotionTarget(View view) {
+        GetMotionTarget getMotionTarget = new GetMotionTarget(mService, 1);
+        getMotionTarget.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                StringBuilder contentStr = new StringBuilder();
+                List<Integer> getMotionTargetData = (List<Integer>) response.responseObject;
+                int distanceValue = getMotionTargetData.get(0);
+                int timeValue = getMotionTargetData.get(1) * 10 + 5;
+                int calorieValue = getMotionTargetData.get(2) * 1000;
+                int targetType = getMotionTargetData.get(3); // 0-none 1-distance 2-sportTime 3-calorie
+                String typeStr = "";
+                if(targetType == 1) {
+                    typeStr = "距离";
+                } else if(targetType == 2) {
+                    typeStr = "时长";
+                } else if(targetType == 3) {
+                    typeStr = "卡路里";
+                } else {
+                    typeStr = "无目标";
+                }
+                contentStr.append("距离：").append(distanceValue).append("\n");
+                contentStr.append("时间：").append(timeValue).append("\n");
+                contentStr.append("卡路里：").append(calorieValue).append("\n");
+                contentStr.append("目标类型：").append(typeStr).append("\n");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAlertDialog(String.valueOf(contentStr));
+                    }
+                });
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(getMotionTarget);
+    }
+    public void getAutoPause(View view) {
+        GetAutoPause getAutoPause = new GetAutoPause(mService, 1);
+        getAutoPause.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                StringBuilder contentStr = new StringBuilder();
+                List<Integer> getMotionTargetData = (List<Integer>) response.responseObject;
+                int toggle = getMotionTargetData.get(0);
+                contentStr.append("自动暂停开关：").append(toggle).append("\n ");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAlertDialog(String.valueOf(contentStr));
+                    }
+                });
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(getAutoPause);
     }
     public void setStandardAlert(View view) {
         MokoSupport.getInstance().sendOrder(new StandardAlertTask(mService, 0));
