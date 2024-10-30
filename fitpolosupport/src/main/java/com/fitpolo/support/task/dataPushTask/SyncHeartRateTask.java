@@ -23,7 +23,7 @@ public class SyncHeartRateTask extends OrderTask {
     private List<byte[]> res = new ArrayList<>();
     public SyncHeartRateTask(MokoOrderTaskCallback callback, int year, int month, int day) {
         super(OrderType.DataPushWRITE, OrderEnum.syncHeartRate, callback, OrderTask.RESPONSE_TYPE_WRITE_NO_RESPONSE);
-        typeData = 0;
+        typeData = 1;
         List<Byte> dataList = new ArrayList<>();
         byte isRecordByte = (byte) 0x01;
         dataList.add(isRecordByte);
