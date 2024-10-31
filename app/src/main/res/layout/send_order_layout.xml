@@ -193,8 +193,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="setTimeFormat"
-                    android:tag="时间设置"
-                    android:text="时间设置" />
+                    android:tag="时间格式设置"
+                    android:text="时间格式设置" />
+                <Button
+                    android:id="@+id/btn_time_get"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="getTimeFormat"
+                    android:tag="时间格式获取"
+                    android:text="时间格式获取" />
+            </TableRow>
+            <TableRow>
                 <Button
                     android:id="@+id/btn_set_Sleep"
                     android:layout_width="match_parent"

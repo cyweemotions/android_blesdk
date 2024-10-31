@@ -80,6 +80,7 @@ import com.fitpolo.support.task.getTask.GetDoNotDisturbTask;
 import com.fitpolo.support.task.getTask.GetMotionTarget;
 import com.fitpolo.support.task.getTask.GetSitAlertSettingTask;
 import com.fitpolo.support.task.getTask.GetTargetTask;
+import com.fitpolo.support.task.getTask.GetTimeTask;
 import com.fitpolo.support.task.getTask.GetUserInfoTask;
 import com.fitpolo.support.task.getTask.SleepMonitorDataTask;
 import com.fitpolo.support.task.setTask.AddressBookTask;
@@ -679,6 +680,33 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
             public void onOrderFinish() { }
         };
         MokoSupport.getInstance().sendOrder(timeTask);
+    }
+    public void getTimeFormat(View view) {
+        GetTimeTask getTimeTask = new GetTimeTask(mService);
+        getTimeTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                StringBuilder contentStr = new StringBuilder();
+                List<Integer> timeFormatData = (List<Integer>) response.responseObject;
+                String timeFormat = String.valueOf((timeFormatData.get(0)));
+                String dateFormat = String.valueOf((timeFormatData.get(1)));
+                String timeZone = String.valueOf((timeFormatData.get(2)));
+                contentStr.append("时间格式：").append(timeFormat).append("\n");
+                contentStr.append("日期格式：").append(dateFormat).append("\n");
+                contentStr.append("时区：").append(timeZone).append("\n");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAlertDialog(String.valueOf(contentStr));
+                    }
+                });
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(getTimeTask);
     }
     public void setSleep(View view) {
         int toggle = 0;
