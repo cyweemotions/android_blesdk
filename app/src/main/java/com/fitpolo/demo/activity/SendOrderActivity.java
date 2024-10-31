@@ -79,6 +79,7 @@ import com.fitpolo.support.task.getTask.GetAutoPause;
 import com.fitpolo.support.task.getTask.GetDoNotDisturbTask;
 import com.fitpolo.support.task.getTask.GetMotionTarget;
 import com.fitpolo.support.task.getTask.GetSitAlertSettingTask;
+import com.fitpolo.support.task.getTask.GetStandardAlertTask;
 import com.fitpolo.support.task.getTask.GetTargetTask;
 import com.fitpolo.support.task.getTask.GetTimeTask;
 import com.fitpolo.support.task.getTask.GetUserInfoTask;
@@ -859,7 +860,29 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
         MokoSupport.getInstance().sendOrder(getAutoPause);
     }
     public void setStandardAlert(View view) {
-        MokoSupport.getInstance().sendOrder(new StandardAlertTask(mService, 0));
+        MokoSupport.getInstance().sendOrder(new StandardAlertTask(mService, 1));
+    }
+    public void getStandardAlert(View view) {
+        GetStandardAlertTask getStandardAlertTask = new GetStandardAlertTask(mService);
+        getStandardAlertTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                StringBuilder contentStr = new StringBuilder();
+                int toggle = (int) response.responseObject;
+                contentStr.append("开关：").append(toggle).append("\n ");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAlertDialog(String.valueOf(contentStr));
+                    }
+                });
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(getStandardAlertTask);
     }
     public void setLanguage(View view) {
         MokoSupport.getInstance().sendOrder(new LanguageTask(mService, 0));

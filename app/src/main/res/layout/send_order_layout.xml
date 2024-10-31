@@ -298,8 +298,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="setStandardAlert"
-                    android:tag="达标提醒"
-                    android:text="达标提醒" />
+                    android:tag="达标提醒设置"
+                    android:text="达标提醒设置" />
+                <Button
+                    android:id="@+id/btn_get_standard_alert"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="getStandardAlert"
+                    android:tag="达标提醒获取"
+                    android:text="达标提醒获取" />
+            </TableRow>
+            <TableRow>
                 <Button
                     android:id="@+id/btn_set_language"
                     android:layout_width="match_parent"
