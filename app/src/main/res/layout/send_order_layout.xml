@@ -355,8 +355,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="setPowerSaveMode"
-                    android:tag="省电模式"
-                    android:text="省电模式" />
+                    android:tag="省电模式设置"
+                    android:text="省电模式设置" />
+                <Button
+                    android:id="@+id/btn_set_power_save"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="getPowerSaveMode"
+                    android:tag="省电模式获取"
+                    android:text="省电模式获取" />
             </TableRow>
             <TableRow>
                 <Button

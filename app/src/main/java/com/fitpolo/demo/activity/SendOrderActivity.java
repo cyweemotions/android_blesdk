@@ -78,6 +78,7 @@ import com.fitpolo.support.task.getTask.AddressBookDataTask;
 import com.fitpolo.support.task.getTask.GetAutoPause;
 import com.fitpolo.support.task.getTask.GetDoNotDisturbTask;
 import com.fitpolo.support.task.getTask.GetMotionTarget;
+import com.fitpolo.support.task.getTask.GetPowerSaveTask;
 import com.fitpolo.support.task.getTask.GetSitAlertSettingTask;
 import com.fitpolo.support.task.getTask.GetStandardAlertTask;
 import com.fitpolo.support.task.getTask.GetTargetTask;
@@ -952,6 +953,28 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
     }
     public void setPowerSaveMode(View view) {
         MokoSupport.getInstance().sendOrder(new PowerSaveTask(mService, 1));
+    }
+    public void getPowerSaveMode(View view) {
+        GetPowerSaveTask getPowerSaveTask = new GetPowerSaveTask(mService);
+        getPowerSaveTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                StringBuilder contentStr = new StringBuilder();
+                int toggle = (int) response.responseObject;
+                contentStr.append("开关：").append(toggle).append("\n ");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAlertDialog(String.valueOf(contentStr));
+                    }
+                });
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(getPowerSaveTask);
     }
     public void setAddressBook(View view) {
         AddressBook addressBook = new AddressBook();
