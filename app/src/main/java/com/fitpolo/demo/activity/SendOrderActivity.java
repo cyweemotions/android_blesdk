@@ -75,6 +75,7 @@ import com.fitpolo.support.task.funcTask.QueryInfoTask;
 import com.fitpolo.support.task.funcTask.TimeAlignTask;
 import com.fitpolo.support.task.funcTask.UnbindDeviceTask;
 import com.fitpolo.support.task.getTask.AddressBookDataTask;
+import com.fitpolo.support.task.getTask.GetAutoLightenTask;
 import com.fitpolo.support.task.getTask.GetAutoPause;
 import com.fitpolo.support.task.getTask.GetDoNotDisturbTask;
 import com.fitpolo.support.task.getTask.GetMotionTarget;
@@ -757,6 +758,28 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
     }
     public void setAutoLigten(View view) {
         MokoSupport.getInstance().sendOrder(new AutoLightenTask(mService, 0));
+    }
+    public void getAutoLigten(View view) {
+        GetAutoLightenTask getAutoLightenTask = new GetAutoLightenTask(mService);
+        getAutoLightenTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                StringBuilder contentStr = new StringBuilder();
+                int toggle = (int) response.responseObject;
+                contentStr.append("开关：").append(toggle).append("\n ");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAlertDialog(String.valueOf(contentStr));
+                    }
+                });
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(getAutoLightenTask);
     }
     public void setHeartRateMonitor(View view) {
         HeartRateMonitor heartRateMonitor = new HeartRateMonitor();

@@ -234,15 +234,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="setAutoLigten"
-                    android:tag="抬手亮屏"
-                    android:text="抬手亮屏" />
+                    android:tag="抬手亮屏设置"
+                    android:text="抬手亮屏设置" />
                 <Button
-                    android:id="@+id/btn_set_heart_rate"
+                    android:id="@+id/btn_get_auto_ligten"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="setHeartRateMonitor"
-                    android:tag="心率设置"
-                    android:text="心率设置" />
+                    android:onClick="getAutoLigten"
+                    android:tag="抬手亮屏获取"
+                    android:text="抬手亮屏获取" />
             </TableRow>
             <TableRow>
 <!--                <Button-->
@@ -252,6 +252,14 @@
 <!--                    android:onClick="setAlarmClock"-->
 <!--                    android:tag="闹钟设置"-->
 <!--                    android:text="闹钟设置" />-->
+
+                <Button
+                    android:id="@+id/btn_set_heart_rate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="setHeartRateMonitor"
+                    android:tag="心率设置"
+                    android:text="心率设置" />
                 <Button
                     android:id="@+id/btn_set_call_reminder"
                     android:layout_width="match_parent"
