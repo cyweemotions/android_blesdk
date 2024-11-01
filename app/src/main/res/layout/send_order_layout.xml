@@ -333,8 +333,6 @@
                     android:onClick="setLanguage"
                     android:tag="语言设置"
                     android:text="语言设置" />
-            </TableRow>
-            <TableRow>
                 <Button
                     android:id="@+id/btn_set_notify"
                     android:layout_width="match_parent"
@@ -342,13 +340,22 @@
                     android:onClick="setNotify"
                     android:tag="通知设置"
                     android:text="通知设置" />
+            </TableRow>
+            <TableRow>
                 <Button
                     android:id="@+id/btn_set_on_screen_duration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="setOnScreenDuration"
-                    android:tag="亮屏时长"
-                    android:text="亮屏时长" />
+                    android:tag="亮屏时长设置"
+                    android:text="亮屏时长设置" />
+                <Button
+                    android:id="@+id/btn_get_on_screen_duration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="getOnScreenDuration"
+                    android:tag="亮屏时长获取"
+                    android:text="亮屏时长获取" />
             </TableRow>
             <TableRow>
                 <Button

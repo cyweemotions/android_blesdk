@@ -80,6 +80,7 @@ import com.fitpolo.support.task.getTask.GetAutoPause;
 import com.fitpolo.support.task.getTask.GetDoNotDisturbTask;
 import com.fitpolo.support.task.getTask.GetHeartRateMonitorTask;
 import com.fitpolo.support.task.getTask.GetMotionTarget;
+import com.fitpolo.support.task.getTask.GetOnScreenDurationTask;
 import com.fitpolo.support.task.getTask.GetPowerSaveTask;
 import com.fitpolo.support.task.getTask.GetSitAlertSettingTask;
 import com.fitpolo.support.task.getTask.GetSleepTask;
@@ -996,6 +997,40 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
     }
     public void setOnScreenDuration(View view) {
         MokoSupport.getInstance().sendOrder(new OnScreenDurationTask(mService, 1));
+    }
+    public void getOnScreenDuration(View view) {
+        GetOnScreenDurationTask getOnScreenDurationTask = new GetOnScreenDurationTask(mService);
+        getOnScreenDurationTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                StringBuilder contentStr = new StringBuilder();
+                int duration = (int) response.responseObject;
+                String durationStr = "";
+                if (duration == 0) {
+                    durationStr = "5";
+                } else if (duration == 1) {
+                    durationStr = "10";
+                } else if (duration == 2) {
+                    durationStr = "15";
+                } else if (duration == 3) {
+                    durationStr = "30";
+                } else {
+                    durationStr = "60";
+                }
+                contentStr.append("亮屏时长：").append(durationStr).append("S");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAlertDialog(String.valueOf(contentStr));
+                    }
+                });
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(getOnScreenDurationTask);
     }
     public void setDoNotDisturb(View view) {
         DoNotDisturb doNotDisturb = new DoNotDisturb();
