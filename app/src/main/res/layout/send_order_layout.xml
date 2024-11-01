@@ -209,8 +209,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="setSleep"
-                    android:tag="睡眠设置"
-                    android:text="睡眠设置" />
+                    android:tag="睡眠监测设置"
+                    android:text="睡眠监测设置" />
+                <Button
+                    android:id="@+id/btn_get_Sleep"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="getSleep"
+                    android:tag="睡眠监测获取"
+                    android:text="睡眠监测获取" />
             </TableRow>
             <TableRow>
                 <Button

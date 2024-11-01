@@ -82,6 +82,7 @@ import com.fitpolo.support.task.getTask.GetHeartRateMonitorTask;
 import com.fitpolo.support.task.getTask.GetMotionTarget;
 import com.fitpolo.support.task.getTask.GetPowerSaveTask;
 import com.fitpolo.support.task.getTask.GetSitAlertSettingTask;
+import com.fitpolo.support.task.getTask.GetSleepTask;
 import com.fitpolo.support.task.getTask.GetStandardAlertTask;
 import com.fitpolo.support.task.getTask.GetTargetTask;
 import com.fitpolo.support.task.getTask.GetTimeTask;
@@ -717,6 +718,35 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
         int startTime = 23*60+30;
         int endTime = 8*60;
         MokoSupport.getInstance().sendOrder(new SleepTask(mService, toggle, startTime, endTime));
+    }
+    public void getSleep(View view) {
+        GetSleepTask getSleepTask = new GetSleepTask(mService);
+        getSleepTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                StringBuilder contentStr = new StringBuilder();
+                List<Integer> getSitAlertData = (List<Integer>) response.responseObject;
+                String onOff = getSitAlertData.get(0) == 0 ? "开" : "关";
+                String startHour =  String.format("%02d", getSitAlertData.get(1) / 60);
+                String startMinute =  String.format("%02d", getSitAlertData.get(1) % 60);
+                String endHour = String.format("%02d", getSitAlertData.get(2) / 60);
+                String endMinute = String.format("%02d", getSitAlertData.get(2) % 60);
+                contentStr.append("开关：").append(onOff).append("\n ");
+                contentStr.append("开始时间：").append(startHour).append(":").append(startMinute).append("\n ");
+                contentStr.append("结束时间：").append(endHour).append(":").append(endMinute).append("\n ");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAlertDialog(String.valueOf(contentStr));
+                    }
+                });
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(getSleepTask);
     }
     public void setSitAlert(View view) {
         SitAlert alert = new SitAlert();
