@@ -274,8 +274,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="setCallReminder"
-                    android:tag="来电提醒"
-                    android:text="来电提醒" />
+                    android:tag="来电提醒设置"
+                    android:text="来电提醒设置" />
+                <Button
+                    android:id="@+id/btn_get_call_reminder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="getCallReminder"
+                    android:tag="来电提醒获取"
+                    android:text="来电提醒获取" />
             </TableRow>
             <TableRow>
                 <Button

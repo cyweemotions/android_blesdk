@@ -77,6 +77,7 @@ import com.fitpolo.support.task.funcTask.UnbindDeviceTask;
 import com.fitpolo.support.task.getTask.AddressBookDataTask;
 import com.fitpolo.support.task.getTask.GetAutoLightenTask;
 import com.fitpolo.support.task.getTask.GetAutoPause;
+import com.fitpolo.support.task.getTask.GetCallReminderTask;
 import com.fitpolo.support.task.getTask.GetDoNotDisturbTask;
 import com.fitpolo.support.task.getTask.GetHeartRateMonitorTask;
 import com.fitpolo.support.task.getTask.GetMotionTarget;
@@ -866,7 +867,29 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
 //        MokoSupport.getInstance().sendOrder(new AlarmClockTask(mService, alarmClock));
     }
     public void setCallReminder(View view) {
-        MokoSupport.getInstance().sendOrder(new CallReminderTask(mService, 1));
+        MokoSupport.getInstance().sendOrder(new CallReminderTask(mService, 0));
+    }
+    public void getCallReminder(View view) {
+        GetCallReminderTask getCallReminderTask = new GetCallReminderTask(mService);
+        getCallReminderTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                StringBuilder contentStr = new StringBuilder();
+                int toggle = (int) response.responseObject;
+                contentStr.append("开关：").append(toggle == 0 ? "开" : "关").append("\n ");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAlertDialog(String.valueOf(contentStr));
+                    }
+                });
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(getCallReminderTask);
     }
     public void setMotionTarget(View view) {
         MotionTarget motionTarget = new MotionTarget();
