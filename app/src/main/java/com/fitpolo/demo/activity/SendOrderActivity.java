@@ -78,6 +78,7 @@ import com.fitpolo.support.task.getTask.AddressBookDataTask;
 import com.fitpolo.support.task.getTask.GetAutoLightenTask;
 import com.fitpolo.support.task.getTask.GetAutoPause;
 import com.fitpolo.support.task.getTask.GetDoNotDisturbTask;
+import com.fitpolo.support.task.getTask.GetHeartRateMonitorTask;
 import com.fitpolo.support.task.getTask.GetMotionTarget;
 import com.fitpolo.support.task.getTask.GetPowerSaveTask;
 import com.fitpolo.support.task.getTask.GetSitAlertSettingTask;
@@ -789,6 +790,37 @@ public class SendOrderActivity extends BaseActivity implements OTAManager.OTALis
         heartRateMonitor.minLimit = 50;
         heartRateMonitor.maxLimit = 190;
         MokoSupport.getInstance().sendOrder(new HeartRateMonitorTask(mService, heartRateMonitor));
+    }
+    public void getHeartRateMonitor(View view) {
+        GetHeartRateMonitorTask getHeartRateMonitorTask = new GetHeartRateMonitorTask(mService);
+        getHeartRateMonitorTask.callback = new MokoOrderTaskCallback() {
+            @Override
+            public void onOrderResult(OrderTaskResponse response) {
+                StringBuilder contentStr = new StringBuilder();
+                List<Integer> sleepMonitorData = (List<Integer>) response.responseObject;
+                String monitorSwitch = sleepMonitorData.get(0) == 0 ? "开" : "关";
+                int interval = sleepMonitorData.get(1);
+                String alarmSwitch = sleepMonitorData.get(2) == 0 ? "开" : "关";
+                int minLimit = sleepMonitorData.get(3);
+                int maxLimit = sleepMonitorData.get(4);
+                contentStr.append("心率监控开关：").append(monitorSwitch).append("\n");
+                contentStr.append("心率监控间隔：").append(interval).append("分钟\n");
+                contentStr.append("心率区间报警开关：").append(alarmSwitch).append("\n");
+                contentStr.append("低心速率限制：").append(minLimit).append("分钟\n");
+                contentStr.append("高心速率限制：").append(maxLimit).append("分钟\n");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAlertDialog(String.valueOf(contentStr));
+                    }
+                });
+            }
+            @Override
+            public void onOrderTimeout(OrderTaskResponse response) { }
+            @Override
+            public void onOrderFinish() { }
+        };
+        MokoSupport.getInstance().sendOrder(getHeartRateMonitorTask);
     }
     public void setAlarmClock(View view) {
         showAlertDialog("暂无");

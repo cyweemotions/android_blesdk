@@ -245,21 +245,23 @@
                     android:text="抬手亮屏获取" />
             </TableRow>
             <TableRow>
-<!--                <Button-->
-<!--                    android:id="@+id/btn_set_alarm_clock"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:onClick="setAlarmClock"-->
-<!--                    android:tag="闹钟设置"-->
-<!--                    android:text="闹钟设置" />-->
-
                 <Button
                     android:id="@+id/btn_set_heart_rate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="setHeartRateMonitor"
-                    android:tag="心率设置"
-                    android:text="心率设置" />
+                    android:tag="心率监测设置"
+                    android:text="心率监测设置" />
+
+                <Button
+                    android:id="@+id/btn_get_heart_rate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="getHeartRateMonitor"
+                    android:tag="心率监测获取"
+                    android:text="心率监测获取" />
+            </TableRow>
+            <TableRow>
                 <Button
                     android:id="@+id/btn_set_call_reminder"
                     android:layout_width="match_parent"
@@ -366,7 +368,7 @@
                     android:tag="省电模式设置"
                     android:text="省电模式设置" />
                 <Button
-                    android:id="@+id/btn_set_power_save"
+                    android:id="@+id/btn_get_power_save"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="getPowerSaveMode"
