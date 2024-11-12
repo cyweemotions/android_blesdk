@@ -6,6 +6,7 @@ import com.fitpolo.support.callback.MokoOrderTaskCallback;
 import com.fitpolo.support.entity.OrderEnum;
 import com.fitpolo.support.entity.OrderType;
 import com.fitpolo.support.entity.dataEntity.BloodOxygenModel;
+import com.fitpolo.support.entity.dataEntity.SleepModel;
 import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.OrderTask;
 import com.fitpolo.support.utils.ByteType;
@@ -14,7 +15,9 @@ import com.fitpolo.support.utils.DigitalConver;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SyncBloodOxygenTask extends OrderTask {
     private byte[] orderData;
@@ -67,14 +70,20 @@ public class SyncBloodOxygenTask extends OrderTask {
         if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) return;
         if (MokoConstants.DataNotify != DigitalConver.byte2Int(value[2])) return;
         int dataLength = (value[4] & 0xFF);
-        if(dataLength < 1) { //获取数据错误
-            int result = (value[5] & 0xFF);
-            if(result == 0){
-                backResult = 0;
-            }else{
-                backResult = 1;
-            }
-            LogModule.i("把backResult返回出去");
+        if(dataLength <= 8) { //获取数据错误
+//            int result = (value[5] & 0xFF);
+//            if(result == 0){
+//                backResult = 0;
+//            }else{
+//                backResult = 1;
+//            }
+            List<BloodOxygenModel> dataSource = new ArrayList<>();
+            response.responseObject = dataSource;
+            MokoSupport.getInstance().setBloodOxygenData(dataSource);
+            orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
+            MokoSupport.getInstance().pollTask();
+            callback.onOrderResult(response);
+            MokoSupport.getInstance().executeTask(callback);
         } else {
             byte[] subArray = Arrays.copyOfRange(value, 5, dataLength + 5);
             int type = (subArray[0] & 0xFF);

@@ -69,14 +69,26 @@ public class SyncSleepTask extends OrderTask {
         if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) return;
         if (MokoConstants.DataNotify != DigitalConver.byte2Int(value[2])) return;
         int dataLength = (value[4] & 0xFF);
-        if(dataLength < 1) { //获取数据错误
-            int result = (value[5] & 0xFF);
-            if(result == 0){
-                backResult = 0;
-            }else{
-                backResult = 1;
-            }
-            LogModule.i("把backResult返回出去");
+        LogModule.i("dataLength===》"+dataLength);
+        if(dataLength <= 8) { //获取数据错误
+//            int result = (value[5] & 0xFF);
+//            if(result == 0){
+//                backResult = 0;
+//            }else{
+//                backResult = 1;
+//            }
+            Map<String, Object> res = new HashMap<>();
+            List<SleepModel> dataSource = new ArrayList<>();
+            res.put("sleepData", dataSource);
+            res.put("sleepRating", 0);
+            res.put("deepSleepContinuity", 0);
+            res.put("respiratoryQuality", 0);
+            response.responseObject = res;
+            MokoSupport.getInstance().setSleepData(dataSource);
+            orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
+            MokoSupport.getInstance().pollTask();
+            callback.onOrderResult(response);
+            MokoSupport.getInstance().executeTask(callback);
         } else {
             byte[] subArray = Arrays.copyOfRange(value, 5, dataLength + 5);
             int type = (subArray[0] & 0xFF);
@@ -157,7 +169,12 @@ public class SyncSleepTask extends OrderTask {
                     System.out.println("这是最终的数据格式" + heartRate.toString());
                 }
                 LogModule.i("获取睡眠数据长度======="+dataSource.size());
-                response.responseObject = dataSource;
+                Map<String, Object> result = new HashMap<>();
+                result.put("sleepData", dataSource);
+                result.put("sleepRating", sleepRating);
+                result.put("deepSleepContinuity", deepSleepContinuity);
+                result.put("respiratoryQuality", respiratoryQuality);
+                response.responseObject = result;
                 MokoSupport.getInstance().setSleepData(dataSource);
                 orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
                 MokoSupport.getInstance().pollTask();

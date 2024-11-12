@@ -5,6 +5,7 @@ import com.fitpolo.support.MokoSupport;
 import com.fitpolo.support.callback.MokoOrderTaskCallback;
 import com.fitpolo.support.entity.OrderEnum;
 import com.fitpolo.support.entity.OrderType;
+import com.fitpolo.support.entity.dataEntity.BloodOxygenModel;
 import com.fitpolo.support.entity.dataEntity.HeartRateModel;
 import com.fitpolo.support.log.LogModule;
 import com.fitpolo.support.task.OrderTask;
@@ -66,14 +67,20 @@ public class SyncHeartRateTask extends OrderTask {
         if (order.getOrderHeader() != DigitalConver.byte2Int(value[3])) return;
         if (MokoConstants.DataNotify != DigitalConver.byte2Int(value[2])) return;
         int dataLength = (value[4] & 0xFF);
-        if(dataLength < 1) { //获取数据错误
-            int result = (value[5] & 0xFF);
-            if(result == 0){
-                backResult = 0;
-            }else{
-                backResult = 1;
-            }
-            LogModule.i("把backResult返回出去");
+        if(dataLength <= 8) { //获取数据错误
+//            int result = (value[5] & 0xFF);
+//            if(result == 0){
+//                backResult = 0;
+//            }else{
+//                backResult = 1;
+//            }
+            List<HeartRateModel> dataSource = new ArrayList<>();
+            response.responseObject = dataSource;
+            MokoSupport.getInstance().setHeartRateData(dataSource);
+            orderStatus = OrderTask.ORDER_STATUS_SUCCESS;
+            MokoSupport.getInstance().pollTask();
+            callback.onOrderResult(response);
+            MokoSupport.getInstance().executeTask(callback);
         } else {
             byte[] subArray = Arrays.copyOfRange(value, 5, dataLength + 5);
             int type = (subArray[0] & 0xFF);
