@@ -14,7 +14,9 @@ import com.fitpolo.support.utils.DigitalConver;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SyncSleepTask extends OrderTask {
     private byte[] orderData;
@@ -109,26 +111,43 @@ public class SyncSleepTask extends OrderTask {
     private void parseRecordData (byte[] list) {
         int packType = (list[1] & 0xFF);
         int packIndex = (list[2] & 0xFF);
+        int dataLenght = (list[4] & 0xFF);
+        System.out.println("这是睡眠数据dataLenght" + dataLenght);
         byte[] resultArray = Arrays.copyOfRange(list, 8, list.length);
         if(packIndex == index) {
             res.add(resultArray);
 //            LogModule.i("获取睡眠数据类型packType====="+ res);
             if(packType == 0 || packType == 2) { //结束 后面没有数据接收了
                 StringBuilder resultStr = new StringBuilder(); // 最后的数据
+                int sleepRating = 0; //睡眠评分
+                int deepSleepContinuity = 0; //深睡连续性
+                int respiratoryQuality = 0;//睡眠呼吸质量 255为未开启睡眠呼吸质量开关
                 List<SleepModel> dataSource = new ArrayList<>();
                 for (int i=0; i<res.size(); i++) {
                     // 1、byte[]数据转换为String数据
                     byte[] value = res.get(i);
+                    System.out.println("这是睡眠数据value" + value.toString());
                     String resultHexStr = DigitalConver.bytesToHexString(value);
                     String heartStr = DigitalConver.hex2String(resultHexStr);
                     System.out.println("这是睡眠数据" + heartStr.toString());
                     resultStr.append(heartStr);
                 }
+
+
                 List<String> contents = Arrays.asList(resultStr.toString().split("\n"));
                 for(int j=0;j<contents.size();j++){
                     if(contents.get(j).startsWith("[SL]")) {
                         String contentStr = contents.get(j).replace("[SL]", "");
                         dataSource.add(SleepModel.StringTurnModel(contentStr, 0));
+
+                        List<String> array = Arrays.asList(contentStr.split(","));
+                        ///睡眠评分，深睡连续性，睡眠呼吸品质
+                        if(array.size() > 4){
+                            LogModule.i("睡眠深睡连续性和呼吸质量数据=="+contentStr);
+                            sleepRating = Integer.parseInt(array.get(3));
+                            deepSleepContinuity = Integer.parseInt(array.get(4));
+                            respiratoryQuality = Integer.parseInt(array.get(5));
+                        }
                     } else if (contents.get(j).startsWith("[NA]")) {
                         String contentStr = contents.get(j).replace("[NA]", "");
                         dataSource.add(SleepModel.StringTurnModel(contentStr, 1));
