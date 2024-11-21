@@ -198,7 +198,7 @@ public class BleDataActivity extends BaseActivity{
         int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        SyncStepsTask syncStepsTask = new SyncStepsTask(mService, year, month, day-2, type);
+        SyncStepsTask syncStepsTask = new SyncStepsTask(mService, year, month, day, type);
         syncStepsTask.callback = new MokoOrderTaskCallback() {
             @Override
             public void onOrderResult(OrderTaskResponse response) {
@@ -258,7 +258,7 @@ public class BleDataActivity extends BaseActivity{
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
-        SyncHeartRateTask syncHeartRateTask = new SyncHeartRateTask(mService, year, month, day-2);
+        SyncHeartRateTask syncHeartRateTask = new SyncHeartRateTask(mService, year, month, day);
         syncHeartRateTask.callback = new MokoOrderTaskCallback(){
             @Override
             public void onOrderResult(OrderTaskResponse response) {
@@ -307,7 +307,7 @@ public class BleDataActivity extends BaseActivity{
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
-        SyncBloodOxygenTask syncBloodOxygenTask = new SyncBloodOxygenTask(mService,  year, month, day-2);
+        SyncBloodOxygenTask syncBloodOxygenTask = new SyncBloodOxygenTask(mService,  year, month, day);
         syncBloodOxygenTask.callback = new MokoOrderTaskCallback(){
             @Override
             public void onOrderResult(OrderTaskResponse response) {
@@ -356,7 +356,7 @@ public class BleDataActivity extends BaseActivity{
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
-        SyncSleepTask syncSleepTask = new SyncSleepTask(mService, year, month, day-2);
+        SyncSleepTask syncSleepTask = new SyncSleepTask(mService, year, month, day);
         syncSleepTask.callback = new MokoOrderTaskCallback(){
             @Override
             public void onOrderResult(OrderTaskResponse response) {
@@ -443,7 +443,7 @@ public class BleDataActivity extends BaseActivity{
         int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int fileIndex = 0;
-        SyncSportTask syncSportTask = new SyncSportTask(mService, fileIndex, year, month, day-2);
+        SyncSportTask syncSportTask = new SyncSportTask(mService, fileIndex, year, month, day);
         syncSportTask.callback = new MokoOrderTaskCallback() {
             @Override
             public void onOrderResult(OrderTaskResponse response) {
@@ -523,7 +523,7 @@ public class BleDataActivity extends BaseActivity{
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
-        SyncPaiTask syncPaiTask = new SyncPaiTask(mService, year, month, day-2);
+        SyncPaiTask syncPaiTask = new SyncPaiTask(mService, year, month, day);
         syncPaiTask.callback = new MokoOrderTaskCallback() {
             @Override
             public void onOrderResult(OrderTaskResponse response) {
@@ -584,7 +584,7 @@ public class BleDataActivity extends BaseActivity{
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
-        SyncPressureTask syncPressureTask = new SyncPressureTask(mService, year, month, day-2);
+        SyncPressureTask syncPressureTask = new SyncPressureTask(mService, year, month, day);
         syncPressureTask.callback = new MokoOrderTaskCallback() {
             @Override
             public void onOrderResult(OrderTaskResponse response) {
@@ -644,7 +644,7 @@ public class BleDataActivity extends BaseActivity{
         int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        SyncTemperatureTask syncTemperatureTask = new SyncTemperatureTask(mService, year, month, day-2);
+        SyncTemperatureTask syncTemperatureTask = new SyncTemperatureTask(mService, year, month, day);
         syncTemperatureTask.callback = new MokoOrderTaskCallback() {
             @Override
             public void onOrderResult(OrderTaskResponse response) {
