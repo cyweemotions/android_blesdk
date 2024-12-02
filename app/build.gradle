@@ -48,12 +48,13 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+//    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+
+    implementation(fileTree("libs"))
     // Butter Knife
     implementation 'com.jakewharton:butterknife:10.2.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation project(path: ':fitpolosupport')
     implementation project(path: ':blueota')
 //    implementation 'com.jakewharton.timber:timber:5.0.1'
 }

@@ -1,1 +1,1 @@
-include ':app',':fitpolosupport',':blueota'
+include ':app',':blueota'
